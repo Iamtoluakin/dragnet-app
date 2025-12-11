@@ -1,0 +1,20 @@
+<svg viewBox="0 0 840 520" xmlns="http://www.w3.org/2000/svg">
+  <rect width="840" height="520" rx="18" fill="#f8fafc"/>
+  <g transform="translate(24,24)">
+    <rect x="0" y="0" width="420" height="120" rx="12" fill="#ffffff" stroke="#e6eef8"/>
+    <text x="20" y="28" font-family="Inter" font-size="20" font-weight="700" fill="#0f172a">Compliance Score</text>
+    <text x="20" y="58" font-size="34" font-weight="800" fill="#0ea5e9">87%</text>
+    <rect x="20" y="76" width="380" height="10" rx="6" fill="#e6eef8"/>
+    <rect x="20" y="76" width="330" height="10" rx="6" fill="#0ea5e9"/>
+    <rect x="440" y="0" width="360" height="120" rx="12" fill="#ffffff" stroke="#e6eef8"/>
+    <text x="460" y="28" font-family="Inter" font-size="20" font-weight="700" fill="#0f172a">Assigned Modules</text>
+    <g transform="translate(460,40)">
+      <rect x="0" y="0" width="300" height="18" rx="8" fill="#eef2ff"/>
+      <text x="10" y="13" font-size="12" fill="#1e293b">Anti-bribery compliance</text>
+      <rect x="0" y="26" width="300" height="18" rx="8" fill="#fff7ed"/>
+      <text x="10" y="39" font-size="12" fill="#92400e">Use of force policy</text>
+      <rect x="0" y="52" width="220" height="18" rx="8" fill="#ecfeff"/>
+      <text x="10" y="65" font-size="12" fill="#064e3b">Human rights module</text>
+    </g>
+  </g>
+</svg>
