@@ -2433,7 +2433,13 @@ function App() {
                     <div className="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-2xl mb-4">
                       <iframe
                         className="w-full h-full"
-                        src="https://www.youtube.com/embed/71xKd6tTFfw"
+                        src={
+                          userProfile?.sector === 'police' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
+                          userProfile?.sector === 'civil' ? 'https://www.youtube.com/embed/3ilFN6NaHVk' :
+                          userProfile?.sector === 'student' ? 'https://www.youtube.com/embed/8amOKakZJwk' :
+                          userProfile?.sector === 'private' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
+                          'https://www.youtube.com/embed/eeM1Ga76bA4'
+                        }
                         title={`${currentCourse.title} - Training Video`}
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
