@@ -31,6 +31,11 @@ function App() {
   const [showAnimation, setShowAnimation] = useState(false);
   const [currentStep, setCurrentStep] = useState('video'); // 'video', 'scenarios', 'keyPoints', 'laws', 'assessment'
   
+  // Audio narration with real files
+  const audioRef = useRef(null);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [useAudioFiles, setUseAudioFiles] = useState(true); // Toggle between audio files and Web Speech API
+  
   // Form states for auth
   const [formData, setFormData] = useState({
     name: '',
@@ -103,6 +108,73 @@ function App() {
       narrateText(text);
     }
   };
+
+  // Function to play audio file (for pre-recorded narration)
+  const playAudioFile = (audioPath) => {
+    // Stop any current Web Speech API narration
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      setIsNarrating(false);
+    }
+
+    // Stop any currently playing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+
+    // Create new audio element
+    const audio = new Audio(audioPath);
+    audioRef.current = audio;
+
+    audio.onplay = () => setIsPlayingAudio(true);
+    audio.onended = () => setIsPlayingAudio(false);
+    audio.onerror = (error) => {
+      console.warn('Audio file not found, falling back to Web Speech API:', error);
+      setIsPlayingAudio(false);
+      // Fallback to Web Speech API if audio file doesn't exist
+      setUseAudioFiles(false);
+    };
+
+    audio.play().catch(error => {
+      console.warn('Could not play audio file, falling back to Web Speech API:', error);
+      setIsPlayingAudio(false);
+      setUseAudioFiles(false);
+    });
+  };
+
+  // Function to stop audio file playback
+  const stopAudioFile = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlayingAudio(false);
+    }
+  };
+
+  // Universal narration function (uses audio files if available, falls back to Web Speech API)
+  const narrateContent = (text, audioPath = null) => {
+    // If audio path is provided and we're using audio files, try to play it
+    if (audioPath && useAudioFiles) {
+      playAudioFile(audioPath);
+    } else {
+      // Otherwise use Web Speech API
+      toggleNarration(text);
+    }
+  };
+
+  // Universal stop function
+  const stopAllNarration = () => {
+    stopAudioFile();
+    stopNarration();
+  };
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      stopAllNarration();
+    };
+  }, [currentScenario]);
 
   const sectors = [
     { value: 'police', label: 'Police', icon: '🚔', color: 'from-blue-600 to-blue-800' },
@@ -2658,11 +2730,44 @@ function App() {
                 <div ref={keyLearningRef} className="relative bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm p-8 rounded-xl border-2 border-blue-700/50 overflow-hidden animate-fadeIn" id="main-content">
                   <div className="absolute bottom-0 right-0 text-9xl opacity-10" aria-hidden="true">🎯</div>
                   <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-12 h-12 bg-blue-500/30 rounded-lg flex items-center justify-center text-2xl" aria-hidden="true">
-                        🎯
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-blue-500/30 rounded-lg flex items-center justify-center text-2xl" aria-hidden="true">
+                          🎯
+                        </div>
+                        <h2 className="text-2xl font-bold text-white">Key Learning Points</h2>
                       </div>
-                      <h2 className="text-2xl font-bold text-white">Key Learning Points</h2>
+                      
+                      {/* Narrate All Key Points Button */}
+                      {speechSupported && (
+                        <button
+                          onClick={() => {
+                            const allPoints = currentCourse.content.keyPoints.join('. ');
+                            const fullText = `Key Learning Points for ${currentCourse.title}. ${allPoints}`;
+                            toggleNarration(fullText);
+                          }}
+                          className={`px-4 py-2 rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl flex items-center gap-2 ${
+                            isNarrating 
+                              ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
+                              : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700'
+                          }`}
+                          aria-label={isNarrating ? 'Stop narrating all learning points' : 'Listen to all learning points'}
+                          aria-pressed={isNarrating}
+                          title={isNarrating ? 'Stop reading all learning points' : 'Have all learning points read aloud'}
+                        >
+                          {isNarrating ? (
+                            <>
+                              <span className="text-lg" aria-hidden="true">⏸️</span>
+                              <span>Stop</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-lg" aria-hidden="true">🔊</span>
+                              <span>Listen to All</span>
+                            </>
+                          )}
+                        </button>
+                      )}
                     </div>
                     <div className="bg-blue-900/20 p-4 rounded-lg mb-6 border-l-4 border-blue-500" role="status" aria-live="polite">
                       <p className="text-gray-300">
@@ -2673,7 +2778,7 @@ function App() {
                       {currentCourse.content.keyPoints.map((point, idx) => {
                         const isClicked = clickedLearningPoints.includes(idx);
                         return (
-                          <button
+                          <div
                             key={idx}
                             onClick={() => {
                               if (!isClicked) {
@@ -2683,27 +2788,61 @@ function App() {
                                 }
                               }
                             }}
-                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth text-left animate-fadeIn ${
+                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth animate-fadeIn cursor-pointer ${
                               isClicked
-                                ? 'bg-green-600/20 border-green-500 cursor-default'
-                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800 cursor-pointer'
+                                ? 'bg-green-600/20 border-green-500'
+                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800'
                             }`}
                             style={{ animationDelay: `${idx * 0.05}s` }}
+                            role="listitem"
+                            tabIndex={0}
+                            onKeyPress={(e) => {
+                              if ((e.key === 'Enter' || e.key === ' ') && !isClicked) {
+                                setClickedLearningPoints([...clickedLearningPoints, idx]);
+                                if (clickedLearningPoints.length + 1 === currentCourse.content.keyPoints.length) {
+                                  setCurrentStep('laws');
+                                }
+                              }
+                            }}
                             aria-label={`Learning point ${idx + 1}: ${point}`}
                             aria-pressed={isClicked}
-                            role="listitem"
                           >
-                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
-                              isClicked
-                                ? 'bg-green-500'
-                                : 'bg-gradient-to-br from-blue-500 to-purple-500'
-                            }`}>
+                            <div
+                              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
+                                isClicked
+                                  ? 'bg-green-500'
+                                  : 'bg-gradient-to-br from-blue-500 to-purple-500'
+                              }`}
+                              aria-hidden="true"
+                            >
                               {isClicked ? '✓' : idx + 1}
                             </div>
-                            <span className={`text-lg leading-relaxed ${
-                              isClicked ? 'text-green-300' : 'text-gray-300'
-                            }`}>{point}</span>
-                          </button>
+                            <div className="flex-1">
+                              <span className={`text-lg leading-relaxed block ${
+                                isClicked ? 'text-green-300' : 'text-gray-300'
+                              }`}>{point}</span>
+                            </div>
+                            
+                            {/* Individual Narration Button */}
+                            {speechSupported && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  const textToRead = `Learning point ${idx + 1}. ${point}`;
+                                  toggleNarration(textToRead);
+                                }}
+                                className={`flex-shrink-0 p-2 rounded-lg transition-smooth border ${
+                                  isNarrating 
+                                    ? 'bg-red-600/50 hover:bg-red-600/70 text-white border-red-500 animate-pulse' 
+                                    : 'bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 hover:text-white border-purple-500/30 hover:border-purple-500'
+                                }`}
+                                aria-label={isNarrating ? `Stop narration of learning point ${idx + 1}` : `Listen to learning point ${idx + 1}`}
+                                title={isNarrating ? "Stop narration" : "Listen to this point"}
+                              >
+                                <span className="text-lg" aria-hidden="true">{isNarrating ? '⏸️' : '🔊'}</span>
+                              </button>
+                            )}
+                          </div>
                         );
                       })}
                     </div>
@@ -2716,11 +2855,44 @@ function App() {
                 <div className="relative bg-gradient-to-br from-purple-900/20 to-indigo-900/20 backdrop-blur-sm p-8 rounded-xl border-2 border-purple-700/50 overflow-hidden animate-fadeIn">
                   <div className="absolute top-0 left-0 text-9xl opacity-10">⚖️</div>
                   <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-12 h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-2xl">
-                        ⚖️
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-2xl">
+                          ⚖️
+                        </div>
+                        <h2 className="text-2xl font-bold text-white">Relevant Laws & Regulations</h2>
                       </div>
-                      <h2 className="text-2xl font-bold text-white">Relevant Laws & Regulations</h2>
+                      
+                      {/* Narrate All Laws Button */}
+                      {speechSupported && (
+                        <button
+                          onClick={() => {
+                            const allLaws = currentCourse.content.laws.join('. ');
+                            const fullText = `Relevant Laws and Regulations for ${currentCourse.title}. ${allLaws}`;
+                            toggleNarration(fullText);
+                          }}
+                          className={`px-4 py-2 rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl flex items-center gap-2 ${
+                            isNarrating 
+                              ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
+                              : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700'
+                          }`}
+                          aria-label={isNarrating ? 'Stop narrating laws and regulations' : 'Listen to all laws and regulations'}
+                          aria-pressed={isNarrating}
+                          title={isNarrating ? 'Stop reading laws' : 'Have all laws read aloud'}
+                        >
+                          {isNarrating ? (
+                            <>
+                              <span className="text-lg" aria-hidden="true">⏸️</span>
+                              <span>Stop</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-lg" aria-hidden="true">🔊</span>
+                              <span>Listen to All</span>
+                            </>
+                          )}
+                        </button>
+                      )}
                     </div>
                     <div className="bg-purple-900/20 p-4 rounded-lg mb-6 border-l-4 border-purple-500">
                       <p className="text-gray-300">
@@ -2733,7 +2905,28 @@ function App() {
                           <div className="flex-shrink-0 w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-xl">
                             📜
                           </div>
-                          <span className="text-gray-300 leading-relaxed">{law}</span>
+                          <div className="flex-1">
+                            <span className="text-gray-300 leading-relaxed">{law}</span>
+                          </div>
+                          
+                          {/* Individual Law Narration Button */}
+                          {speechSupported && (
+                            <button
+                              onClick={() => {
+                                const textToRead = `Law ${idx + 1}. ${law}`;
+                                toggleNarration(textToRead);
+                              }}
+                              className={`flex-shrink-0 p-2 rounded-lg transition-smooth border ${
+                                isNarrating 
+                                  ? 'bg-red-600/50 hover:bg-red-600/70 text-white border-red-500 animate-pulse' 
+                                  : 'bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 hover:text-white border-purple-500/30 hover:border-purple-500'
+                              }`}
+                              aria-label={isNarrating ? `Stop narration of law ${idx + 1}` : `Listen to law ${idx + 1}`}
+                              title={isNarrating ? "Stop narration" : "Listen to this law"}
+                            >
+                              <span className="text-lg" aria-hidden="true">{isNarrating ? '⏸️' : '🔊'}</span>
+                            </button>
+                          )}
                         </div>
                       ))}
                     </div>

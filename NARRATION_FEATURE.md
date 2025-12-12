@@ -81,10 +81,26 @@ utterance.lang = 'en-US';  // US English
 
 ## Usage in the App
 
-### Location
-The narration button appears in the scenario view, directly below the scenario description text, inside the "Scenario Story" card.
+### Locations
+The narration feature is now available in multiple sections:
+
+#### 1. **Scenario View**
+- Location: Directly below the scenario description text, inside the "Scenario Story" card
+- Button: "🔊 Listen to Scenario" / "⏸️ Stop Narration"
+
+#### 2. **Key Learning Points Section** ⭐ NEW
+- Location: Top-right of the Key Learning Points section header
+- Button: "🔊 Listen to All" - Narrates all learning points in sequence
+- Individual buttons: Each learning point has its own 🔊 button for individual narration
+
+#### 3. **Laws & Regulations Section** ⭐ NEW
+- Location: Top-right of the Laws & Regulations section header
+- Button: "🔊 Listen to All" - Narrates all laws and regulations
+- Individual buttons: Each law has its own 🔊 button for individual narration
 
 ### User Flow
+
+#### Scenario Narration
 1. User opens an ethical dilemma scenario
 2. Narration button appears (if browser supports it)
 3. User clicks "🔊 Listen to Scenario"
@@ -92,6 +108,23 @@ The narration button appears in the scenario view, directly below the scenario d
 5. Button changes to "⏸️ Stop Narration" with pulsing animation
 6. User can click to stop, or let it finish naturally
 7. When complete, button returns to original state
+
+#### Key Learning Points Narration ⭐ NEW
+1. User completes scenarios and reaches Key Learning Points
+2. Two narration options appear:
+   - **"Listen to All"** button at the top - Reads all points in sequence
+   - Individual 🔊 buttons - Read one specific point
+3. User can listen while reviewing points
+4. Clicking the checkmark marks the point as reviewed
+5. All points must be reviewed to proceed to assessment
+
+#### Laws & Regulations Narration ⭐ NEW
+1. After reviewing all key points, Laws & Regulations appear
+2. Two narration options:
+   - **"Listen to All"** button - Reads all laws in sequence
+   - Individual 🔊 buttons per law
+3. User can review laws while listening
+4. Helps with understanding complex legal terminology
 
 ## Testing the Feature
 
@@ -118,16 +151,27 @@ The narration button appears in the scenario view, directly below the scenario d
 ## Accessibility Benefits
 
 ### For Users With:
-- **Visual Impairments**: Can listen to scenarios without reading
-- **Reading Difficulties**: Audio reinforcement helps comprehension
-- **Multitasking Needs**: Can listen while doing other tasks
-- **Learning Preferences**: Some users learn better through audio
+- **Visual Impairments**: Can listen to scenarios, key points, and laws without reading
+- **Reading Difficulties**: Audio reinforcement helps comprehension of complex legal terminology
+- **Multitasking Needs**: Can listen while reviewing materials or taking notes
+- **Learning Preferences**: Some users learn better through audio (auditory learners)
+- **Cognitive Disabilities**: Hearing content read aloud can improve understanding and retention
+- **Language Barriers**: Pronunciation help for complex legal terms
 
 ### WCAG Compliance:
-- ✅ Supports multiple input methods
-- ✅ Provides alternative content delivery
-- ✅ Clear visual and auditory feedback
-- ✅ Keyboard accessible (buttons are focusable)
+- ✅ Supports multiple input methods (click, keyboard, touch)
+- ✅ Provides alternative content delivery (audio + visual)
+- ✅ Clear visual and auditory feedback for all actions
+- ✅ Keyboard accessible (all buttons are focusable and operable via keyboard)
+- ✅ ARIA labels for screen reader support
+- ✅ Role and state attributes (aria-pressed, aria-label)
+- ✅ Live regions for dynamic content updates
+
+### Enhanced Learning:
+- **Dual Coding Theory**: Combining visual and auditory input improves retention
+- **Self-Paced Learning**: Users can replay content as many times as needed
+- **Reduced Cognitive Load**: Listening while reading reduces mental effort
+- **Better Engagement**: Audio narration makes learning more interactive
 
 ## Future Enhancements
 
