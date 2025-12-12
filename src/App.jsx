@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
 
 function App() {
@@ -24,6 +24,12 @@ function App() {
   const [completedCourses, setCompletedCourses] = useState([]);
   const [clickedLearningPoints, setClickedLearningPoints] = useState([]);
   const [showKeyLearning, setShowKeyLearning] = useState(false);
+  const [isNarrating, setIsNarrating] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
+  const [scenarioBranch, setScenarioBranch] = useState([]);
+  const [feedbackHistory, setFeedbackHistory] = useState([]);
+  const [showAnimation, setShowAnimation] = useState(false);
+  const [currentStep, setCurrentStep] = useState('video'); // 'video', 'scenarios', 'keyPoints', 'laws', 'assessment'
   
   // Form states for auth
   const [formData, setFormData] = useState({
@@ -32,6 +38,71 @@ function App() {
     password: '',
     confirmPassword: ''
   });
+
+  // Check for Web Speech API support on component mount
+  useEffect(() => {
+    if ('speechSynthesis' in window) {
+      setSpeechSupported(true);
+    }
+  }, []);
+
+  // Stop narration when scenario changes or component unmounts
+  useEffect(() => {
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, [currentScenario]);
+
+  // Function to narrate text using Web Speech API
+  const narrateText = (text) => {
+    window.speechSynthesis.cancel();
+    
+    if (!speechSupported) {
+      console.log('Speech synthesis not supported in this browser');
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    utterance.lang = 'en-US';
+    
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(voice => 
+      voice.lang === 'en-US' && (voice.name.includes('Google') || voice.name.includes('Microsoft'))
+    ) || voices.find(voice => voice.lang.startsWith('en'));
+    
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+
+    utterance.onstart = () => setIsNarrating(true);
+    utterance.onend = () => setIsNarrating(false);
+    utterance.onerror = (event) => {
+      console.error('Speech synthesis error:', event);
+      setIsNarrating(false);
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Function to stop narration
+  const stopNarration = () => {
+    window.speechSynthesis.cancel();
+    setIsNarrating(false);
+  };
+
+  // Function to toggle narration
+  const toggleNarration = (text) => {
+    if (isNarrating) {
+      stopNarration();
+    } else {
+      narrateText(text);
+    }
+  };
 
   const sectors = [
     { value: 'police', label: 'Police', icon: '🚔', color: 'from-blue-600 to-blue-800' },
@@ -106,25 +177,48 @@ function App() {
                 id: 'a',
                 text: 'Accept the money and let them go',
                 correct: false,
-                feedback: '❌ INCORRECT: This is bribery and corruption. Accepting money to overlook a violation is a criminal offense under the Corrupt Practices Act. You could face imprisonment, dismissal, and prosecution.'
+                feedback: '❌ INCORRECT: This is bribery and corruption. Accepting money to overlook a violation is a criminal offense under the Corrupt Practices Act. You could face imprisonment, dismissal, and prosecution.',
+                consequence: 'Your action was witnessed by a passing patrol car. You are now under investigation for corruption.',
+                points: -10,
+                followUp: {
+                  situation: 'Your supervisor calls you to the station. What do you do?',
+                  options: [
+                    { id: 'a1', text: 'Deny everything', correct: false, feedback: 'This makes things worse. Lying compounds the offense.' },
+                    { id: 'a2', text: 'Admit the mistake and cooperate', correct: true, feedback: 'Cooperation may reduce penalties. However, the damage is done.' }
+                  ]
+                }
               },
               {
                 id: 'b',
                 text: 'Refuse the money and issue the proper citation',
                 correct: true,
-                feedback: '✅ CORRECT: This is the right action. Refuse the bribe, issue the proper citation for expired documents, and document the attempted bribery in your report. Your integrity protects the public trust.'
+                feedback: '✅ CORRECT: This is the right action. Refuse the bribe, issue the proper citation for expired documents, and document the attempted bribery in your report. Your integrity protects the public trust.',
+                consequence: 'The driver becomes angry and threatens to report you. How do you handle this?',
+                points: 10,
+                followUp: {
+                  situation: 'The driver is now being aggressive and threatening. What is your next step?',
+                  options: [
+                    { id: 'b1', text: 'Stay calm, complete the citation, and call for backup if needed', correct: true, feedback: '✅ Excellent! Professional de-escalation and following protocol.' },
+                    { id: 'b2', text: 'Argue back and escalate the situation', correct: false, feedback: '❌ This is unprofessional. Always maintain composure.' },
+                    { id: 'b3', text: 'Let them go to avoid confrontation', correct: false, feedback: '❌ This undermines your authority and the law.' }
+                  ]
+                }
               },
               {
                 id: 'c',
                 text: 'Take the money but still write the ticket',
                 correct: false,
-                feedback: '❌ INCORRECT: Taking the money is still bribery, even if you perform your duty. This constitutes corruption and is punishable by law. You must refuse all forms of inducement.'
+                feedback: '❌ INCORRECT: Taking the money is still bribery, even if you perform your duty. This constitutes corruption and is punishable by law. You must refuse all forms of inducement.',
+                consequence: 'The driver is confused and threatens to expose you. This creates a compromising situation.',
+                points: -8
               },
               {
                 id: 'd',
                 text: 'Let them go without payment "as a warning"',
                 correct: false,
-                feedback: '⚠️ PARTIALLY INCORRECT: While not accepting a bribe, failing to enforce traffic laws without proper justification could be seen as dereliction of duty. Issue the citation and follow proper procedures.'
+                feedback: '⚠️ PARTIALLY INCORRECT: While not accepting a bribe, failing to enforce traffic laws without proper justification could be seen as dereliction of duty. Issue the citation and follow proper procedures.',
+                consequence: 'Your supervisor reviews checkpoint logs and notices missing citations. You are questioned about your judgment.',
+                points: -3
               }
             ]
           },
@@ -2366,6 +2460,44 @@ function App() {
         </div>
       ) : view === 'course' ? (
         <div className="p-8 max-w-5xl mx-auto">
+          {/* Skip to main content link for accessibility */}
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
+
+          {/* Progress Indicator */}
+          {currentCourse && !currentScenario && (
+            <div className="mb-6 bg-gray-800/50 p-4 rounded-lg border border-gray-700" role="navigation" aria-label="Learning progress">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-sm font-semibold text-gray-300">Learning Progress</h2>
+                <span className="text-xs text-gray-400">Step {['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].indexOf(currentStep) + 1} of 5</span>
+              </div>
+              <div className="flex gap-2">
+                {['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].map((step, index) => (
+                  <div 
+                    key={step}
+                    className={`flex-1 h-2 rounded-full transition-all duration-500 progress-step ${
+                      step === currentStep ? 'bg-blue-500 active animate-glow' : 
+                      ['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].indexOf(currentStep) > index ? 'bg-green-500 completed' : 'bg-gray-700'
+                    }`}
+                    role="progressbar"
+                    aria-valuenow={['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].indexOf(currentStep) + 1}
+                    aria-valuemin="1"
+                    aria-valuemax="5"
+                    aria-label={`${step.charAt(0).toUpperCase() + step.slice(1)} step`}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-between mt-2 text-xs text-gray-400">
+                <span>📹 Video</span>
+                <span>🎭 Scenarios</span>
+                <span>💡 Key Points</span>
+                <span>⚖️ Laws</span>
+                <span>✅ Assessment</span>
+              </div>
+            </div>
+          )}
+
           <div className="mb-6 flex items-center justify-between">
             <button 
               onClick={() => {
@@ -2373,13 +2505,15 @@ function App() {
                 setCurrentCourse(null);
                 setCurrentScenario(null);
                 setScenarioResult(null);
+                setCurrentStep('video');
               }}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all"
+              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-smooth"
+              aria-label="Return to dashboard"
             >
               ← Back to Dashboard
             </button>
             {currentCourse && currentCourse.risk === 'high' && (
-              <span className="px-3 py-1 bg-red-500/20 text-red-300 text-sm font-semibold rounded-lg">
+              <span className="px-3 py-1 bg-red-500/20 text-red-300 text-sm font-semibold rounded-lg" role="status">
                 🔥 HIGH RISK MODULE
               </span>
             )}
@@ -2489,8 +2623,11 @@ function App() {
                             setCurrentScenario(scenario);
                             setScenarioAnswer('');
                             setScenarioResult(null);
+                            setCurrentStep('scenarios');
                           }}
-                          className="w-full p-6 bg-gray-800/80 hover:bg-gray-700 border-2 border-gray-600 hover:border-orange-500 rounded-xl text-left transition-all group relative overflow-hidden"
+                          className="w-full p-6 bg-gray-800/80 hover:bg-gray-700 border-2 border-gray-600 hover:border-orange-500 rounded-xl text-left transition-smooth group relative overflow-hidden animate-fadeIn"
+                          style={{ animationDelay: `${idx * 0.1}s` }}
+                          aria-label={`Practice scenario ${idx + 1}: ${scenario.title}`}
                         >
                           {/* Animated hover effect */}
                           <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/10 to-orange-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
@@ -2518,21 +2655,21 @@ function App() {
 
               {/* 3. KEY LEARNING POINTS - Third Section (Shows after scenarios) */}
               {currentCourse.content && showKeyLearning && (
-                <div ref={keyLearningRef} className="relative bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm p-8 rounded-xl border-2 border-blue-700/50 overflow-hidden">
-                  <div className="absolute bottom-0 right-0 text-9xl opacity-10">🎯</div>
+                <div ref={keyLearningRef} className="relative bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm p-8 rounded-xl border-2 border-blue-700/50 overflow-hidden animate-fadeIn" id="main-content">
+                  <div className="absolute bottom-0 right-0 text-9xl opacity-10" aria-hidden="true">🎯</div>
                   <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="w-12 h-12 bg-blue-500/30 rounded-lg flex items-center justify-center text-2xl">
+                      <div className="w-12 h-12 bg-blue-500/30 rounded-lg flex items-center justify-center text-2xl" aria-hidden="true">
                         🎯
                       </div>
                       <h2 className="text-2xl font-bold text-white">Key Learning Points</h2>
                     </div>
-                    <div className="bg-blue-900/20 p-4 rounded-lg mb-6 border-l-4 border-blue-500">
+                    <div className="bg-blue-900/20 p-4 rounded-lg mb-6 border-l-4 border-blue-500" role="status" aria-live="polite">
                       <p className="text-gray-300">
                         📝 Click on each learning point to review before taking the assessment. ({clickedLearningPoints.length}/{currentCourse.content.keyPoints.length} reviewed)
                       </p>
                     </div>
-                    <div className="grid gap-4">
+                    <div className="grid gap-4" role="list" aria-label="Key learning points">
                       {currentCourse.content.keyPoints.map((point, idx) => {
                         const isClicked = clickedLearningPoints.includes(idx);
                         return (
@@ -2541,13 +2678,20 @@ function App() {
                             onClick={() => {
                               if (!isClicked) {
                                 setClickedLearningPoints([...clickedLearningPoints, idx]);
+                                if (clickedLearningPoints.length + 1 === currentCourse.content.keyPoints.length) {
+                                  setCurrentStep('laws');
+                                }
                               }
                             }}
-                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-all text-left ${
+                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth text-left animate-fadeIn ${
                               isClicked
                                 ? 'bg-green-600/20 border-green-500 cursor-default'
                                 : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800 cursor-pointer'
                             }`}
+                            style={{ animationDelay: `${idx * 0.05}s` }}
+                            aria-label={`Learning point ${idx + 1}: ${point}`}
+                            aria-pressed={isClicked}
+                            role="listitem"
                           >
                             <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
                               isClicked
@@ -2605,8 +2749,10 @@ function App() {
                       setShowQuiz(true);
                       setQuizAnswers({});
                       setQuizResult(null);
+                      setCurrentStep('assessment');
                     }}
-                    className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-semibold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                    className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-semibold text-lg transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 animate-pulse"
+                    aria-label="Start final assessment with 5 questions"
                   >
                     📝 Take Final Assessment (5 Questions)
                   </button>
@@ -2923,6 +3069,35 @@ function App() {
                           {currentScenario.situation}
                         </p>
                       </div>
+                      
+                      {/* Narration Button */}
+                      {speechSupported && (
+                        <div className="mt-4 flex justify-center">
+                          <button
+                            onClick={() => toggleNarration(currentScenario.situation)}
+                            className={`px-6 py-3 rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 ${
+                              isNarrating 
+                                ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
+                                : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700'
+                            }`}
+                            aria-label={isNarrating ? 'Stop scenario narration' : 'Listen to scenario narration'}
+                            aria-pressed={isNarrating}
+                            title={isNarrating ? 'Stop reading the scenario aloud' : 'Have the scenario read aloud to you'}
+                          >
+                            {isNarrating ? (
+                              <>
+                                <span className="text-xl" aria-hidden="true">⏸️</span>
+                                <span>Stop Narration</span>
+                              </>
+                            ) : (
+                              <>
+                                <span className="text-xl" aria-hidden="true">🔊</span>
+                                <span>Listen to Scenario</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -2939,21 +3114,28 @@ function App() {
                 <div className="bg-gray-800/80 backdrop-blur-sm p-8 rounded-xl border-2 border-gray-700">
                   <h2 className="text-xl font-bold text-white mb-6">🤔 What would you do? Select your response:</h2>
                   <div className="space-y-4">
-                    {currentScenario.options.map((option) => (
+                    {currentScenario.options.map((option, index) => (
                       <button
                         key={option.id}
                         onClick={() => {
                           setScenarioAnswer(option.id);
                           setScenarioResult(option);
+                          setShowAnimation(true);
                         }}
-                        className={`w-full p-6 text-left rounded-xl border-2 transition-all ${
+                        className={`w-full p-6 text-left rounded-xl border-2 transition-smooth animate-fadeIn ${
                           scenarioAnswer === option.id
-                            ? 'bg-blue-600/20 border-blue-500 shadow-lg'
+                            ? 'bg-blue-600/20 border-blue-500 shadow-lg animate-pulse'
                             : 'bg-gray-700/50 border-gray-600 hover:border-gray-500 hover:bg-gray-700'
                         }`}
+                        style={{ animationDelay: `${index * 0.1}s` }}
+                        aria-label={`Option ${option.id.toUpperCase()}: ${option.text}`}
+                        aria-pressed={scenarioAnswer === option.id}
                       >
                         <div className="flex items-start gap-4">
-                          <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold flex-shrink-0">
+                          <div 
+                            className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold flex-shrink-0"
+                            aria-hidden="true"
+                          >
                             {option.id.toUpperCase()}
                           </div>
                           <p className="text-white text-lg">{option.text}</p>
@@ -2963,25 +3145,100 @@ function App() {
                   </div>
                 </div>
               ) : (
-                <div className={`p-8 rounded-xl border-2 ${
-                  scenarioResult.correct 
-                    ? 'bg-green-600/20 border-green-500' 
-                    : 'bg-red-600/20 border-red-500'
-                }`}>
+                <div 
+                  className={`p-8 rounded-xl border-2 animate-fadeIn ${
+                    scenarioResult.correct 
+                      ? 'bg-green-600/20 border-green-500' 
+                      : 'bg-red-600/20 border-red-500'
+                  }`}
+                  role="alert"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
                   <h2 className="text-2xl font-bold text-white mb-4">
                     {scenarioResult.correct ? '✅ Correct Answer!' : '❌ Incorrect Answer'}
                   </h2>
-                  <div className="bg-gray-900/50 p-6 rounded-lg">
+                  
+                  {/* Feedback Section */}
+                  <div className="bg-gray-900/50 p-6 rounded-lg mb-4">
                     <p className="text-gray-100 text-lg leading-relaxed">{scenarioResult.feedback}</p>
                   </div>
+
+                  {/* Points and Consequence */}
+                  {scenarioResult.points && (
+                    <div className={`p-4 rounded-lg mb-4 animate-scaleUp ${
+                      scenarioResult.points > 0 ? 'bg-green-700/30' : 'bg-red-700/30'
+                    }`}>
+                      <p className="text-white font-semibold">
+                        {scenarioResult.points > 0 ? '🎯' : '⚠️'} Points: {scenarioResult.points > 0 ? '+' : ''}{scenarioResult.points}
+                      </p>
+                    </div>
+                  )}
+
+                  {scenarioResult.consequence && (
+                    <div className="bg-yellow-900/30 border border-yellow-600 p-4 rounded-lg mb-4 animate-slideInRight">
+                      <p className="text-yellow-100">
+                        <strong>📋 Consequence:</strong> {scenarioResult.consequence}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Follow-up Question (Branching) */}
+                  {scenarioResult.followUp && !scenarioBranch.includes(scenarioResult.id) && (
+                    <div className="mt-6 p-6 bg-gray-800/50 rounded-lg border border-blue-500 animate-slideInLeft">
+                      <h3 className="text-xl font-bold text-white mb-4">🔀 Follow-up Situation</h3>
+                      <p className="text-gray-200 mb-4">{scenarioResult.followUp.situation}</p>
+                      <div className="space-y-3">
+                        {scenarioResult.followUp.options.map((followUpOption) => (
+                          <button
+                            key={followUpOption.id}
+                            onClick={() => {
+                              setScenarioBranch([...scenarioBranch, scenarioResult.id]);
+                              setFeedbackHistory([...feedbackHistory, {
+                                scenario: currentScenario.title,
+                                choice: followUpOption.text,
+                                feedback: followUpOption.feedback,
+                                correct: followUpOption.correct
+                              }]);
+                              alert(followUpOption.feedback);
+                            }}
+                            className="w-full p-4 text-left rounded-lg bg-gray-700 hover:bg-gray-600 border border-gray-600 hover:border-blue-500 transition-smooth text-white"
+                            aria-label={`Follow-up option: ${followUpOption.text}`}
+                          >
+                            {followUpOption.text}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Feedback History */}
+                  {feedbackHistory.length > 0 && (
+                    <div className="mt-6 p-4 bg-gray-800/30 rounded-lg">
+                      <h4 className="text-lg font-semibold text-white mb-3">📊 Your Decision Path</h4>
+                      <div className="branch-path">
+                        {feedbackHistory.map((item, index) => (
+                          <div key={index} className="branch-node mb-3">
+                            <p className="text-sm text-gray-400">{item.scenario}</p>
+                            <p className={`text-white ${item.correct ? 'text-green-400' : 'text-red-400'}`}>
+                              {item.correct ? '✓' : '✗'} {item.choice}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex gap-4 mt-6">
                     <button
                       onClick={() => {
                         setCurrentScenario(null);
                         setScenarioAnswer('');
                         setScenarioResult(null);
+                        setScenarioBranch([]);
                       }}
-                      className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all"
+                      className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-smooth"
+                      aria-label="Go back to course overview"
                     >
                       ← Back to Course
                     </button>
