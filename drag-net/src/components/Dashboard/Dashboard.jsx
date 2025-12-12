@@ -374,39 +374,100 @@ function Dashboard() {
         { progress: 100, status: 'Completed' }
       ];
       return (
-        <div className="min-h-screen bg-gray-100 p-6">
-          <div className="max-w-3xl mx-auto">
-            <img src={'/logo-dragnet.svg?url'} alt="Dragnet logo" className="w-32 mb-6 mx-auto" />
-            <h1 className="text-3xl font-bold mb-2 text-blue-700 text-center">Police Compliance Dashboard</h1>
-            <p className="text-gray-600 text-center mb-8">
-              Welcome, <b>{role}</b> ({rank}) — <span className="text-blue-600 font-semibold">{department}</span>
-            </p>
-            <div className="flex flex-col gap-8">
-              <DragCard title={<span className="flex items-center gap-2 text-xl"><span role="img" aria-label="chart">📊</span> Progress Overview</span>}>
-                <div className="flex flex-col md:flex-row md:items-center md:gap-8">
-                  <div className="mb-4 md:mb-0">
-                    <ul className="text-gray-700 text-lg font-medium mb-2">
-                      <li>✔ <span className="font-bold">87%</span> completed</li>
-                      <li>📚 <span className="font-bold">{modules.length}</span> courses assigned</li>
-                      <li>⏳ Last activity: <span className="font-bold">2 days ago</span></li>
-                    </ul>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 p-4 md:p-6">
+          <div className="max-w-5xl mx-auto">
+            {/* Header Section */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-6">
+              <div className="flex flex-col md:flex-row items-center justify-between">
+                <div className="flex items-center gap-4 mb-4 md:mb-0">
+                  <img src={'/logo-dragnet.svg?url'} alt="Dragnet logo" className="w-16 h-16" />
+                  <div>
+                    <h1 className="text-2xl md:text-3xl font-bold text-blue-700">Police Compliance Dashboard</h1>
+                    <p className="text-gray-600 mt-1">
+                      Welcome, <b>{role}</b> ({rank}) • <span className="text-blue-600 font-semibold">{department}</span>
+                    </p>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="text-gray-700 text-base">Pre-Test Score: <span className="font-bold">{preTestScore}/3</span></div>
-                    <div className="text-gray-700 text-base">Post-Test Score: <span className="font-bold">{postTestScore}/5</span></div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
+                    ✓ Active
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-blue-100">Overall Progress</span>
+                  <span className="text-3xl">📊</span>
+                </div>
+                <div className="text-4xl font-bold mb-1">87%</div>
+                <div className="text-blue-100 text-sm">Courses completed</div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-6 text-white">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-green-100">Pre-Test Score</span>
+                  <span className="text-3xl">✓</span>
+                </div>
+                <div className="text-4xl font-bold mb-1">{preTestScore}/3</div>
+                <div className="text-green-100 text-sm">Passed assessment</div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-purple-100">Post-Test Score</span>
+                  <span className="text-3xl">🎯</span>
+                </div>
+                <div className="text-4xl font-bold mb-1">{postTestScore}/5</div>
+                <div className="text-purple-100 text-sm">Final assessment</div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <DragCard title={<span className="flex items-center gap-2 text-xl"><span role="img" aria-label="chart">📈</span> Learning Journey</span>}>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700 font-medium">Current Status</span>
+                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">Active Learner</span>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                      <span>{modules.length} courses assigned</span>
+                      <span>Last activity: 2 days ago</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full" style={{ width: '87%' }}></div>
+                    </div>
                   </div>
                 </div>
               </DragCard>
-              <DragCard title={<span className="flex items-center gap-2 text-xl"><span role="img" aria-label="assessment">📝</span> Assessments</span>}>
-                <div className="flex flex-col md:flex-row md:items-center md:gap-8">
-                  <div className="text-gray-700 text-base mb-2 md:mb-0">Latest assessment: <span className="font-bold">Police compliance test</span></div>
-                  <SecondaryButton onClick={() => {}}>View Results</SecondaryButton>
+              <DragCard title={<span className="flex items-center gap-2 text-xl"><span role="img" aria-label="assessment">📝</span> Recent Assessments</span>}>
+                <div className="space-y-3">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 bg-blue-50 rounded-xl">
+                    <div>
+                      <div className="font-semibold text-gray-800">Police Compliance Test</div>
+                      <div className="text-sm text-gray-600 mt-1">Completed on {new Date().toLocaleDateString()}</div>
+                    </div>
+                    <div className="flex items-center gap-3 mt-3 md:mt-0">
+                      <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">Passed</span>
+                      <SecondaryButton onClick={() => {}}>View Results</SecondaryButton>
+                    </div>
+                  </div>
                 </div>
               </DragCard>
-              <DragCard title={<span className="flex items-center gap-2 text-xl"><span role="img" aria-label="courses">📚</span> Assigned Courses</span>}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <DragCard title={<span className="flex items-center gap-2 text-xl"><span role="img" aria-label="courses">📚</span> Your Compliance Courses</span>}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   {modules.map((m, i) => (
-                    <CourseCard key={i} title={m} desc="AI-assigned module" progress={moduleProgress[i % moduleProgress.length].progress} status={moduleProgress[i % moduleProgress.length].status} />
+                    <CourseCard 
+                      key={i} 
+                      title={m} 
+                      desc="AI-assigned based on your role" 
+                      progress={moduleProgress[i % moduleProgress.length].progress} 
+                      status={moduleProgress[i % moduleProgress.length].status} 
+                    />
                   ))}
                 </div>
               </DragCard>
