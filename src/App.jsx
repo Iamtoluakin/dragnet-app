@@ -2217,11 +2217,16 @@ function App() {
             <h1 className="text-6xl font-bold text-white mb-6">
               🎯 DragNet
             </h1>
-            <p className="text-2xl text-blue-300 mb-8">
+            <p className="text-2xl text-blue-300 mb-4">
               AI-Powered Compliance Training Platform
             </p>
+            <div className="inline-block px-6 py-2 bg-purple-600/20 border-2 border-purple-500/50 rounded-lg mb-8">
+              <p className="text-xl text-purple-200 font-semibold">
+                ✅ Compliance App for Ethics & Standards
+              </p>
+            </div>
             <p className="text-lg text-gray-300 mb-12">
-              Personalized anti-corruption training for Nigerian professionals
+              Personalized anti-corruption training for Nigerian professionals in all facets of life
             </p>
             
             <div className="flex gap-4 justify-center">
