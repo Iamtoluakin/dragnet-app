@@ -44,6 +44,69 @@ function App() {
     confirmPassword: ''
   });
 
+  // Load saved progress from localStorage on mount
+  useEffect(() => {
+    const loadProgress = () => {
+      try {
+        const savedProgress = localStorage.getItem('dragnet_progress');
+        if (savedProgress) {
+          const progress = JSON.parse(savedProgress);
+          
+          // Restore user data
+          if (progress.isAuthenticated) {
+            setIsAuthenticated(true);
+            setUserName(progress.userName || '');
+            setUserEmail(progress.userEmail || '');
+            setSelectedSector(progress.selectedSector || '');
+            setSelectedRole(progress.selectedRole || '');
+            setSelectedDepartment(progress.selectedDepartment || '');
+            setSelectedRank(progress.selectedRank || '');
+            setUserProfile(progress.userProfile || null);
+            setView(progress.view || 'dashboard');
+          }
+          
+          // Restore course progress
+          if (progress.completedCourses) {
+            setCompletedCourses(progress.completedCourses);
+          }
+          
+          console.log('✅ Progress loaded from localStorage');
+        }
+      } catch (error) {
+        console.error('Error loading progress:', error);
+      }
+    };
+    
+    loadProgress();
+  }, []);
+
+  // Save progress to localStorage whenever key state changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      try {
+        const progressData = {
+          isAuthenticated,
+          userName,
+          userEmail,
+          selectedSector,
+          selectedRole,
+          selectedDepartment,
+          selectedRank,
+          userProfile,
+          completedCourses,
+          view,
+          lastUpdated: new Date().toISOString()
+        };
+        
+        localStorage.setItem('dragnet_progress', JSON.stringify(progressData));
+        console.log('💾 Progress saved to localStorage');
+      } catch (error) {
+        console.error('Error saving progress:', error);
+      }
+    }
+  }, [isAuthenticated, userName, userEmail, selectedSector, selectedRole, 
+      selectedDepartment, selectedRank, userProfile, completedCourses, view]);
+
   // Check for Web Speech API support on component mount
   useEffect(() => {
     if ('speechSynthesis' in window) {
@@ -1991,12 +2054,126 @@ function App() {
   };
 
   const handleLogout = () => {
+    // Clear all state
     setIsAuthenticated(false);
     setUserName('');
     setUserEmail('');
     setUserProfile(null);
+    setSelectedSector('');
+    setSelectedRole('');
+    setSelectedDepartment('');
+    setSelectedRank('');
+    setCompletedCourses([]);
+    setCurrentCourse(null);
     setView('landing');
     setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+    
+    // Clear localStorage
+    try {
+      localStorage.removeItem('dragnet_progress');
+      console.log('🗑️ Progress cleared from localStorage');
+    } catch (error) {
+      console.error('Error clearing progress:', error);
+    }
+  };
+
+  // Generate AI-powered career recommendations based on compliance training
+  const generateCareerRecommendations = () => {
+    if (!userProfile || completedCourses.length === 0) {
+      return {
+        recommendations: [],
+        suitability: [],
+        strengths: []
+      };
+    }
+
+    const { sector, role, department } = userProfile;
+    const completedCount = completedCourses.length;
+    const totalCourses = coursesBySector[sector]?.length || 4;
+    const completionRate = (completedCount / totalCourses) * 100;
+
+    // Analyze completed courses for strengths
+    const strengths = [];
+    const recommendations = [];
+    const suitability = [];
+
+    if (completedCourses.includes(1)) {
+      strengths.push('Strong understanding of anti-bribery and corruption laws');
+      strengths.push('Ethical decision-making in high-pressure situations');
+    }
+    if (completedCourses.includes(2)) {
+      strengths.push('Knowledge of conflict of interest management');
+      strengths.push('Professional relationship boundaries');
+    }
+    if (completedCourses.includes(3)) {
+      strengths.push('Data protection and privacy compliance');
+      strengths.push('Information security awareness');
+    }
+    if (completedCourses.includes(4)) {
+      strengths.push('Whistleblowing procedures understanding');
+      strengths.push('Commitment to transparency and accountability');
+    }
+
+    // Generate sector-specific recommendations
+    if (sector === 'police') {
+      if (completionRate >= 75) {
+        suitability.push('Ethics and Compliance Training Facilitator');
+        suitability.push('Internal Affairs Investigation Unit');
+        suitability.push('Anti-Corruption Task Force Member');
+        recommendations.push('Consider pursuing certification in Law Enforcement Ethics');
+        recommendations.push('You could mentor junior officers on ethical conduct');
+      }
+      if (completedCourses.includes(1)) {
+        suitability.push('Checkpoint Supervision and Management');
+        recommendations.push('Your anti-corruption training makes you suitable for leadership roles');
+      }
+    } else if (sector === 'civil') {
+      if (completionRate >= 75) {
+        suitability.push('Procurement Compliance Officer');
+        suitability.push('Ethics and Integrity Unit Coordinator');
+        suitability.push('Policy Development and Implementation');
+        recommendations.push('Consider specializing in Public Sector Compliance');
+        recommendations.push('You could lead ethics training workshops for civil servants');
+      }
+      if (completedCourses.includes(2)) {
+        suitability.push('Conflict Resolution Specialist');
+        recommendations.push('Your understanding of conflicts of interest is valuable for advisory roles');
+      }
+    } else if (sector === 'student') {
+      if (completionRate >= 75) {
+        suitability.push('Student Governance and Leadership Positions');
+        suitability.push('Campus Ethics Committee Member');
+        suitability.push('Peer Education and Mentorship Programs');
+        recommendations.push('Your compliance knowledge prepares you for student union leadership');
+        recommendations.push('Consider becoming a campus integrity ambassador');
+      }
+      if (completedCourses.includes(4)) {
+        suitability.push('Student Advocacy and Rights Protection');
+        recommendations.push('Your whistleblowing knowledge makes you ideal for student welfare roles');
+      }
+    } else if (sector === 'private') {
+      if (completionRate >= 75) {
+        suitability.push('Compliance Officer or Manager');
+        suitability.push('Corporate Ethics and Governance Specialist');
+        suitability.push('Risk and Compliance Analyst');
+        recommendations.push('Your training qualifies you for corporate compliance positions');
+        recommendations.push('Consider pursuing professional certification (e.g., CCEP, CAMS)');
+      }
+      if (completedCourses.includes(3)) {
+        suitability.push('Data Protection Officer (DPO)');
+        recommendations.push('Your data privacy knowledge is valuable in the digital economy');
+      }
+    }
+
+    // Universal recommendations
+    if (completionRate === 100) {
+      recommendations.push('🏆 You have completed all compliance modules! You are a compliance champion.');
+      recommendations.push('Consider sharing your knowledge through training or mentorship');
+      suitability.push('Chief Compliance Officer roles');
+      suitability.push('Ethics Training and Development Specialist');
+    }
+
+    return { recommendations, suitability, strengths };
   };
 
   const handleCompleteOnboarding = () => {
@@ -2287,13 +2464,16 @@ function App() {
           <div className="max-w-2xl w-full">
             <div className="bg-gray-800/80 backdrop-blur-sm p-12 rounded-2xl border-2 border-blue-500/50 shadow-2xl">
               <div className="text-center mb-8">
-                <div className="text-6xl mb-4 animate-pulse">🧠</div>
+                <div className="text-6xl mb-4 animate-pulse">�</div>
                 <h2 className="text-3xl font-bold text-white mb-4">
-                  Analyzing Your Profile, {userName}...
+                  AI Analyzing Your Profile, {userName}...
                 </h2>
                 <p className="text-gray-300">
-                  Creating a personalized training plan based on your role as {selectedRole}
+                  Our AI is creating a personalized compliance training plan based on your role as {selectedRole}
                 </p>
+                <div className="mt-3 inline-block px-4 py-2 bg-purple-600/20 border border-purple-500/50 rounded-lg">
+                  <span className="text-purple-300 text-sm font-semibold">🤖 AI-Powered Analysis</span>
+                </div>
               </div>
 
               <div className="space-y-4">
@@ -2348,17 +2528,31 @@ function App() {
                   {userProfile.role} • {userProfile.department} • {userProfile.rank}
                 </p>
               )}
+              <p className="text-xs text-green-400 mt-1 flex items-center gap-1">
+                <span>💾</span>
+                <span>Progress auto-saved</span>
+              </p>
             </div>
             <div className="flex gap-3">
               <button 
                 onClick={() => setView('landing')}
                 className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all"
+                aria-label="Go to home page"
               >
                 ← Home
               </button>
               <button 
+                onClick={() => setView('profile')}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all"
+                aria-label="View your profile and achievements"
+              >
+                👤 My Profile
+              </button>
+              <button 
                 onClick={handleLogout}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all"
+                aria-label="Logout and clear progress"
+                title="Logout will clear your saved progress"
               >
                 🚪 Logout
               </button>
@@ -2529,6 +2723,222 @@ function App() {
               </div>
             )}
           </div>
+        </div>
+      ) : view === 'profile' ? (
+        <div className="p-8 max-w-6xl mx-auto">
+          {/* Profile Header */}
+          <div className="mb-6">
+            <button 
+              onClick={() => setView('dashboard')}
+              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all mb-4"
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+
+          {/* Profile Card */}
+          <div className="bg-gradient-to-br from-purple-600 to-indigo-600 p-8 rounded-2xl text-white mb-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+            
+            <div className="relative z-10 flex items-start gap-6">
+              <div className="flex-shrink-0 w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center text-5xl backdrop-blur-sm border-2 border-white/30">
+                👤
+              </div>
+              <div className="flex-1">
+                <h1 className="text-4xl font-bold mb-2">{userProfile?.name || userName}</h1>
+                <p className="text-xl text-purple-100 mb-3">{userProfile?.email || userEmail}</p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">
+                    {sectors.find(s => s.value === userProfile?.sector)?.icon} {sectors.find(s => s.value === userProfile?.sector)?.label}
+                  </span>
+                  <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">
+                    👔 {userProfile?.role}
+                  </span>
+                  <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">
+                    🏢 {userProfile?.department}
+                  </span>
+                  <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">
+                    ⭐ {userProfile?.rank}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid md:grid-cols-3 gap-6 mb-6">
+            <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border-2 border-gray-700">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-3xl">📚</span>
+                <h3 className="text-lg font-semibold text-gray-300">Courses Completed</h3>
+              </div>
+              <p className="text-4xl font-bold text-white">{completedCourses.length}</p>
+              <p className="text-sm text-gray-400 mt-1">
+                out of {coursesBySector[userProfile?.sector]?.length || 4} total
+              </p>
+            </div>
+
+            <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border-2 border-gray-700">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-3xl">📊</span>
+                <h3 className="text-lg font-semibold text-gray-300">Completion Rate</h3>
+              </div>
+              <p className="text-4xl font-bold text-white">
+                {Math.round((completedCourses.length / (coursesBySector[userProfile?.sector]?.length || 4)) * 100)}%
+              </p>
+              <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+                <div 
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${(completedCourses.length / (coursesBySector[userProfile?.sector]?.length || 4)) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border-2 border-gray-700">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-3xl">🏆</span>
+                <h3 className="text-lg font-semibold text-gray-300">Achievement Level</h3>
+              </div>
+              <p className="text-2xl font-bold text-white">
+                {completedCourses.length === 0 ? 'Beginner' : 
+                 completedCourses.length === 1 ? 'Learner' :
+                 completedCourses.length === 2 ? 'Practitioner' :
+                 completedCourses.length === 3 ? 'Expert' :
+                 'Compliance Champion'}
+              </p>
+              <p className="text-sm text-gray-400 mt-1">
+                {completedCourses.length === (coursesBySector[userProfile?.sector]?.length || 4) ? '🌟 All courses completed!' : 'Keep learning!'}
+              </p>
+            </div>
+          </div>
+
+          {/* AI-Powered Recommendations Section */}
+          {completedCourses.length > 0 && (() => {
+            const { recommendations, suitability, strengths } = generateCareerRecommendations();
+            
+            return (
+              <div className="space-y-6">
+                {/* Strengths */}
+                {strengths.length > 0 && (
+                  <div className="bg-gradient-to-br from-green-900/20 to-emerald-900/20 backdrop-blur-sm p-6 rounded-xl border-2 border-green-700/50">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-3xl">💪</span>
+                      <h2 className="text-2xl font-bold text-white">Your Compliance Strengths</h2>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      {strengths.map((strength, idx) => (
+                        <div key={idx} className="flex items-start gap-2 bg-green-800/20 p-3 rounded-lg">
+                          <span className="text-green-400 mt-1">✓</span>
+                          <p className="text-gray-200">{strength}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Career Suitability */}
+                {suitability.length > 0 && (
+                  <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm p-6 rounded-xl border-2 border-blue-700/50">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-3xl">🎯</span>
+                      <h2 className="text-2xl font-bold text-white">Career Suitability</h2>
+                    </div>
+                    <p className="text-gray-300 mb-4">
+                      Based on your compliance training, you are well-suited for the following roles in society:
+                    </p>
+                    <div className="space-y-2">
+                      {suitability.map((role, idx) => (
+                        <div key={idx} className="flex items-center gap-3 bg-blue-800/20 p-4 rounded-lg border border-blue-600/30">
+                          <span className="text-2xl">🔹</span>
+                          <p className="text-white font-semibold">{role}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* AI Recommendations */}
+                {recommendations.length > 0 && (
+                  <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-sm p-6 rounded-xl border-2 border-purple-700/50">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-3xl">🤖</span>
+                      <h2 className="text-2xl font-bold text-white">AI-Powered Recommendations</h2>
+                    </div>
+                    <p className="text-gray-300 mb-4">
+                      Our AI analysis suggests the following next steps for your career development:
+                    </p>
+                    <div className="space-y-3">
+                      {recommendations.map((rec, idx) => (
+                        <div key={idx} className="flex items-start gap-3 bg-purple-800/20 p-4 rounded-lg border-l-4 border-purple-500">
+                          <span className="text-purple-400 text-xl mt-1">💡</span>
+                          <p className="text-gray-200">{rec}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Completed Courses List */}
+          <div className="mt-6 bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border-2 border-gray-700">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-3xl">📋</span>
+              <h2 className="text-2xl font-bold text-white">Completed Training Modules</h2>
+            </div>
+            {completedCourses.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-400 text-lg">No courses completed yet</p>
+                <p className="text-gray-500 mt-2">Start your compliance training journey today!</p>
+                <button 
+                  onClick={() => setView('dashboard')}
+                  className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all"
+                >
+                  Browse Courses
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {completedCourses.map((courseId) => {
+                  const course = coursesBySector[userProfile?.sector]?.find(c => c.id === courseId);
+                  if (!course) return null;
+                  
+                  return (
+                    <div key={courseId} className="flex items-center gap-4 bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                      <div className="flex-shrink-0 w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center text-2xl">
+                        ✅
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-white">{course.title}</h3>
+                        <p className="text-sm text-gray-400">{course.description}</p>
+                      </div>
+                      <span className="px-3 py-1 bg-green-600/20 text-green-300 rounded-lg text-sm font-semibold">
+                        Completed
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Call to Action */}
+          {completedCourses.length < (coursesBySector[userProfile?.sector]?.length || 4) && (
+            <div className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-xl text-center">
+              <h3 className="text-2xl font-bold text-white mb-2">Continue Your Learning Journey</h3>
+              <p className="text-blue-100 mb-4">
+                Complete {(coursesBySector[userProfile?.sector]?.length || 4) - completedCourses.length} more module{(coursesBySector[userProfile?.sector]?.length || 4) - completedCourses.length > 1 ? 's' : ''} to become a Compliance Champion!
+              </p>
+              <button 
+                onClick={() => setView('dashboard')}
+                className="px-8 py-3 bg-white text-blue-600 hover:bg-gray-100 rounded-lg font-semibold transition-all shadow-lg"
+              >
+                Continue Training
+              </button>
+            </div>
+          )}
         </div>
       ) : view === 'course' ? (
         <div className="p-8 max-w-5xl mx-auto">
