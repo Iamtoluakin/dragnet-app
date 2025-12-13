@@ -1,5 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
+import { auth, googleProvider, microsoftProvider, db } from './firebase';
+import { 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword 
+} from 'firebase/auth';
+import { 
+  doc, 
+  setDoc, 
+  getDoc, 
+  updateDoc,
+  serverTimestamp 
+} from 'firebase/firestore';
 
 function App() {
   const [view, setView] = useState('landing');
@@ -8,6 +23,8 @@ function App() {
   const [authMode, setAuthMode] = useState('signin'); // 'signin' or 'signup'
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [firebaseUser, setFirebaseUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [selectedSector, setSelectedSector] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
@@ -106,6 +123,49 @@ function App() {
     }
   }, [isAuthenticated, userName, userEmail, selectedSector, selectedRole, 
       selectedDepartment, selectedRank, userProfile, completedCourses, view]);
+
+  // Firebase authentication listener
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setAuthLoading(true);
+      if (user) {
+        // User is signed in
+        setFirebaseUser(user);
+        setUserEmail(user.email);
+        setUserName(user.displayName || user.email.split('@')[0]);
+        setIsAuthenticated(true);
+        
+        // Load user data from Firestore
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setSelectedSector(userData.sector || '');
+            setSelectedRole(userData.role || '');
+            setSelectedDepartment(userData.department || '');
+            setSelectedRank(userData.rank || '');
+            setUserProfile(userData.profile || null);
+            setCompletedCourses(userData.completedCourses || []);
+            setView(userData.lastView || 'dashboard');
+            console.log('✅ User data loaded from Firestore');
+          } else {
+            // New user - show onboarding
+            setView('onboarding');
+          }
+        } catch (error) {
+          console.error('Error loading user data from Firestore:', error);
+        }
+      } else {
+        // User is signed out
+        setFirebaseUser(null);
+        setIsAuthenticated(false);
+        setView('landing');
+      }
+      setAuthLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Check for Web Speech API support on component mount
   useEffect(() => {
@@ -2020,6 +2080,45 @@ function App() {
     ]
   };
 
+  // Save user data to Firestore
+  const saveUserDataToFirestore = async (userId, data) => {
+    try {
+      await setDoc(doc(db, 'users', userId), {
+        ...data,
+        lastUpdated: serverTimestamp()
+      }, { merge: true });
+      console.log('💾 User data saved to Firestore');
+    } catch (error) {
+      console.error('Error saving to Firestore:', error);
+    }
+  };
+
+  // Google SSO Sign In
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      console.log('✅ Signed in with Google:', user.email);
+      // User data will be loaded by onAuthStateChanged listener
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
+      alert('Failed to sign in with Google: ' + error.message);
+    }
+  };
+
+  // Microsoft SSO Sign In
+  const handleMicrosoftSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, microsoftProvider);
+      const user = result.user;
+      console.log('✅ Signed in with Microsoft:', user.email);
+      // User data will be loaded by onAuthStateChanged listener
+    } catch (error) {
+      console.error('Microsoft Sign-In Error:', error);
+      alert('Failed to sign in with Microsoft: ' + error.message);
+    }
+  };
+
   const handleSectorSelect = (sector) => {
     setSelectedSector(sector);
     setSelectedRole('');
@@ -2027,7 +2126,7 @@ function App() {
     setSelectedRank('');
   };
 
-  const handleAuth = (e) => {
+  const handleAuth = async (e) => {
     e.preventDefault();
     
     if (authMode === 'signup') {
@@ -2039,41 +2138,79 @@ function App() {
         alert('Please fill in all fields!');
         return;
       }
+      
+      // Firebase sign up with email/password
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth, 
+          formData.email, 
+          formData.password
+        );
+        const user = userCredential.user;
+        
+        // Save initial user data to Firestore
+        await saveUserDataToFirestore(user.uid, {
+          name: formData.name,
+          email: formData.email,
+          createdAt: serverTimestamp(),
+          completedCourses: []
+        });
+        
+        console.log('✅ User created successfully');
+        setView('onboarding');
+      } catch (error) {
+        console.error('Sign-up Error:', error);
+        alert('Sign-up failed: ' + error.message);
+      }
     } else {
+      // Sign in mode
       if (!formData.email || !formData.password) {
         alert('Please fill in all fields!');
         return;
       }
+      
+      // Firebase sign in with email/password
+      try {
+        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        console.log('✅ User signed in successfully');
+        // User data will be loaded by onAuthStateChanged listener
+      } catch (error) {
+        console.error('Sign-in Error:', error);
+        alert('Sign-in failed: ' + error.message);
+      }
     }
-    
-    // Simulate authentication (in production, this would call an API)
-    setUserName(formData.name || formData.email.split('@')[0]);
-    setUserEmail(formData.email);
-    setIsAuthenticated(true);
-    setView('onboarding');
   };
 
-  const handleLogout = () => {
-    // Clear all state
-    setIsAuthenticated(false);
-    setUserName('');
-    setUserEmail('');
-    setUserProfile(null);
-    setSelectedSector('');
-    setSelectedRole('');
-    setSelectedDepartment('');
-    setSelectedRank('');
-    setCompletedCourses([]);
-    setCurrentCourse(null);
-    setView('landing');
-    setFormData({ name: '', email: '', password: '', confirmPassword: '' });
-    
-    // Clear localStorage
+  const handleLogout = async () => {
     try {
-      localStorage.removeItem('dragnet_progress');
-      console.log('🗑️ Progress cleared from localStorage');
+      // Sign out from Firebase
+      await signOut(auth);
+      
+      // Clear all state
+      setIsAuthenticated(false);
+      setUserName('');
+      setUserEmail('');
+      setUserProfile(null);
+      setSelectedSector('');
+      setSelectedRole('');
+      setSelectedDepartment('');
+      setSelectedRank('');
+      setCompletedCourses([]);
+      setCurrentCourse(null);
+      setView('landing');
+      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+      setFirebaseUser(null);
+      
+      // Clear localStorage
+      try {
+        localStorage.removeItem('dragnet_progress');
+        console.log('🗑️ Progress cleared and user signed out');
+      } catch (error) {
+        console.error('Error clearing progress:', error);
+      }
     } catch (error) {
-      console.error('Error clearing progress:', error);
+      console.error('Logout Error:', error);
+      alert('Failed to logout: ' + error.message);
     }
   };
 
@@ -2176,13 +2313,13 @@ function App() {
     return { recommendations, suitability, strengths };
   };
 
-  const handleCompleteOnboarding = () => {
+  const handleCompleteOnboarding = async () => {
     setView('analysis');
     setAnalysisStep(0);
     
     // Simulate AI analysis with progressive steps
     let currentStep = 0;
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       currentStep++;
       setAnalysisStep(currentStep);
       
@@ -2201,6 +2338,19 @@ function App() {
         };
         console.log('Setting user profile:', profile);
         setUserProfile(profile);
+        
+        // Save to Firestore
+        if (firebaseUser) {
+          await saveUserDataToFirestore(firebaseUser.uid, {
+            profile,
+            sector: selectedSector,
+            role: selectedRole,
+            department: selectedDepartment,
+            rank: selectedRank,
+            completedCourses: []
+          });
+        }
+        
         setTimeout(() => {
           console.log('Navigating to dashboard with profile:', profile);
           setView('dashboard');
@@ -2212,27 +2362,23 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
       {view === 'landing' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen p-8">
-          <div className="text-center max-w-4xl">
+        <div className="min-h-screen p-8">
+          {/* Hero Section */}
+          <div className="text-center max-w-4xl mx-auto mb-16 pt-12">
             <h1 className="text-6xl font-bold text-white mb-6">
               🎯 DragNet
             </h1>
-            <p className="text-2xl text-blue-300 mb-4">
+            <p className="text-3xl text-blue-300 mb-6 font-semibold">
               AI-Powered Compliance Training Platform
             </p>
-            <div className="inline-block px-6 py-2 bg-purple-600/20 border-2 border-purple-500/50 rounded-lg mb-8">
-              <p className="text-xl text-purple-200 font-semibold">
-                ✅ Compliance App for Ethics & Standards
-              </p>
-            </div>
-            <p className="text-lg text-gray-300 mb-12">
+            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
               Personalized anti-corruption training for Nigerian professionals in all facets of life
             </p>
             
-            <div className="flex gap-4 justify-center">
+            <div className="flex gap-4 justify-center mb-16">
               <button 
                 onClick={() => setView('auth')}
-                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 Get Started →
               </button>
@@ -2244,6 +2390,126 @@ function App() {
                   View Dashboard
                 </button>
               )}
+            </div>
+          </div>
+
+          {/* Features Grid */}
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl font-bold text-white text-center mb-12">
+              What You'll Learn
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+              {/* Card 1: Real-World Scenarios */}
+              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">🎭</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Real-World Scenarios</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Practice decision-making in realistic ethical dilemmas specific to your sector and role
+                </p>
+              </div>
+
+              {/* Card 2: Interactive Learning */}
+              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">🎯</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Interactive Learning</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Engage with branching scenarios, instant feedback, and audio narration for better comprehension
+                </p>
+              </div>
+
+              {/* Card 3: AI-Powered Training */}
+              <div className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-pink-500/30 hover:border-pink-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">🤖</div>
+                <h3 className="text-2xl font-bold text-white mb-3">AI-Powered Training</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Get personalized training plans and career recommendations based on your sector and role
+                </p>
+              </div>
+
+              {/* Card 4: Key Learning Points */}
+              <div className="bg-gradient-to-br from-green-900/40 to-green-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-green-500/30 hover:border-green-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">📚</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Key Learning Points</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Master essential compliance concepts with clear explanations and audio support
+                </p>
+              </div>
+
+              {/* Card 5: Laws & Regulations */}
+              <div className="bg-gradient-to-br from-orange-900/40 to-orange-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-orange-500/30 hover:border-orange-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">⚖️</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Laws & Regulations</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Learn about relevant Nigerian laws like ICPC Act, Criminal Code, and sector-specific regulations
+                </p>
+              </div>
+
+              {/* Card 6: Track Progress */}
+              <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">📊</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Track Progress</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Monitor your learning journey with achievement levels, completed courses, and personalized insights
+                </p>
+              </div>
+            </div>
+
+            {/* Sectors Section */}
+            <div className="bg-gray-800/50 backdrop-blur-sm p-10 rounded-2xl border-2 border-gray-700 mb-16">
+              <h2 className="text-3xl font-bold text-white text-center mb-8">
+                Training Available For All Sectors
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div className="p-4">
+                  <div className="text-4xl mb-2">🏛️</div>
+                  <p className="text-white font-semibold">Government</p>
+                </div>
+                <div className="p-4">
+                  <div className="text-4xl mb-2">🏢</div>
+                  <p className="text-white font-semibold">Corporate</p>
+                </div>
+                <div className="p-4">
+                  <div className="text-4xl mb-2">🎓</div>
+                  <p className="text-white font-semibold">Education</p>
+                </div>
+                <div className="p-4">
+                  <div className="text-4xl mb-2">🏥</div>
+                  <p className="text-white font-semibold">Healthcare</p>
+                </div>
+                <div className="p-4">
+                  <div className="text-4xl mb-2">👮</div>
+                  <p className="text-white font-semibold">Law Enforcement</p>
+                </div>
+                <div className="p-4">
+                  <div className="text-4xl mb-2">⚡</div>
+                  <p className="text-white font-semibold">Energy & Power</p>
+                </div>
+                <div className="p-4">
+                  <div className="text-4xl mb-2">🏗️</div>
+                  <p className="text-white font-semibold">Construction</p>
+                </div>
+                <div className="p-4">
+                  <div className="text-4xl mb-2">🚗</div>
+                  <p className="text-white font-semibold">Transportation</p>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Section */}
+            <div className="text-center pb-16">
+              <h2 className="text-3xl font-bold text-white mb-6">
+                Ready to Build Your Compliance Knowledge?
+              </h2>
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Join thousands of Nigerian professionals strengthening their ethical decision-making skills
+              </p>
+              <button 
+                onClick={() => setView('auth')}
+                className="px-12 py-5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-bold text-xl transition-all duration-200 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105"
+              >
+                Start Learning Today →
+              </button>
             </div>
           </div>
         </div>
@@ -2337,6 +2603,47 @@ function App() {
                   {authMode === 'signin' ? '🔓 Sign In' : '✨ Create Account'}
                 </button>
               </form>
+
+              {/* Divider */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-600"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-gray-800 text-gray-400">Or continue with</span>
+                </div>
+              </div>
+
+              {/* SSO Buttons */}
+              <div className="space-y-3">
+                <button
+                  onClick={handleGoogleSignIn}
+                  type="button"
+                  className="w-full px-8 py-3 bg-white hover:bg-gray-100 text-gray-900 rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-3"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  Continue with Google
+                </button>
+
+                <button
+                  onClick={handleMicrosoftSignIn}
+                  type="button"
+                  className="w-full px-8 py-3 bg-[#2F2F2F] hover:bg-[#1F1F1F] text-white rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-3"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#f25022" d="M0 0h11v11H0z"/>
+                    <path fill="#00a4ef" d="M12 0h11v11H12z"/>
+                    <path fill="#7fba00" d="M0 12h11v11H0z"/>
+                    <path fill="#ffb900" d="M12 12h11v11H12z"/>
+                  </svg>
+                  Continue with Microsoft
+                </button>
+              </div>
 
               <div className="mt-6 text-center">
                 <p className="text-gray-400">
@@ -3459,13 +3766,25 @@ function App() {
                       );
                       setUserProfile({ ...userProfile, courses: updatedCourses });
                       
-                      setCompletedCourses([...completedCourses, {
+                      const newCompletedCourse = {
                         courseId: currentCourse.id,
                         courseName: currentCourse.title,
                         score: percentage,
                         passed: true,
                         completedDate: new Date().toLocaleDateString()
-                      }]);
+                      };
+                      
+                      const updatedCompletedCourses = [...completedCourses, newCompletedCourse];
+                      setCompletedCourses(updatedCompletedCourses);
+                      
+                      // Save to Firestore
+                      if (firebaseUser) {
+                        saveUserDataToFirestore(firebaseUser.uid, {
+                          completedCourses: updatedCompletedCourses.map(c => c.courseId),
+                          profile: { ...userProfile, courses: updatedCourses },
+                          lastView: 'dashboard'
+                        });
+                      }
                     }
                   }}
                   disabled={Object.keys(quizAnswers).length < (currentCourse.quiz?.length || 0)}
