@@ -1,20 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
-import { auth, googleProvider, microsoftProvider, db } from './firebase';
-import { 
-  signInWithPopup, 
-  signOut, 
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword 
-} from 'firebase/auth';
-import { 
-  doc, 
-  setDoc, 
-  getDoc, 
-  updateDoc,
-  serverTimestamp 
-} from 'firebase/firestore';
 
 function App() {
   const [view, setView] = useState('landing');
@@ -23,8 +8,6 @@ function App() {
   const [authMode, setAuthMode] = useState('signin'); // 'signin' or 'signup'
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [firebaseUser, setFirebaseUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
   const [selectedSector, setSelectedSector] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
@@ -48,11 +31,6 @@ function App() {
   const [showAnimation, setShowAnimation] = useState(false);
   const [currentStep, setCurrentStep] = useState('video'); // 'video', 'scenarios', 'keyPoints', 'laws', 'assessment'
   
-  // Audio narration with real files
-  const audioRef = useRef(null);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [useAudioFiles, setUseAudioFiles] = useState(true); // Toggle between audio files and Web Speech API
-  
   // Form states for auth
   const [formData, setFormData] = useState({
     name: '',
@@ -60,112 +38,6 @@ function App() {
     password: '',
     confirmPassword: ''
   });
-
-  // Load saved progress from localStorage on mount
-  useEffect(() => {
-    const loadProgress = () => {
-      try {
-        const savedProgress = localStorage.getItem('dragnet_progress');
-        if (savedProgress) {
-          const progress = JSON.parse(savedProgress);
-          
-          // Restore user data
-          if (progress.isAuthenticated) {
-            setIsAuthenticated(true);
-            setUserName(progress.userName || '');
-            setUserEmail(progress.userEmail || '');
-            setSelectedSector(progress.selectedSector || '');
-            setSelectedRole(progress.selectedRole || '');
-            setSelectedDepartment(progress.selectedDepartment || '');
-            setSelectedRank(progress.selectedRank || '');
-            setUserProfile(progress.userProfile || null);
-            setView(progress.view || 'dashboard');
-          }
-          
-          // Restore course progress
-          if (progress.completedCourses) {
-            setCompletedCourses(progress.completedCourses);
-          }
-          
-          console.log('✅ Progress loaded from localStorage');
-        }
-      } catch (error) {
-        console.error('Error loading progress:', error);
-      }
-    };
-    
-    loadProgress();
-  }, []);
-
-  // Save progress to localStorage whenever key state changes
-  useEffect(() => {
-    if (isAuthenticated) {
-      try {
-        const progressData = {
-          isAuthenticated,
-          userName,
-          userEmail,
-          selectedSector,
-          selectedRole,
-          selectedDepartment,
-          selectedRank,
-          userProfile,
-          completedCourses,
-          view,
-          lastUpdated: new Date().toISOString()
-        };
-        
-        localStorage.setItem('dragnet_progress', JSON.stringify(progressData));
-        console.log('💾 Progress saved to localStorage');
-      } catch (error) {
-        console.error('Error saving progress:', error);
-      }
-    }
-  }, [isAuthenticated, userName, userEmail, selectedSector, selectedRole, 
-      selectedDepartment, selectedRank, userProfile, completedCourses, view]);
-
-  // Firebase authentication listener
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setAuthLoading(true);
-      if (user) {
-        // User is signed in
-        setFirebaseUser(user);
-        setUserEmail(user.email);
-        setUserName(user.displayName || user.email.split('@')[0]);
-        setIsAuthenticated(true);
-        
-        // Load user data from Firestore
-        try {
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setSelectedSector(userData.sector || '');
-            setSelectedRole(userData.role || '');
-            setSelectedDepartment(userData.department || '');
-            setSelectedRank(userData.rank || '');
-            setUserProfile(userData.profile || null);
-            setCompletedCourses(userData.completedCourses || []);
-            setView(userData.lastView || 'dashboard');
-            console.log('✅ User data loaded from Firestore');
-          } else {
-            // New user - show onboarding
-            setView('onboarding');
-          }
-        } catch (error) {
-          console.error('Error loading user data from Firestore:', error);
-        }
-      } else {
-        // User is signed out
-        setFirebaseUser(null);
-        setIsAuthenticated(false);
-        setView('landing');
-      }
-      setAuthLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   // Check for Web Speech API support on component mount
   useEffect(() => {
@@ -231,73 +103,6 @@ function App() {
       narrateText(text);
     }
   };
-
-  // Function to play audio file (for pre-recorded narration)
-  const playAudioFile = (audioPath) => {
-    // Stop any current Web Speech API narration
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-      setIsNarrating(false);
-    }
-
-    // Stop any currently playing audio
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-
-    // Create new audio element
-    const audio = new Audio(audioPath);
-    audioRef.current = audio;
-
-    audio.onplay = () => setIsPlayingAudio(true);
-    audio.onended = () => setIsPlayingAudio(false);
-    audio.onerror = (error) => {
-      console.warn('Audio file not found, falling back to Web Speech API:', error);
-      setIsPlayingAudio(false);
-      // Fallback to Web Speech API if audio file doesn't exist
-      setUseAudioFiles(false);
-    };
-
-    audio.play().catch(error => {
-      console.warn('Could not play audio file, falling back to Web Speech API:', error);
-      setIsPlayingAudio(false);
-      setUseAudioFiles(false);
-    });
-  };
-
-  // Function to stop audio file playback
-  const stopAudioFile = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsPlayingAudio(false);
-    }
-  };
-
-  // Universal narration function (uses audio files if available, falls back to Web Speech API)
-  const narrateContent = (text, audioPath = null) => {
-    // If audio path is provided and we're using audio files, try to play it
-    if (audioPath && useAudioFiles) {
-      playAudioFile(audioPath);
-    } else {
-      // Otherwise use Web Speech API
-      toggleNarration(text);
-    }
-  };
-
-  // Universal stop function
-  const stopAllNarration = () => {
-    stopAudioFile();
-    stopNarration();
-  };
-
-  // Cleanup audio on unmount
-  useEffect(() => {
-    return () => {
-      stopAllNarration();
-    };
-  }, [currentScenario]);
 
   const sectors = [
     { value: 'police', label: 'Police', icon: '🚔', color: 'from-blue-600 to-blue-800' },
@@ -2080,45 +1885,6 @@ function App() {
     ]
   };
 
-  // Save user data to Firestore
-  const saveUserDataToFirestore = async (userId, data) => {
-    try {
-      await setDoc(doc(db, 'users', userId), {
-        ...data,
-        lastUpdated: serverTimestamp()
-      }, { merge: true });
-      console.log('💾 User data saved to Firestore');
-    } catch (error) {
-      console.error('Error saving to Firestore:', error);
-    }
-  };
-
-  // Google SSO Sign In
-  const handleGoogleSignIn = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      console.log('✅ Signed in with Google:', user.email);
-      // User data will be loaded by onAuthStateChanged listener
-    } catch (error) {
-      console.error('Google Sign-In Error:', error);
-      alert('Failed to sign in with Google: ' + error.message);
-    }
-  };
-
-  // Microsoft SSO Sign In
-  const handleMicrosoftSignIn = async () => {
-    try {
-      const result = await signInWithPopup(auth, microsoftProvider);
-      const user = result.user;
-      console.log('✅ Signed in with Microsoft:', user.email);
-      // User data will be loaded by onAuthStateChanged listener
-    } catch (error) {
-      console.error('Microsoft Sign-In Error:', error);
-      alert('Failed to sign in with Microsoft: ' + error.message);
-    }
-  };
-
   const handleSectorSelect = (sector) => {
     setSelectedSector(sector);
     setSelectedRole('');
@@ -2126,7 +1892,7 @@ function App() {
     setSelectedRank('');
   };
 
-  const handleAuth = async (e) => {
+  const handleAuth = (e) => {
     e.preventDefault();
     
     if (authMode === 'signup') {
@@ -2138,188 +1904,36 @@ function App() {
         alert('Please fill in all fields!');
         return;
       }
-      
-      // Firebase sign up with email/password
-      try {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth, 
-          formData.email, 
-          formData.password
-        );
-        const user = userCredential.user;
-        
-        // Save initial user data to Firestore
-        await saveUserDataToFirestore(user.uid, {
-          name: formData.name,
-          email: formData.email,
-          createdAt: serverTimestamp(),
-          completedCourses: []
-        });
-        
-        console.log('✅ User created successfully');
-        setView('onboarding');
-      } catch (error) {
-        console.error('Sign-up Error:', error);
-        alert('Sign-up failed: ' + error.message);
-      }
     } else {
-      // Sign in mode
       if (!formData.email || !formData.password) {
         alert('Please fill in all fields!');
         return;
       }
-      
-      // Firebase sign in with email/password
-      try {
-        await signInWithEmailAndPassword(auth, formData.email, formData.password);
-        console.log('✅ User signed in successfully');
-        // User data will be loaded by onAuthStateChanged listener
-      } catch (error) {
-        console.error('Sign-in Error:', error);
-        alert('Sign-in failed: ' + error.message);
-      }
     }
+    
+    // Simulate authentication (in production, this would call an API)
+    setUserName(formData.name || formData.email.split('@')[0]);
+    setUserEmail(formData.email);
+    setIsAuthenticated(true);
+    setView('onboarding');
   };
 
-  const handleLogout = async () => {
-    try {
-      // Sign out from Firebase
-      await signOut(auth);
-      
-      // Clear all state
-      setIsAuthenticated(false);
-      setUserName('');
-      setUserEmail('');
-      setUserProfile(null);
-      setSelectedSector('');
-      setSelectedRole('');
-      setSelectedDepartment('');
-      setSelectedRank('');
-      setCompletedCourses([]);
-      setCurrentCourse(null);
-      setView('landing');
-      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
-      setFirebaseUser(null);
-      
-      // Clear localStorage
-      try {
-        localStorage.removeItem('dragnet_progress');
-        console.log('🗑️ Progress cleared and user signed out');
-      } catch (error) {
-        console.error('Error clearing progress:', error);
-      }
-    } catch (error) {
-      console.error('Logout Error:', error);
-      alert('Failed to logout: ' + error.message);
-    }
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUserName('');
+    setUserEmail('');
+    setUserProfile(null);
+    setView('landing');
+    setFormData({ name: '', email: '', password: '', confirmPassword: '' });
   };
 
-  // Generate AI-powered career recommendations based on compliance training
-  const generateCareerRecommendations = () => {
-    if (!userProfile || completedCourses.length === 0) {
-      return {
-        recommendations: [],
-        suitability: [],
-        strengths: []
-      };
-    }
-
-    const { sector, role, department } = userProfile;
-    const completedCount = completedCourses.length;
-    const totalCourses = coursesBySector[sector]?.length || 4;
-    const completionRate = (completedCount / totalCourses) * 100;
-
-    // Analyze completed courses for strengths
-    const strengths = [];
-    const recommendations = [];
-    const suitability = [];
-
-    if (completedCourses.includes(1)) {
-      strengths.push('Strong understanding of anti-bribery and corruption laws');
-      strengths.push('Ethical decision-making in high-pressure situations');
-    }
-    if (completedCourses.includes(2)) {
-      strengths.push('Knowledge of conflict of interest management');
-      strengths.push('Professional relationship boundaries');
-    }
-    if (completedCourses.includes(3)) {
-      strengths.push('Data protection and privacy compliance');
-      strengths.push('Information security awareness');
-    }
-    if (completedCourses.includes(4)) {
-      strengths.push('Whistleblowing procedures understanding');
-      strengths.push('Commitment to transparency and accountability');
-    }
-
-    // Generate sector-specific recommendations
-    if (sector === 'police') {
-      if (completionRate >= 75) {
-        suitability.push('Ethics and Compliance Training Facilitator');
-        suitability.push('Internal Affairs Investigation Unit');
-        suitability.push('Anti-Corruption Task Force Member');
-        recommendations.push('Consider pursuing certification in Law Enforcement Ethics');
-        recommendations.push('You could mentor junior officers on ethical conduct');
-      }
-      if (completedCourses.includes(1)) {
-        suitability.push('Checkpoint Supervision and Management');
-        recommendations.push('Your anti-corruption training makes you suitable for leadership roles');
-      }
-    } else if (sector === 'civil') {
-      if (completionRate >= 75) {
-        suitability.push('Procurement Compliance Officer');
-        suitability.push('Ethics and Integrity Unit Coordinator');
-        suitability.push('Policy Development and Implementation');
-        recommendations.push('Consider specializing in Public Sector Compliance');
-        recommendations.push('You could lead ethics training workshops for civil servants');
-      }
-      if (completedCourses.includes(2)) {
-        suitability.push('Conflict Resolution Specialist');
-        recommendations.push('Your understanding of conflicts of interest is valuable for advisory roles');
-      }
-    } else if (sector === 'student') {
-      if (completionRate >= 75) {
-        suitability.push('Student Governance and Leadership Positions');
-        suitability.push('Campus Ethics Committee Member');
-        suitability.push('Peer Education and Mentorship Programs');
-        recommendations.push('Your compliance knowledge prepares you for student union leadership');
-        recommendations.push('Consider becoming a campus integrity ambassador');
-      }
-      if (completedCourses.includes(4)) {
-        suitability.push('Student Advocacy and Rights Protection');
-        recommendations.push('Your whistleblowing knowledge makes you ideal for student welfare roles');
-      }
-    } else if (sector === 'private') {
-      if (completionRate >= 75) {
-        suitability.push('Compliance Officer or Manager');
-        suitability.push('Corporate Ethics and Governance Specialist');
-        suitability.push('Risk and Compliance Analyst');
-        recommendations.push('Your training qualifies you for corporate compliance positions');
-        recommendations.push('Consider pursuing professional certification (e.g., CCEP, CAMS)');
-      }
-      if (completedCourses.includes(3)) {
-        suitability.push('Data Protection Officer (DPO)');
-        recommendations.push('Your data privacy knowledge is valuable in the digital economy');
-      }
-    }
-
-    // Universal recommendations
-    if (completionRate === 100) {
-      recommendations.push('🏆 You have completed all compliance modules! You are a compliance champion.');
-      recommendations.push('Consider sharing your knowledge through training or mentorship');
-      suitability.push('Chief Compliance Officer roles');
-      suitability.push('Ethics Training and Development Specialist');
-    }
-
-    return { recommendations, suitability, strengths };
-  };
-
-  const handleCompleteOnboarding = async () => {
+  const handleCompleteOnboarding = () => {
     setView('analysis');
     setAnalysisStep(0);
     
     // Simulate AI analysis with progressive steps
     let currentStep = 0;
-    const interval = setInterval(async () => {
+    const interval = setInterval(() => {
       currentStep++;
       setAnalysisStep(currentStep);
       
@@ -2338,19 +1952,6 @@ function App() {
         };
         console.log('Setting user profile:', profile);
         setUserProfile(profile);
-        
-        // Save to Firestore
-        if (firebaseUser) {
-          await saveUserDataToFirestore(firebaseUser.uid, {
-            profile,
-            sector: selectedSector,
-            role: selectedRole,
-            department: selectedDepartment,
-            rank: selectedRank,
-            completedCourses: []
-          });
-        }
-        
         setTimeout(() => {
           console.log('Navigating to dashboard with profile:', profile);
           setView('dashboard');
@@ -2362,13 +1963,12 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
       {view === 'landing' ? (
-        <div className="min-h-screen p-8">
-          {/* Hero Section */}
-          <div className="text-center max-w-4xl mx-auto mb-16 pt-12">
+        <div className="flex flex-col items-center justify-center min-h-screen p-8">
+          <div className="text-center max-w-4xl">
             <h1 className="text-6xl font-bold text-white mb-6">
               🎯 DragNet
             </h1>
-            <p className="text-3xl text-blue-300 mb-6 font-semibold">
+            <p className="text-2xl text-blue-300 mb-8">
               AI-Powered Compliance Training Platform
             </p>
             <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
@@ -2393,65 +1993,160 @@ function App() {
             </div>
           </div>
 
-          {/* Features Grid */}
+          {/* Key Benefits - Main Feature Cards */}
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold text-white text-center mb-12">
-              What You'll Learn
+              Why Choose DragNet?
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+              {/* Benefit 1 */}
+              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">🎯</div>
+                <h3 className="text-xl font-bold text-white mb-3">Personalized Learning</h3>
+                <p className="text-gray-300">
+                  AI-powered training tailored to your specific sector, role, and risk level
+                </p>
+              </div>
+
+              {/* Benefit 2 */}
+              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">🎭</div>
+                <h3 className="text-xl font-bold text-white mb-3">Real Scenarios</h3>
+                <p className="text-gray-300">
+                  Practice with realistic ethical dilemmas from actual Nigerian cases
+                </p>
+              </div>
+
+              {/* Benefit 3 */}
+              <div className="bg-gradient-to-br from-green-900/40 to-green-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-green-500/30 hover:border-green-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">🔊</div>
+                <h3 className="text-xl font-bold text-white mb-3">Audio Narration</h3>
+                <p className="text-gray-300">
+                  Listen to content with high-quality text-to-speech for better accessibility
+                </p>
+              </div>
+
+              {/* Benefit 4 */}
+              <div className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-pink-500/30 hover:border-pink-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">📊</div>
+                <h3 className="text-xl font-bold text-white mb-3">Track Progress</h3>
+                <p className="text-gray-300">
+                  Monitor your learning journey with detailed analytics and achievements
+                </p>
+              </div>
+            </div>
+
+            {/* Additional Benefits Grid - 6 more cards */}
+            <h2 className="text-3xl font-bold text-white text-center mb-12">
+              What You'll Get
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-              {/* Card 1: Real-World Scenarios */}
-              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">🎭</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Real-World Scenarios</h3>
+              {/* Card 1 */}
+              <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">⚖️</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Nigerian Laws & Regulations</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Practice decision-making in realistic ethical dilemmas specific to your sector and role
+                  Learn ICPC Act, Criminal Code, and sector-specific regulations with clear explanations
                 </p>
               </div>
 
-              {/* Card 2: Interactive Learning */}
-              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">🎯</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Interactive Learning</h3>
+              {/* Card 2 */}
+              <div className="bg-gradient-to-br from-orange-900/40 to-orange-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-orange-500/30 hover:border-orange-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">🎮</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Interactive Simulations</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Engage with branching scenarios, instant feedback, and audio narration for better comprehension
+                  Make decisions in branching scenarios with instant feedback on your choices
                 </p>
               </div>
 
-              {/* Card 3: AI-Powered Training */}
-              <div className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-pink-500/30 hover:border-pink-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">🤖</div>
-                <h3 className="text-2xl font-bold text-white mb-3">AI-Powered Training</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Get personalized training plans and career recommendations based on your sector and role
-                </p>
-              </div>
-
-              {/* Card 4: Key Learning Points */}
-              <div className="bg-gradient-to-br from-green-900/40 to-green-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-green-500/30 hover:border-green-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+              {/* Card 3 */}
+              <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-indigo-500/30 hover:border-indigo-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
                 <div className="text-5xl mb-4">📚</div>
                 <h3 className="text-2xl font-bold text-white mb-3">Key Learning Points</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Master essential compliance concepts with clear explanations and audio support
+                  Master essential compliance concepts before taking assessments
                 </p>
               </div>
 
-              {/* Card 5: Laws & Regulations */}
-              <div className="bg-gradient-to-br from-orange-900/40 to-orange-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-orange-500/30 hover:border-orange-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">⚖️</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Laws & Regulations</h3>
+              {/* Card 4 */}
+              <div className="bg-gradient-to-br from-rose-900/40 to-rose-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-rose-500/30 hover:border-rose-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">🏆</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Career Advancement</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Learn about relevant Nigerian laws like ICPC Act, Criminal Code, and sector-specific regulations
+                  Get AI-powered career recommendations based on your completed training
                 </p>
               </div>
 
-              {/* Card 6: Track Progress */}
-              <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">📊</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Track Progress</h3>
+              {/* Card 5 */}
+              <div className="bg-gradient-to-br from-teal-900/40 to-teal-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-teal-500/30 hover:border-teal-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">🛡️</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Risk Protection</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Monitor your learning journey with achievement levels, completed courses, and personalized insights
+                  Protect yourself and your organization from legal and ethical violations
                 </p>
+              </div>
+
+              {/* Card 6 */}
+              <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-amber-500/30 hover:border-amber-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
+                <div className="text-5xl mb-4">✨</div>
+                <h3 className="text-2xl font-bold text-white mb-3">Flexible Learning</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Learn at your own pace with progress saved automatically across devices
+                </p>
+              </div>
+            </div>
+
+            {/* How It Works Section */}
+            <div className="mb-16">
+              <h2 className="text-3xl font-bold text-white text-center mb-12">
+                How DragNet Works
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <span className="text-3xl text-white font-bold">1</span>
+                  </div>
+                  <div className="text-6xl mb-4">📝</div>
+                  <h3 className="text-xl font-bold text-white mb-2">Sign Up</h3>
+                  <p className="text-gray-400">
+                    Create your account and tell us about your sector and role
+                  </p>
+                </div>
+
+                <div className="text-center">
+                  <div className="bg-gradient-to-br from-purple-500 to-purple-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <span className="text-3xl text-white font-bold">2</span>
+                  </div>
+                  <div className="text-6xl mb-4">🤖</div>
+                  <h3 className="text-xl font-bold text-white mb-2">Get Your Plan</h3>
+                  <p className="text-gray-400">
+                    AI analyzes your profile and creates personalized training
+                  </p>
+                </div>
+
+                <div className="text-center">
+                  <div className="bg-gradient-to-br from-pink-500 to-pink-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <span className="text-3xl text-white font-bold">3</span>
+                  </div>
+                  <div className="text-6xl mb-4">🎮</div>
+                  <h3 className="text-xl font-bold text-white mb-2">Learn by Doing</h3>
+                  <p className="text-gray-400">
+                    Practice with interactive scenarios and real case studies
+                  </p>
+                </div>
+
+                <div className="text-center">
+                  <div className="bg-gradient-to-br from-green-500 to-green-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <span className="text-3xl text-white font-bold">4</span>
+                  </div>
+                  <div className="text-6xl mb-4">🏆</div>
+                  <h3 className="text-xl font-bold text-white mb-2">Track & Grow</h3>
+                  <p className="text-gray-400">
+                    Earn achievements and get career recommendations
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -2496,20 +2191,47 @@ function App() {
               </div>
             </div>
 
+            {/* Statistics Section */}
+            <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 backdrop-blur-sm p-10 rounded-2xl border-2 border-purple-500/30 mb-16">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                  <div className="text-5xl font-bold text-blue-400 mb-2">10+</div>
+                  <p className="text-xl text-gray-300">Compliance Courses</p>
+                  <p className="text-sm text-gray-400 mt-2">Covering all major sectors</p>
+                </div>
+                <div>
+                  <div className="text-5xl font-bold text-purple-400 mb-2">50+</div>
+                  <p className="text-xl text-gray-300">Real-World Scenarios</p>
+                  <p className="text-sm text-gray-400 mt-2">Practice ethical decision-making</p>
+                </div>
+                <div>
+                  <div className="text-5xl font-bold text-pink-400 mb-2">100%</div>
+                  <p className="text-xl text-gray-300">Personalized</p>
+                  <p className="text-sm text-gray-400 mt-2">AI-powered training plans</p>
+                </div>
+              </div>
+            </div>
+
             {/* CTA Section */}
             <div className="text-center pb-16">
-              <h2 className="text-3xl font-bold text-white mb-6">
-                Ready to Build Your Compliance Knowledge?
-              </h2>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                Join thousands of Nigerian professionals strengthening their ethical decision-making skills
-              </p>
-              <button 
-                onClick={() => setView('auth')}
-                className="px-12 py-5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-bold text-xl transition-all duration-200 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105"
-              >
-                Start Learning Today →
-              </button>
+              <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm p-12 rounded-3xl border-2 border-blue-500/30">
+                <div className="text-6xl mb-6">🚀</div>
+                <h2 className="text-4xl font-bold text-white mb-6">
+                  Ready to Build Your Compliance Knowledge?
+                </h2>
+                <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                  Join thousands of Nigerian professionals strengthening their ethical decision-making skills
+                </p>
+                <button 
+                  onClick={() => setView('auth')}
+                  className="px-12 py-5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-bold text-xl transition-all duration-200 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105"
+                >
+                  Start Learning Today →
+                </button>
+                <p className="text-gray-400 mt-6">
+                  No credit card required • Get started in 2 minutes
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -2603,47 +2325,6 @@ function App() {
                   {authMode === 'signin' ? '🔓 Sign In' : '✨ Create Account'}
                 </button>
               </form>
-
-              {/* Divider */}
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-600"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-gray-800 text-gray-400">Or continue with</span>
-                </div>
-              </div>
-
-              {/* SSO Buttons */}
-              <div className="space-y-3">
-                <button
-                  onClick={handleGoogleSignIn}
-                  type="button"
-                  className="w-full px-8 py-3 bg-white hover:bg-gray-100 text-gray-900 rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-3"
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                  </svg>
-                  Continue with Google
-                </button>
-
-                <button
-                  onClick={handleMicrosoftSignIn}
-                  type="button"
-                  className="w-full px-8 py-3 bg-[#2F2F2F] hover:bg-[#1F1F1F] text-white rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-3"
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="#f25022" d="M0 0h11v11H0z"/>
-                    <path fill="#00a4ef" d="M12 0h11v11H12z"/>
-                    <path fill="#7fba00" d="M0 12h11v11H0z"/>
-                    <path fill="#ffb900" d="M12 12h11v11H12z"/>
-                  </svg>
-                  Continue with Microsoft
-                </button>
-              </div>
 
               <div className="mt-6 text-center">
                 <p className="text-gray-400">
@@ -2776,16 +2457,13 @@ function App() {
           <div className="max-w-2xl w-full">
             <div className="bg-gray-800/80 backdrop-blur-sm p-12 rounded-2xl border-2 border-blue-500/50 shadow-2xl">
               <div className="text-center mb-8">
-                <div className="text-6xl mb-4 animate-pulse">�</div>
+                <div className="text-6xl mb-4 animate-pulse">🧠</div>
                 <h2 className="text-3xl font-bold text-white mb-4">
-                  AI Analyzing Your Profile, {userName}...
+                  Analyzing Your Profile, {userName}...
                 </h2>
                 <p className="text-gray-300">
-                  Our AI is creating a personalized compliance training plan based on your role as {selectedRole}
+                  Creating a personalized training plan based on your role as {selectedRole}
                 </p>
-                <div className="mt-3 inline-block px-4 py-2 bg-purple-600/20 border border-purple-500/50 rounded-lg">
-                  <span className="text-purple-300 text-sm font-semibold">🤖 AI-Powered Analysis</span>
-                </div>
               </div>
 
               <div className="space-y-4">
@@ -2840,31 +2518,23 @@ function App() {
                   {userProfile.role} • {userProfile.department} • {userProfile.rank}
                 </p>
               )}
-              <p className="text-xs text-green-400 mt-1 flex items-center gap-1">
-                <span>💾</span>
-                <span>Progress auto-saved</span>
-              </p>
             </div>
             <div className="flex gap-3">
               <button 
+                onClick={() => setView('profile')}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all"
+              >
+                👤 Profile
+              </button>
+              <button 
                 onClick={() => setView('landing')}
                 className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all"
-                aria-label="Go to home page"
               >
                 ← Home
               </button>
               <button 
-                onClick={() => setView('profile')}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all"
-                aria-label="View your profile and achievements"
-              >
-                👤 My Profile
-              </button>
-              <button 
                 onClick={handleLogout}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all"
-                aria-label="Logout and clear progress"
-                title="Logout will clear your saved progress"
               >
                 🚪 Logout
               </button>
@@ -3035,222 +2705,6 @@ function App() {
               </div>
             )}
           </div>
-        </div>
-      ) : view === 'profile' ? (
-        <div className="p-8 max-w-6xl mx-auto">
-          {/* Profile Header */}
-          <div className="mb-6">
-            <button 
-              onClick={() => setView('dashboard')}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all mb-4"
-            >
-              ← Back to Dashboard
-            </button>
-          </div>
-
-          {/* Profile Card */}
-          <div className="bg-gradient-to-br from-purple-600 to-indigo-600 p-8 rounded-2xl text-white mb-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
-            
-            <div className="relative z-10 flex items-start gap-6">
-              <div className="flex-shrink-0 w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center text-5xl backdrop-blur-sm border-2 border-white/30">
-                👤
-              </div>
-              <div className="flex-1">
-                <h1 className="text-4xl font-bold mb-2">{userProfile?.name || userName}</h1>
-                <p className="text-xl text-purple-100 mb-3">{userProfile?.email || userEmail}</p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">
-                    {sectors.find(s => s.value === userProfile?.sector)?.icon} {sectors.find(s => s.value === userProfile?.sector)?.label}
-                  </span>
-                  <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">
-                    👔 {userProfile?.role}
-                  </span>
-                  <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">
-                    🏢 {userProfile?.department}
-                  </span>
-                  <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">
-                    ⭐ {userProfile?.rank}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
-            <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border-2 border-gray-700">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-3xl">📚</span>
-                <h3 className="text-lg font-semibold text-gray-300">Courses Completed</h3>
-              </div>
-              <p className="text-4xl font-bold text-white">{completedCourses.length}</p>
-              <p className="text-sm text-gray-400 mt-1">
-                out of {coursesBySector[userProfile?.sector]?.length || 4} total
-              </p>
-            </div>
-
-            <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border-2 border-gray-700">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-3xl">📊</span>
-                <h3 className="text-lg font-semibold text-gray-300">Completion Rate</h3>
-              </div>
-              <p className="text-4xl font-bold text-white">
-                {Math.round((completedCourses.length / (coursesBySector[userProfile?.sector]?.length || 4)) * 100)}%
-              </p>
-              <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
-                <div 
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${(completedCourses.length / (coursesBySector[userProfile?.sector]?.length || 4)) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-
-            <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border-2 border-gray-700">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-3xl">🏆</span>
-                <h3 className="text-lg font-semibold text-gray-300">Achievement Level</h3>
-              </div>
-              <p className="text-2xl font-bold text-white">
-                {completedCourses.length === 0 ? 'Beginner' : 
-                 completedCourses.length === 1 ? 'Learner' :
-                 completedCourses.length === 2 ? 'Practitioner' :
-                 completedCourses.length === 3 ? 'Expert' :
-                 'Compliance Champion'}
-              </p>
-              <p className="text-sm text-gray-400 mt-1">
-                {completedCourses.length === (coursesBySector[userProfile?.sector]?.length || 4) ? '🌟 All courses completed!' : 'Keep learning!'}
-              </p>
-            </div>
-          </div>
-
-          {/* AI-Powered Recommendations Section */}
-          {completedCourses.length > 0 && (() => {
-            const { recommendations, suitability, strengths } = generateCareerRecommendations();
-            
-            return (
-              <div className="space-y-6">
-                {/* Strengths */}
-                {strengths.length > 0 && (
-                  <div className="bg-gradient-to-br from-green-900/20 to-emerald-900/20 backdrop-blur-sm p-6 rounded-xl border-2 border-green-700/50">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">💪</span>
-                      <h2 className="text-2xl font-bold text-white">Your Compliance Strengths</h2>
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-3">
-                      {strengths.map((strength, idx) => (
-                        <div key={idx} className="flex items-start gap-2 bg-green-800/20 p-3 rounded-lg">
-                          <span className="text-green-400 mt-1">✓</span>
-                          <p className="text-gray-200">{strength}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Career Suitability */}
-                {suitability.length > 0 && (
-                  <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm p-6 rounded-xl border-2 border-blue-700/50">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">🎯</span>
-                      <h2 className="text-2xl font-bold text-white">Career Suitability</h2>
-                    </div>
-                    <p className="text-gray-300 mb-4">
-                      Based on your compliance training, you are well-suited for the following roles in society:
-                    </p>
-                    <div className="space-y-2">
-                      {suitability.map((role, idx) => (
-                        <div key={idx} className="flex items-center gap-3 bg-blue-800/20 p-4 rounded-lg border border-blue-600/30">
-                          <span className="text-2xl">🔹</span>
-                          <p className="text-white font-semibold">{role}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* AI Recommendations */}
-                {recommendations.length > 0 && (
-                  <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-sm p-6 rounded-xl border-2 border-purple-700/50">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">🤖</span>
-                      <h2 className="text-2xl font-bold text-white">AI-Powered Recommendations</h2>
-                    </div>
-                    <p className="text-gray-300 mb-4">
-                      Our AI analysis suggests the following next steps for your career development:
-                    </p>
-                    <div className="space-y-3">
-                      {recommendations.map((rec, idx) => (
-                        <div key={idx} className="flex items-start gap-3 bg-purple-800/20 p-4 rounded-lg border-l-4 border-purple-500">
-                          <span className="text-purple-400 text-xl mt-1">💡</span>
-                          <p className="text-gray-200">{rec}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })()}
-
-          {/* Completed Courses List */}
-          <div className="mt-6 bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border-2 border-gray-700">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-3xl">📋</span>
-              <h2 className="text-2xl font-bold text-white">Completed Training Modules</h2>
-            </div>
-            {completedCourses.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-400 text-lg">No courses completed yet</p>
-                <p className="text-gray-500 mt-2">Start your compliance training journey today!</p>
-                <button 
-                  onClick={() => setView('dashboard')}
-                  className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all"
-                >
-                  Browse Courses
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {completedCourses.map((courseId) => {
-                  const course = coursesBySector[userProfile?.sector]?.find(c => c.id === courseId);
-                  if (!course) return null;
-                  
-                  return (
-                    <div key={courseId} className="flex items-center gap-4 bg-gray-700/50 p-4 rounded-lg border border-gray-600">
-                      <div className="flex-shrink-0 w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center text-2xl">
-                        ✅
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-white">{course.title}</h3>
-                        <p className="text-sm text-gray-400">{course.description}</p>
-                      </div>
-                      <span className="px-3 py-1 bg-green-600/20 text-green-300 rounded-lg text-sm font-semibold">
-                        Completed
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Call to Action */}
-          {completedCourses.length < (coursesBySector[userProfile?.sector]?.length || 4) && (
-            <div className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-xl text-center">
-              <h3 className="text-2xl font-bold text-white mb-2">Continue Your Learning Journey</h3>
-              <p className="text-blue-100 mb-4">
-                Complete {(coursesBySector[userProfile?.sector]?.length || 4) - completedCourses.length} more module{(coursesBySector[userProfile?.sector]?.length || 4) - completedCourses.length > 1 ? 's' : ''} to become a Compliance Champion!
-              </p>
-              <button 
-                onClick={() => setView('dashboard')}
-                className="px-8 py-3 bg-white text-blue-600 hover:bg-gray-100 rounded-lg font-semibold transition-all shadow-lg"
-              >
-                Continue Training
-              </button>
-            </div>
-          )}
         </div>
       ) : view === 'course' ? (
         <div className="p-8 max-w-5xl mx-auto">
@@ -3452,44 +2906,11 @@ function App() {
                 <div ref={keyLearningRef} className="relative bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm p-8 rounded-xl border-2 border-blue-700/50 overflow-hidden animate-fadeIn" id="main-content">
                   <div className="absolute bottom-0 right-0 text-9xl opacity-10" aria-hidden="true">🎯</div>
                   <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-blue-500/30 rounded-lg flex items-center justify-center text-2xl" aria-hidden="true">
-                          🎯
-                        </div>
-                        <h2 className="text-2xl font-bold text-white">Key Learning Points</h2>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-12 h-12 bg-blue-500/30 rounded-lg flex items-center justify-center text-2xl" aria-hidden="true">
+                        🎯
                       </div>
-                      
-                      {/* Narrate All Key Points Button */}
-                      {speechSupported && (
-                        <button
-                          onClick={() => {
-                            const allPoints = currentCourse.content.keyPoints.join('. ');
-                            const fullText = `Key Learning Points for ${currentCourse.title}. ${allPoints}`;
-                            toggleNarration(fullText);
-                          }}
-                          className={`px-4 py-2 rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl flex items-center gap-2 ${
-                            isNarrating 
-                              ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
-                              : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700'
-                          }`}
-                          aria-label={isNarrating ? 'Stop narrating all learning points' : 'Listen to all learning points'}
-                          aria-pressed={isNarrating}
-                          title={isNarrating ? 'Stop reading all learning points' : 'Have all learning points read aloud'}
-                        >
-                          {isNarrating ? (
-                            <>
-                              <span className="text-lg" aria-hidden="true">⏸️</span>
-                              <span>Stop</span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="text-lg" aria-hidden="true">🔊</span>
-                              <span>Listen to All</span>
-                            </>
-                          )}
-                        </button>
-                      )}
+                      <h2 className="text-2xl font-bold text-white">Key Learning Points</h2>
                     </div>
                     <div className="bg-blue-900/20 p-4 rounded-lg mb-6 border-l-4 border-blue-500" role="status" aria-live="polite">
                       <p className="text-gray-300">
@@ -3500,7 +2921,7 @@ function App() {
                       {currentCourse.content.keyPoints.map((point, idx) => {
                         const isClicked = clickedLearningPoints.includes(idx);
                         return (
-                          <div
+                          <button
                             key={idx}
                             onClick={() => {
                               if (!isClicked) {
@@ -3510,61 +2931,27 @@ function App() {
                                 }
                               }
                             }}
-                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth animate-fadeIn cursor-pointer ${
+                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth text-left animate-fadeIn ${
                               isClicked
-                                ? 'bg-green-600/20 border-green-500'
-                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800'
+                                ? 'bg-green-600/20 border-green-500 cursor-default'
+                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800 cursor-pointer'
                             }`}
                             style={{ animationDelay: `${idx * 0.05}s` }}
-                            role="listitem"
-                            tabIndex={0}
-                            onKeyPress={(e) => {
-                              if ((e.key === 'Enter' || e.key === ' ') && !isClicked) {
-                                setClickedLearningPoints([...clickedLearningPoints, idx]);
-                                if (clickedLearningPoints.length + 1 === currentCourse.content.keyPoints.length) {
-                                  setCurrentStep('laws');
-                                }
-                              }
-                            }}
                             aria-label={`Learning point ${idx + 1}: ${point}`}
                             aria-pressed={isClicked}
+                            role="listitem"
                           >
-                            <div
-                              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
-                                isClicked
-                                  ? 'bg-green-500'
-                                  : 'bg-gradient-to-br from-blue-500 to-purple-500'
-                              }`}
-                              aria-hidden="true"
-                            >
+                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
+                              isClicked
+                                ? 'bg-green-500'
+                                : 'bg-gradient-to-br from-blue-500 to-purple-500'
+                            }`}>
                               {isClicked ? '✓' : idx + 1}
                             </div>
-                            <div className="flex-1">
-                              <span className={`text-lg leading-relaxed block ${
-                                isClicked ? 'text-green-300' : 'text-gray-300'
-                              }`}>{point}</span>
-                            </div>
-                            
-                            {/* Individual Narration Button */}
-                            {speechSupported && (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  const textToRead = `Learning point ${idx + 1}. ${point}`;
-                                  toggleNarration(textToRead);
-                                }}
-                                className={`flex-shrink-0 p-2 rounded-lg transition-smooth border ${
-                                  isNarrating 
-                                    ? 'bg-red-600/50 hover:bg-red-600/70 text-white border-red-500 animate-pulse' 
-                                    : 'bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 hover:text-white border-purple-500/30 hover:border-purple-500'
-                                }`}
-                                aria-label={isNarrating ? `Stop narration of learning point ${idx + 1}` : `Listen to learning point ${idx + 1}`}
-                                title={isNarrating ? "Stop narration" : "Listen to this point"}
-                              >
-                                <span className="text-lg" aria-hidden="true">{isNarrating ? '⏸️' : '🔊'}</span>
-                              </button>
-                            )}
-                          </div>
+                            <span className={`text-lg leading-relaxed ${
+                              isClicked ? 'text-green-300' : 'text-gray-300'
+                            }`}>{point}</span>
+                          </button>
                         );
                       })}
                     </div>
@@ -3577,44 +2964,11 @@ function App() {
                 <div className="relative bg-gradient-to-br from-purple-900/20 to-indigo-900/20 backdrop-blur-sm p-8 rounded-xl border-2 border-purple-700/50 overflow-hidden animate-fadeIn">
                   <div className="absolute top-0 left-0 text-9xl opacity-10">⚖️</div>
                   <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-2xl">
-                          ⚖️
-                        </div>
-                        <h2 className="text-2xl font-bold text-white">Relevant Laws & Regulations</h2>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-12 h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-2xl">
+                        ⚖️
                       </div>
-                      
-                      {/* Narrate All Laws Button */}
-                      {speechSupported && (
-                        <button
-                          onClick={() => {
-                            const allLaws = currentCourse.content.laws.join('. ');
-                            const fullText = `Relevant Laws and Regulations for ${currentCourse.title}. ${allLaws}`;
-                            toggleNarration(fullText);
-                          }}
-                          className={`px-4 py-2 rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl flex items-center gap-2 ${
-                            isNarrating 
-                              ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
-                              : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700'
-                          }`}
-                          aria-label={isNarrating ? 'Stop narrating laws and regulations' : 'Listen to all laws and regulations'}
-                          aria-pressed={isNarrating}
-                          title={isNarrating ? 'Stop reading laws' : 'Have all laws read aloud'}
-                        >
-                          {isNarrating ? (
-                            <>
-                              <span className="text-lg" aria-hidden="true">⏸️</span>
-                              <span>Stop</span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="text-lg" aria-hidden="true">🔊</span>
-                              <span>Listen to All</span>
-                            </>
-                          )}
-                        </button>
-                      )}
+                      <h2 className="text-2xl font-bold text-white">Relevant Laws & Regulations</h2>
                     </div>
                     <div className="bg-purple-900/20 p-4 rounded-lg mb-6 border-l-4 border-purple-500">
                       <p className="text-gray-300">
@@ -3627,28 +2981,7 @@ function App() {
                           <div className="flex-shrink-0 w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-xl">
                             📜
                           </div>
-                          <div className="flex-1">
-                            <span className="text-gray-300 leading-relaxed">{law}</span>
-                          </div>
-                          
-                          {/* Individual Law Narration Button */}
-                          {speechSupported && (
-                            <button
-                              onClick={() => {
-                                const textToRead = `Law ${idx + 1}. ${law}`;
-                                toggleNarration(textToRead);
-                              }}
-                              className={`flex-shrink-0 p-2 rounded-lg transition-smooth border ${
-                                isNarrating 
-                                  ? 'bg-red-600/50 hover:bg-red-600/70 text-white border-red-500 animate-pulse' 
-                                  : 'bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 hover:text-white border-purple-500/30 hover:border-purple-500'
-                              }`}
-                              aria-label={isNarrating ? `Stop narration of law ${idx + 1}` : `Listen to law ${idx + 1}`}
-                              title={isNarrating ? "Stop narration" : "Listen to this law"}
-                            >
-                              <span className="text-lg" aria-hidden="true">{isNarrating ? '⏸️' : '🔊'}</span>
-                            </button>
-                          )}
+                          <span className="text-gray-300 leading-relaxed">{law}</span>
                         </div>
                       ))}
                     </div>
@@ -3766,25 +3099,13 @@ function App() {
                       );
                       setUserProfile({ ...userProfile, courses: updatedCourses });
                       
-                      const newCompletedCourse = {
+                      setCompletedCourses([...completedCourses, {
                         courseId: currentCourse.id,
                         courseName: currentCourse.title,
                         score: percentage,
                         passed: true,
                         completedDate: new Date().toLocaleDateString()
-                      };
-                      
-                      const updatedCompletedCourses = [...completedCourses, newCompletedCourse];
-                      setCompletedCourses(updatedCompletedCourses);
-                      
-                      // Save to Firestore
-                      if (firebaseUser) {
-                        saveUserDataToFirestore(firebaseUser.uid, {
-                          completedCourses: updatedCompletedCourses.map(c => c.courseId),
-                          profile: { ...userProfile, courses: updatedCourses },
-                          lastView: 'dashboard'
-                        });
-                      }
+                      }]);
                     }
                   }}
                   disabled={Object.keys(quizAnswers).length < (currentCourse.quiz?.length || 0)}
@@ -4212,6 +3533,168 @@ function App() {
               )}
             </div>
           )}
+        </div>
+      ) : view === 'profile' ? (
+        <div className="min-h-screen p-8">
+          <div className="max-w-6xl mx-auto">
+            {/* Profile Header */}
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-4xl font-bold text-white">👤 My Profile</h1>
+              <button 
+                onClick={() => setView('dashboard')}
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all"
+              >
+                ← Back to Dashboard
+              </button>
+            </div>
+
+            {/* Profile Information Card */}
+            <div className="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-sm p-8 rounded-2xl border-2 border-purple-500/30 mb-8">
+              <div className="flex items-start gap-6">
+                <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-4xl">
+                  👤
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-3xl font-bold text-white mb-2">{userName}</h2>
+                  <p className="text-blue-300 text-lg mb-4">{userEmail}</p>
+                  {userProfile && (
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+                      <div>
+                        <p className="text-gray-400 text-sm">Sector</p>
+                        <p className="text-white font-semibold">{selectedSector}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-sm">Role</p>
+                        <p className="text-white font-semibold">{userProfile.role}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-sm">Department</p>
+                        <p className="text-white font-semibold">{userProfile.department}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-sm">Rank</p>
+                        <p className="text-white font-semibold">{userProfile.rank}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 backdrop-blur-sm p-6 rounded-2xl border-2 border-green-500/30">
+                <div className="text-4xl mb-2">🎓</div>
+                <p className="text-gray-400 text-sm">Completed Courses</p>
+                <p className="text-3xl font-bold text-white">{completedCourses.length}</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 backdrop-blur-sm p-6 rounded-2xl border-2 border-blue-500/30">
+                <div className="text-4xl mb-2">⭐</div>
+                <p className="text-gray-400 text-sm">Achievement Level</p>
+                <p className="text-2xl font-bold text-white">
+                  {completedCourses.length === 0 ? 'Beginner' : 
+                   completedCourses.length < 3 ? 'Intermediate' : 
+                   completedCourses.length < 5 ? 'Advanced' : 'Expert'}
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 backdrop-blur-sm p-6 rounded-2xl border-2 border-purple-500/30">
+                <div className="text-4xl mb-2">🔥</div>
+                <p className="text-gray-400 text-sm">Total Modules</p>
+                <p className="text-3xl font-bold text-white">{userProfile?.courses?.length || 0}</p>
+              </div>
+            </div>
+
+            {/* Completed Courses */}
+            {completedCourses.length > 0 && (
+              <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border-2 border-gray-700 mb-8">
+                <h3 className="text-2xl font-bold text-white mb-6">📚 Completed Courses</h3>
+                <div className="space-y-4">
+                  {completedCourses.map((course, index) => (
+                    <div key={index} className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h4 className="text-lg font-semibold text-white">{course.title}</h4>
+                          <p className="text-gray-400 text-sm">Completed on {course.completedDate}</p>
+                        </div>
+                        <div className="text-green-400 text-2xl">✓</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* AI Career Recommendations */}
+            {userProfile && completedCourses.length > 0 && (() => {
+              const recommendations = generateCareerRecommendations();
+              return (
+                <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 backdrop-blur-sm p-8 rounded-2xl border-2 border-purple-500/30">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="text-4xl">🤖</span>
+                    <h3 className="text-2xl font-bold text-white">AI Career Recommendations</h3>
+                  </div>
+                  
+                  {recommendations.recommendations.length > 0 && (
+                    <div className="mb-6">
+                      <h4 className="text-lg font-semibold text-purple-300 mb-3">📈 Recommended Career Paths</h4>
+                      <ul className="space-y-2">
+                        {recommendations.recommendations.map((rec, index) => (
+                          <li key={index} className="flex items-start gap-2 text-gray-300">
+                            <span className="text-purple-400">●</span>
+                            <span>{rec}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {recommendations.strengths.length > 0 && (
+                    <div className="mb-6">
+                      <h4 className="text-lg font-semibold text-blue-300 mb-3">💪 Your Strengths</h4>
+                      <ul className="space-y-2">
+                        {recommendations.strengths.map((strength, index) => (
+                          <li key={index} className="flex items-start gap-2 text-gray-300">
+                            <span className="text-blue-400">✓</span>
+                            <span>{strength}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {recommendations.suitability.length > 0 && (
+                    <div>
+                      <h4 className="text-lg font-semibold text-green-300 mb-3">🎯 Well-Suited For</h4>
+                      <ul className="space-y-2">
+                        {recommendations.suitability.map((suit, index) => (
+                          <li key={index} className="flex items-start gap-2 text-gray-300">
+                            <span className="text-green-400">→</span>
+                            <span>{suit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {completedCourses.length === 0 && (
+              <div className="bg-gray-800/30 backdrop-blur-sm p-12 rounded-2xl border-2 border-gray-700 text-center">
+                <div className="text-6xl mb-4">📚</div>
+                <h3 className="text-2xl font-bold text-white mb-2">No Courses Completed Yet</h3>
+                <p className="text-gray-400 mb-6">Start learning to unlock career recommendations and achievements!</p>
+                <button
+                  onClick={() => setView('dashboard')}
+                  className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all"
+                >
+                  Go to Dashboard →
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
     </div>
