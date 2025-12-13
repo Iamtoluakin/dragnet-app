@@ -2037,64 +2037,112 @@ function App() {
               </div>
             </div>
 
-            {/* Additional Benefits Grid - 6 more cards */}
-            <h2 className="text-3xl font-bold text-white text-center mb-12">
-              What You'll Get
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-              {/* Card 1 */}
-              <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">⚖️</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Nigerian Laws & Regulations</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Learn ICPC Act, Criminal Code, and sector-specific regulations with clear explanations
-                </p>
+            {/* What You'll Get - Reorganized with Categories */}
+            <div className="mb-16">
+              <h2 className="text-3xl font-bold text-white text-center mb-4">
+                What You'll Get
+              </h2>
+              <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+                Everything you need to become a compliance expert
+              </p>
+              
+              {/* Learning Content */}
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold text-blue-300 mb-6 flex items-center gap-3">
+                  <span className="text-3xl">📖</span>
+                  Comprehensive Learning Content
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-300">
+                    <div className="text-4xl mb-3">⚖️</div>
+                    <h4 className="text-lg font-bold text-white mb-2">Nigerian Laws & Regulations</h4>
+                    <p className="text-gray-300 text-sm">
+                      ICPC Act, Criminal Code, and sector-specific regulations explained clearly
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300">
+                    <div className="text-4xl mb-3">🎭</div>
+                    <h4 className="text-lg font-bold text-white mb-2">50+ Real Scenarios</h4>
+                    <p className="text-gray-300 text-sm">
+                      Practice with actual ethical dilemmas from Nigerian workplaces
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-pink-500/30 hover:border-pink-400/60 transition-all duration-300">
+                    <div className="text-4xl mb-3">📚</div>
+                    <h4 className="text-lg font-bold text-white mb-2">Key Learning Points</h4>
+                    <p className="text-gray-300 text-sm">
+                      Essential compliance concepts summarized for quick mastery
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* Card 2 */}
-              <div className="bg-gradient-to-br from-orange-900/40 to-orange-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-orange-500/30 hover:border-orange-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">🎮</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Interactive Simulations</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Make decisions in branching scenarios with instant feedback on your choices
-                </p>
+              {/* Interactive Features */}
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold text-purple-300 mb-6 flex items-center gap-3">
+                  <span className="text-3xl">⚡</span>
+                  Interactive Learning Features
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300">
+                    <div className="text-4xl mb-3">🎮</div>
+                    <h4 className="text-lg font-bold text-white mb-2">Branching Scenarios</h4>
+                    <p className="text-gray-300 text-sm">
+                      Make choices and see consequences with instant feedback
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-teal-900/40 to-teal-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-teal-500/30 hover:border-teal-400/60 transition-all duration-300">
+                    <div className="text-4xl mb-3">�</div>
+                    <h4 className="text-lg font-bold text-white mb-2">Audio Narration</h4>
+                    <p className="text-gray-300 text-sm">
+                      Listen to content with high-quality text-to-speech technology
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-green-900/40 to-green-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-green-500/30 hover:border-green-400/60 transition-all duration-300">
+                    <div className="text-4xl mb-3">✅</div>
+                    <h4 className="text-lg font-bold text-white mb-2">Interactive Quizzes</h4>
+                    <p className="text-gray-300 text-sm">
+                      Test your knowledge with comprehensive assessments
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* Card 3 */}
-              <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-indigo-500/30 hover:border-indigo-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">📚</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Key Learning Points</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Master essential compliance concepts before taking assessments
-                </p>
-              </div>
-
-              {/* Card 4 */}
-              <div className="bg-gradient-to-br from-rose-900/40 to-rose-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-rose-500/30 hover:border-rose-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">🏆</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Career Advancement</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Get AI-powered career recommendations based on your completed training
-                </p>
-              </div>
-
-              {/* Card 5 */}
-              <div className="bg-gradient-to-br from-teal-900/40 to-teal-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-teal-500/30 hover:border-teal-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">🛡️</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Risk Protection</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Protect yourself and your organization from legal and ethical violations
-                </p>
-              </div>
-
-              {/* Card 6 */}
-              <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-amber-500/30 hover:border-amber-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">✨</div>
-                <h3 className="text-2xl font-bold text-white mb-3">Flexible Learning</h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Learn at your own pace with progress saved automatically across devices
-                </p>
+              {/* Progress & Career */}
+              <div>
+                <h3 className="text-2xl font-bold text-green-300 mb-6 flex items-center gap-3">
+                  <span className="text-3xl">🚀</span>
+                  Career Growth & Progress Tracking
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-gradient-to-br from-orange-900/40 to-orange-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-orange-500/30 hover:border-orange-400/60 transition-all duration-300">
+                    <div className="text-4xl mb-3">🏆</div>
+                    <h4 className="text-lg font-bold text-white mb-2">AI Career Recommendations</h4>
+                    <p className="text-gray-300 text-sm">
+                      Get personalized career path suggestions based on your training
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-rose-900/40 to-rose-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-rose-500/30 hover:border-rose-400/60 transition-all duration-300">
+                    <div className="text-4xl mb-3">�</div>
+                    <h4 className="text-lg font-bold text-white mb-2">Progress Dashboard</h4>
+                    <p className="text-gray-300 text-sm">
+                      Track completed courses, achievements, and learning milestones
+                    </p>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-amber-500/30 hover:border-amber-400/60 transition-all duration-300">
+                    <div className="text-4xl mb-3">🛡️</div>
+                    <h4 className="text-lg font-bold text-white mb-2">Risk Protection</h4>
+                    <p className="text-gray-300 text-sm">
+                      Safeguard yourself and your organization from violations
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -2146,47 +2194,6 @@ function App() {
                   <p className="text-gray-400">
                     Earn achievements and get career recommendations
                   </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Sectors Section */}
-            <div className="bg-gray-800/50 backdrop-blur-sm p-10 rounded-2xl border-2 border-gray-700 mb-16">
-              <h2 className="text-3xl font-bold text-white text-center mb-8">
-                Training Available For All Sectors
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <div className="p-4">
-                  <div className="text-4xl mb-2">🏛️</div>
-                  <p className="text-white font-semibold">Government</p>
-                </div>
-                <div className="p-4">
-                  <div className="text-4xl mb-2">🏢</div>
-                  <p className="text-white font-semibold">Corporate</p>
-                </div>
-                <div className="p-4">
-                  <div className="text-4xl mb-2">🎓</div>
-                  <p className="text-white font-semibold">Education</p>
-                </div>
-                <div className="p-4">
-                  <div className="text-4xl mb-2">🏥</div>
-                  <p className="text-white font-semibold">Healthcare</p>
-                </div>
-                <div className="p-4">
-                  <div className="text-4xl mb-2">👮</div>
-                  <p className="text-white font-semibold">Law Enforcement</p>
-                </div>
-                <div className="p-4">
-                  <div className="text-4xl mb-2">⚡</div>
-                  <p className="text-white font-semibold">Energy & Power</p>
-                </div>
-                <div className="p-4">
-                  <div className="text-4xl mb-2">🏗️</div>
-                  <p className="text-white font-semibold">Construction</p>
-                </div>
-                <div className="p-4">
-                  <div className="text-4xl mb-2">🚗</div>
-                  <p className="text-white font-semibold">Transportation</p>
                 </div>
               </div>
             </div>
@@ -2508,33 +2515,36 @@ function App() {
         </div>
       ) : view === 'dashboard' ? (
         <div className="p-8">
-          <nav className="flex justify-between items-center mb-8 bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl">
-            <div>
-              <h2 className="text-2xl font-bold text-white">
-                📊 Welcome back, {userProfile?.name || userName}! 👋
-              </h2>
-              {userProfile && (
-                <p className="text-sm text-gray-400 mt-1">
-                  {userProfile.role} • {userProfile.department} • {userProfile.rank}
-                </p>
-              )}
+          <nav className="flex justify-between items-center mb-8 bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl border-2 border-gray-700">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setView('profile')}
+                className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 rounded-full flex items-center justify-center text-2xl transition-all transform hover:scale-110 shadow-lg"
+                title="View Profile"
+              >
+                👨‍💼
+              </button>
+              <div>
+                <h2 className="text-2xl font-bold text-white">
+                  📊 Welcome back, {userProfile?.name || userName}! 👋
+                </h2>
+                {userProfile && (
+                  <p className="text-sm text-gray-400 mt-1">
+                    {userProfile.role} • {userProfile.department} • {userProfile.rank}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="flex gap-3">
               <button 
-                onClick={() => setView('profile')}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all"
-              >
-                👤 Profile
-              </button>
-              <button 
                 onClick={() => setView('landing')}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all"
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all font-semibold"
               >
                 ← Home
               </button>
               <button 
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all"
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all font-semibold"
               >
                 🚪 Logout
               </button>
@@ -3539,20 +3549,25 @@ function App() {
           <div className="max-w-6xl mx-auto">
             {/* Profile Header */}
             <div className="flex justify-between items-center mb-8">
-              <h1 className="text-4xl font-bold text-white">👤 My Profile</h1>
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-3xl shadow-lg">
+                  👨‍💼
+                </div>
+                <h1 className="text-4xl font-bold text-white">My Profile</h1>
+              </div>
               <button 
                 onClick={() => setView('dashboard')}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all"
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all font-semibold shadow-lg"
               >
                 ← Back to Dashboard
               </button>
             </div>
 
             {/* Profile Information Card */}
-            <div className="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-sm p-8 rounded-2xl border-2 border-purple-500/30 mb-8">
+            <div className="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-sm p-8 rounded-2xl border-2 border-purple-500/30 mb-8 shadow-xl">
               <div className="flex items-start gap-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-4xl">
-                  👤
+                <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-5xl shadow-lg">
+                  👨‍�
                 </div>
                 <div className="flex-1">
                   <h2 className="text-3xl font-bold text-white mb-2">{userName}</h2>
