@@ -1993,51 +1993,8 @@ function App() {
             </div>
           </div>
 
-          {/* Key Benefits - Main Feature Cards */}
+          {/* What You'll Get - Reorganized with Categories */}
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-white text-center mb-12">
-              Why Choose DragNet?
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-              {/* Benefit 1 */}
-              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">🎯</div>
-                <h3 className="text-xl font-bold text-white mb-3">Personalized Learning</h3>
-                <p className="text-gray-300">
-                  AI-powered training tailored to your specific sector, role, and risk level
-                </p>
-              </div>
-
-              {/* Benefit 2 */}
-              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">🎭</div>
-                <h3 className="text-xl font-bold text-white mb-3">Real Scenarios</h3>
-                <p className="text-gray-300">
-                  Practice with realistic ethical dilemmas from actual Nigerian cases
-                </p>
-              </div>
-
-              {/* Benefit 3 */}
-              <div className="bg-gradient-to-br from-green-900/40 to-green-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-green-500/30 hover:border-green-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">🔊</div>
-                <h3 className="text-xl font-bold text-white mb-3">Audio Narration</h3>
-                <p className="text-gray-300">
-                  Listen to content with high-quality text-to-speech for better accessibility
-                </p>
-              </div>
-
-              {/* Benefit 4 */}
-              <div className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-pink-500/30 hover:border-pink-400/60 transition-all duration-300 hover:transform hover:scale-105 shadow-lg">
-                <div className="text-5xl mb-4">📊</div>
-                <h3 className="text-xl font-bold text-white mb-3">Track Progress</h3>
-                <p className="text-gray-300">
-                  Monitor your learning journey with detailed analytics and achievements
-                </p>
-              </div>
-            </div>
-
-            {/* What You'll Get - Reorganized with Categories */}
             <div className="mb-16">
               <h2 className="text-3xl font-bold text-white text-center mb-4">
                 What You'll Get
@@ -2054,59 +2011,23 @@ function App() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-300">
-                    <div className="text-4xl mb-3">⚖️</div>
-                    <h4 className="text-lg font-bold text-white mb-2">Nigerian Laws & Regulations</h4>
+                    <h4 className="text-lg font-bold text-white mb-3">Nigerian Laws & Regulations</h4>
                     <p className="text-gray-300 text-sm">
                       ICPC Act, Criminal Code, and sector-specific regulations explained clearly
                     </p>
                   </div>
                   
                   <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300">
-                    <div className="text-4xl mb-3">🎭</div>
-                    <h4 className="text-lg font-bold text-white mb-2">50+ Real Scenarios</h4>
+                    <h4 className="text-lg font-bold text-white mb-3">50+ Real Scenarios</h4>
                     <p className="text-gray-300 text-sm">
                       Practice with actual ethical dilemmas from Nigerian workplaces
                     </p>
                   </div>
                   
                   <div className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-pink-500/30 hover:border-pink-400/60 transition-all duration-300">
-                    <div className="text-4xl mb-3">📚</div>
-                    <h4 className="text-lg font-bold text-white mb-2">Key Learning Points</h4>
+                    <h4 className="text-lg font-bold text-white mb-3">Key Learning Points</h4>
                     <p className="text-gray-300 text-sm">
                       Essential compliance concepts summarized for quick mastery
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Interactive Features */}
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold text-purple-300 mb-6 flex items-center gap-3">
-                  <span className="text-3xl">⚡</span>
-                  Interactive Learning Features
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300">
-                    <div className="text-4xl mb-3">🎮</div>
-                    <h4 className="text-lg font-bold text-white mb-2">Branching Scenarios</h4>
-                    <p className="text-gray-300 text-sm">
-                      Make choices and see consequences with instant feedback
-                    </p>
-                  </div>
-                  
-                  <div className="bg-gradient-to-br from-teal-900/40 to-teal-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-teal-500/30 hover:border-teal-400/60 transition-all duration-300">
-                    <div className="text-4xl mb-3">�</div>
-                    <h4 className="text-lg font-bold text-white mb-2">Audio Narration</h4>
-                    <p className="text-gray-300 text-sm">
-                      Listen to content with high-quality text-to-speech technology
-                    </p>
-                  </div>
-                  
-                  <div className="bg-gradient-to-br from-green-900/40 to-green-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-green-500/30 hover:border-green-400/60 transition-all duration-300">
-                    <div className="text-4xl mb-3">✅</div>
-                    <h4 className="text-lg font-bold text-white mb-2">Interactive Quizzes</h4>
-                    <p className="text-gray-300 text-sm">
-                      Test your knowledge with comprehensive assessments
                     </p>
                   </div>
                 </div>
@@ -2771,7 +2692,7 @@ function App() {
               ← Back to Dashboard
             </button>
             {currentCourse && currentCourse.risk === 'high' && (
-              <span className="px-3 py-1 bg-red-500/20 text-red-300 text-sm font-semibold rounded-lg" role="status">
+              <span className="px-3 py-1 bg-red-500/20 text-red-300 text-sm font-semibold rounded" role="status">
                 🔥 HIGH RISK MODULE
               </span>
             )}
@@ -2839,9 +2760,9 @@ function App() {
                       ></iframe>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <span className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg">📚 {currentCourse.duration} Training</span>
-                      <span className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg">💡 Essential Knowledge</span>
-                      <span className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg">🎓 Professional Development</span>
+                      <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs font-semibold rounded-full">
+                        🏅 Essential Knowledge
+                      </span>
                     </div>
                   </div>
                   
@@ -2864,7 +2785,7 @@ function App() {
                       <div className="w-12 h-12 bg-orange-500/30 rounded-lg flex items-center justify-center text-2xl">
                         🎭
                       </div>
-                      <h2 className="text-2xl font-bold text-white">Interactive Scenario Simulations</h2>
+                      <h2 className="text-2xl font-bold text-white mb-2">Interactive Scenario Simulations</h2>
                     </div>
                     
                     <div className="bg-orange-900/20 p-4 rounded-lg mb-6 border-l-4 border-orange-500">
