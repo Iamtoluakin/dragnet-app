@@ -2319,94 +2319,14 @@ function App() {
                     value={selectedDepartment}
                     onChange={(e) => setSelectedDepartment(e.target.value)}
                     className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200"
-        ],
-        quiz: [
-          {
-            id: 'q1',
-            question: 'What is plagiarism?',
-            options: [
-              { id: 'a', text: 'Studying with friends', correct: false },
-              { id: 'b', text: 'Presenting someone else\'s work as your own', correct: true },
-              { id: 'c', text: 'Reading books for research', correct: false },
-              { id: 'd', text: 'Asking questions in class', correct: false }
-            ]
-          },
-          {
-            id: 'q2',
-            question: 'What should you do if your group wants to plagiarize content for a project?',
-            options: [
-              { id: 'a', text: 'Go along to avoid conflict', correct: false },
-              { id: 'b', text: 'Refuse, explain the risks, and insist on original content with proper citations', correct: true },
-              { id: 'c', text: 'Submit it and hope no one notices', correct: false },
-              { id: 'd', text: 'Let them do it and write your section only', correct: false }
-            ]
-          },
-          {
-            id: 'q3',
-            question: 'Is it acceptable to copy answers from another student during an exam?',
-            options: [
-              { id: 'a', text: 'Yes, if they are a top student', correct: false },
-              { id: 'b', text: 'Yes, to confirm your own answers', correct: false },
-              { id: 'c', text: 'No, this is exam malpractice and academic dishonesty', correct: true },
-              { id: 'd', text: 'Yes, if you don\'t get caught', correct: false }
-            ]
-          },
-          {
-            id: 'q4',
-            question: 'Can you buy essays online and submit them as your own work?',
-            options: [
-              { id: 'a', text: 'Yes, if they are "original"', correct: false },
-              { id: 'b', text: 'Yes, if time is limited', correct: false },
-              { id: 'c', text: 'No, this is academic fraud and plagiarism', correct: true },
-              { id: 'd', text: 'Yes, just for one essay', correct: false }
-            ]
-          },
-          {
-            id: 'q5',
-            question: 'What is the best approach when facing multiple deadlines?',
-            options: [
-              { id: 'a', text: 'Buy some essays to save time', correct: false },
-              { id: 'b', text: 'Copy from online sources', correct: false },
-              { id: 'c', text: 'Manage time, prioritize, complete own work, and request extensions if needed', correct: true },
-              { id: 'd', text: 'Cheat during exams', correct: false }
-            ]
-          }
-        ]
-      },
-      { 
-        id: 9,
-        title: 'Ethical Leadership & Conduct',
-        description: 'Principles of ethical leadership for student representatives',
-        progress: 0,
-        risk: 'medium',
-        duration: '12 min',
-        content: {
-          introduction: 'As a student leader, you represent your peers and hold a position of trust. Ethical leadership means serving with integrity, transparency, and accountability.',
-          keyPoints: [
-            'Use student funds transparently and for their intended purpose',
-            'Represent all students fairly, not just your friends',
-            'Disclose any conflicts of interest in decisions',
-            'Do not accept bribes or kickbacks from vendors',
-            'Keep accurate records and report honestly to students'
-          ],
-          laws: [
-            'University Student Union Constitution',
-            'Student Leadership Code of Conduct',
-            'Anti-Corruption Laws'
-          ]
-        },
-        scenarios: [
-          {
-            id: 'student-leadership-1',
-            title: 'Student Fund Misuse',
-            situation: 'As student union treasurer, a fellow executive member suggests "borrowing" ₦50,000 from student activity funds for a personal emergency, promising to return it next month.',
-            options: [
-              {
-                id: 'a',
-                text: 'Allow the "loan" since they promise to return it',
-                correct: false,
-                feedback: '❌ INCORRECT: This is misappropriation of student funds. Student money must only be used for approved student activities. Personal use, even if temporary, is a serious breach of trust and may violate criminal law.'
-              },
+                  >
+                    <option value="">Select your department...</option>
+                    {departmentsBySection[selectedSector]?.map((dept) => (
+                      <option key={dept} value={dept}>{dept}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               {/* Rank/Grade Level */}
               {selectedDepartment && (
@@ -2448,6 +2368,86 @@ function App() {
             <div className="bg-gray-800/80 backdrop-blur-sm p-12 rounded-2xl border-2 border-blue-500/50 shadow-2xl">
               <div className="text-center mb-8">
                 <div className="text-6xl mb-4 animate-pulse">🧠</div>
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  Analyzing Your Profile, {userName}...
+                </h2>
+                <p className="text-gray-300">
+                  Creating a personalized training plan based on your role as {selectedRole}
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {analysisSteps.map((step, index) => (
+                  <div 
+                    key={index}
+                    className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-500 ${
+                      index < analysisStep 
+                        ? 'bg-green-600/20 border-2 border-green-500/50' 
+                        : index === analysisStep 
+                        ? 'bg-blue-600/20 border-2 border-blue-500/50 animate-pulse' 
+                        : 'bg-gray-700/30 border-2 border-gray-600/30'
+                    }`}
+                  >
+                    <div className="text-3xl">
+                      {index < analysisStep ? '✅' : index === analysisStep ? step.icon : '⏳'}
+                    </div>
+                    <div className="flex-1">
+                      <p className={`font-semibold ${
+                        index <= analysisStep ? 'text-white' : 'text-gray-500'
+                      }`}>
+                        {step.text}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <div className="w-full bg-gray-700 rounded-full h-3">
+                  <div 
+                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500"
+                    style={{width: `${(analysisStep / analysisSteps.length) * 100}%`}}
+                  ></div>
+                </div>
+                <p className="text-center text-gray-400 text-sm mt-2">
+                  {Math.round((analysisStep / analysisSteps.length) * 100)}% Complete
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : view === 'dashboard' ? (
+        <div className="p-8">
+          <nav className="flex justify-between items-center mb-8 bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl border-2 border-gray-700">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setView('profile')}
+                className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 rounded-full flex items-center justify-center text-2xl transition-all transform hover:scale-110 shadow-lg"
+                title="View Profile"
+              >
+                👨‍💼
+              </button>
+              <div>
+                <h2 className="text-2xl font-bold text-white">
+                  📊 Welcome back, {userProfile?.name || userName}! 👋
+                </h2>
+                {userProfile && (
+                  <p className="text-sm text-gray-400 mt-1">
+                    {userProfile.role} • {userProfile.department} • {userProfile.rank}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setView('landing')}
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all font-semibold"
+              >
+                ← Home
+              </button>
+              <button 
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all font-semibold"
               >
                 🚪 Logout
               </button>
