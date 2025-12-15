@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
+import { narrate, stopAudio, isAudioPlaying } from './utils/pollyNarration';
 
 function App() {
   const [view, setView] = useState('landing');
@@ -55,49 +56,36 @@ function App() {
     };
   }, [currentScenario]);
 
-  // Function to narrate text using Web Speech API
-  const narrateText = (text) => {
-    window.speechSynthesis.cancel();
-    
-    if (!speechSupported) {
-      console.log('Speech synthesis not supported in this browser');
-      return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    utterance.lang = 'en-US';
-    
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(voice => 
-      voice.lang === 'en-US' && (voice.name.includes('Google') || voice.name.includes('Microsoft'))
-    ) || voices.find(voice => voice.lang.startsWith('en'));
-    
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
-
-    utterance.onstart = () => setIsNarrating(true);
-    utterance.onend = () => setIsNarrating(false);
-    utterance.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
+  // Function to narrate text using AWS Polly (with Web Speech API fallback)
+  const narrateText = async (text) => {
+    try {
+      setIsNarrating(true);
+      
+      // Try AWS Polly first (high-quality neural voice)
+      await narrate(text, {
+        voiceId: 'Joanna', // US English female neural voice
+        languageCode: 'en-US'
+      }, true); // true = use Polly, false = use browser TTS
+      
       setIsNarrating(false);
-    };
-
-    window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      console.error('Narration error:', error);
+      setIsNarrating(false);
+    }
   };
 
   // Function to stop narration
   const stopNarration = () => {
-    window.speechSynthesis.cancel();
+    stopAudio(); // Stop Polly audio
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel(); // Also stop browser TTS if it's playing
+    }
     setIsNarrating(false);
   };
 
   // Function to toggle narration
   const toggleNarration = (text) => {
-    if (isNarrating) {
+    if (isNarrating || isAudioPlaying()) {
       stopNarration();
     } else {
       narrateText(text);
@@ -2833,38 +2821,59 @@ function App() {
                     <div className="grid gap-4" role="list" aria-label="Key learning points">
                       {currentCourse.content.keyPoints.map((point, idx) => {
                         const isClicked = clickedLearningPoints.includes(idx);
+                        const isNarrating = isNarrationActive && narrationSource === `keypoint-${idx}`;
                         return (
-                          <button
+                          <div
                             key={idx}
-                            onClick={() => {
-                              if (!isClicked) {
-                                setClickedLearningPoints([...clickedLearningPoints, idx]);
-                                if (clickedLearningPoints.length + 1 === currentCourse.content.keyPoints.length) {
-                                  setCurrentStep('laws');
-                                }
-                              }
-                            }}
-                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth text-left animate-fadeIn ${
+                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth animate-fadeIn ${
                               isClicked
-                                ? 'bg-green-600/20 border-green-500 cursor-default'
-                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800 cursor-pointer'
+                                ? 'bg-green-600/20 border-green-500'
+                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800'
                             }`}
                             style={{ animationDelay: `${idx * 0.05}s` }}
-                            aria-label={`Learning point ${idx + 1}: ${point}`}
-                            aria-pressed={isClicked}
                             role="listitem"
                           >
-                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
-                              isClicked
-                                ? 'bg-green-500'
-                                : 'bg-gradient-to-br from-blue-500 to-purple-500'
-                            }`}>
+                            <button
+                              onClick={() => {
+                                if (!isClicked) {
+                                  setClickedLearningPoints([...clickedLearningPoints, idx]);
+                                  if (clickedLearningPoints.length + 1 === currentCourse.content.keyPoints.length) {
+                                    setCurrentStep('laws');
+                                  }
+                                }
+                              }}
+                              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
+                                isClicked
+                                  ? 'bg-green-500'
+                                  : 'bg-gradient-to-br from-blue-500 to-purple-500'
+                              }`}
+                              aria-label={`Mark learning point ${idx + 1} as reviewed`}
+                              aria-pressed={isClicked}
+                            >
                               {isClicked ? '✓' : idx + 1}
-                            </div>
-                            <span className={`text-lg leading-relaxed ${
+                            </button>
+                            <span className={`flex-1 text-lg leading-relaxed ${
                               isClicked ? 'text-green-300' : 'text-gray-300'
                             }`}>{point}</span>
-                          </button>
+                            <button
+                              onClick={() => {
+                                if (isNarrating) {
+                                  stopNarration();
+                                } else {
+                                  handleNarration(point, `keypoint-${idx}`);
+                                }
+                              }}
+                              className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
+                                isNarrating
+                                  ? 'bg-red-500/80 hover:bg-red-600 text-white'
+                                  : 'bg-blue-500/30 hover:bg-blue-500/50 text-blue-300'
+                              }`}
+                              aria-label={isNarrating ? 'Stop narration' : `Listen to learning point ${idx + 1}`}
+                              title={isNarrating ? 'Stop' : 'Listen'}
+                            >
+                              {isNarrating ? '⏸️' : '🔊'}
+                            </button>
+                          </div>
                         );
                       })}
                     </div>
