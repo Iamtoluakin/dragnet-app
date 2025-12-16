@@ -2961,6 +2961,15 @@ function App() {
                   onClick={() => {
                     setShowQuiz(false);
                     setQuizAnswers({});
+                    setShowKeyLearning(true);
+                    setCurrentStep('laws');
+                    // Scroll to Key Learning Points section
+                    setTimeout(() => {
+                      keyLearningRef.current?.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                      });
+                    }, 100);
                   }}
                   className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold transition-all"
                 >
@@ -3055,6 +3064,15 @@ function App() {
                       setShowQuiz(false);
                       setQuizAnswers({});
                       setQuizResult(null);
+                      setShowKeyLearning(true);
+                      setCurrentStep('keyPoints');
+                      // Scroll to Key Learning Points section
+                      setTimeout(() => {
+                        keyLearningRef.current?.scrollIntoView({ 
+                          behavior: 'smooth', 
+                          block: 'start' 
+                        });
+                      }, 100);
                     }}
                     className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all"
                   >
@@ -3388,6 +3406,15 @@ function App() {
                         setScenarioAnswer('');
                         setScenarioResult(null);
                         setScenarioBranch([]);
+                        setShowKeyLearning(true);
+                        setCurrentStep('keyPoints');
+                        // Scroll to Key Learning Points section
+                        setTimeout(() => {
+                          keyLearningRef.current?.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start' 
+                          });
+                        }, 100);
                       }}
                       className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-smooth"
                       aria-label="Go back to course overview"
@@ -3418,6 +3445,7 @@ function App() {
                             setScenarioResult(null);
                             setShowKeyLearning(true);
                             setClickedLearningPoints([]);
+                            setCurrentStep('keyPoints');
                             // Scroll to Key Learning Points section after a brief delay
                             setTimeout(() => {
                               keyLearningRef.current?.scrollIntoView({ 
