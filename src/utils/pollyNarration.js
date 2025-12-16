@@ -81,67 +81,30 @@ export const isAudioPlaying = () => {
 };
 
 /**
- * Fallback to Web Speech API if Polly is unavailable
- */
-export const textToSpeechBrowser = (text, options = {}) => {
-  return new Promise((resolve, reject) => {
-    if (!('speechSynthesis' in window)) {
-      reject(new Error('Speech synthesis not supported'));
-      return;
-    }
-
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = options.rate || 1.0;
-    utterance.pitch = options.pitch || 1.0;
-    utterance.volume = options.volume || 1.0;
-
-    // Try to select a specific voice
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(voice => 
-      voice.lang.startsWith('en-') && voice.name.includes('Female')
-    ) || voices.find(voice => voice.lang.startsWith('en-'));
-
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
-
-    utterance.onend = () => resolve();
-    utterance.onerror = (error) => reject(error);
-
-    window.speechSynthesis.speak(utterance);
-  });
-};
-
-/**
- * Main narration function with fallback
+ * Main narration function - AWS Polly ONLY
  * @param {string} text - Text to narrate
- * @param {Object} options - Narration options
- * @param {boolean} usePolly - Whether to use Polly (true) or browser TTS (false)
+ * @param {Object} options - Narration options (voiceId, languageCode)
+ * @returns {Promise} - Resolves when audio finishes playing
  */
-export const narrate = async (text, options = {}, usePolly = true) => {
+export const narrate = async (text, options = {}) => {
   try {
-    if (usePolly) {
-      const audioUrl = await textToSpeechPolly(text, options);
-      return new Promise((resolve, reject) => {
-        playAudio(audioUrl, resolve);
-      });
-    } else {
-      return await textToSpeechBrowser(text, options);
-    }
+    console.log('🎙️ Using AWS Polly for narration...');
+    const audioUrl = await textToSpeechPolly(text, options);
+    return new Promise((resolve, reject) => {
+      const audio = playAudio(audioUrl, resolve);
+      if (!audio) {
+        reject(new Error('Failed to play audio'));
+      }
+    });
   } catch (error) {
-    console.error('Polly narration failed, falling back to browser TTS:', error);
-    // Fallback to browser TTS
-    return await textToSpeechBrowser(text, options);
+    console.error('❌ AWS Polly narration failed:', error);
+    throw new Error('AWS Polly is not configured. Please check Firebase Functions deployment.');
   }
 };
 
 export default {
   narrate,
   textToSpeechPolly,
-  textToSpeechBrowser,
   playAudio,
   stopAudio,
   isAudioPlaying,

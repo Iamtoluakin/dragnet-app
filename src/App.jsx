@@ -26,7 +26,7 @@ function App() {
   const [clickedLearningPoints, setClickedLearningPoints] = useState([]);
   const [showKeyLearning, setShowKeyLearning] = useState(false);
   const [isNarrating, setIsNarrating] = useState(false);
-  const [speechSupported, setSpeechSupported] = useState(false);
+  const [narrationError, setNarrationError] = useState(null);
   const [scenarioBranch, setScenarioBranch] = useState([]);
   const [feedbackHistory, setFeedbackHistory] = useState([]);
   const [showAnimation, setShowAnimation] = useState(false);
@@ -40,52 +40,46 @@ function App() {
     confirmPassword: ''
   });
 
-  // Check for Web Speech API support on component mount
-  useEffect(() => {
-    if ('speechSynthesis' in window) {
-      setSpeechSupported(true);
-    }
-  }, []);
-
   // Stop narration when scenario changes or component unmounts
   useEffect(() => {
     return () => {
-      if (window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
+      stopAudio();
     };
   }, [currentScenario]);
 
-  // Function to narrate text using AWS Polly (with Web Speech API fallback)
+  // Function to narrate text using AWS Polly ONLY
   const narrateText = async (text) => {
     try {
       setIsNarrating(true);
+      setNarrationError(null);
       
-      // Try AWS Polly first (high-quality neural voice)
+      console.log('🎙️ Starting AWS Polly narration...');
       await narrate(text, {
         voiceId: 'Joanna', // US English female neural voice
         languageCode: 'en-US'
-      }, true); // true = use Polly, false = use browser TTS
+      });
       
       setIsNarrating(false);
+      console.log('✅ Narration completed successfully');
     } catch (error) {
-      console.error('Narration error:', error);
+      console.error('❌ AWS Polly narration failed:', error);
       setIsNarrating(false);
+      setNarrationError('AWS Polly is not configured. Please deploy Firebase Functions.');
+      
+      // Show error to user for 5 seconds
+      setTimeout(() => setNarrationError(null), 5000);
     }
   };
 
   // Function to stop narration
   const stopNarration = () => {
-    stopAudio(); // Stop Polly audio
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel(); // Also stop browser TTS if it's playing
-    }
+    stopAudio();
     setIsNarrating(false);
   };
 
   // Function to toggle narration
   const toggleNarration = (text) => {
-    if (isNarrating || isAudioPlaying()) {
+    if (isNarrating) {
       stopNarration();
     } else {
       narrateText(text);
@@ -2821,59 +2815,38 @@ function App() {
                     <div className="grid gap-4" role="list" aria-label="Key learning points">
                       {currentCourse.content.keyPoints.map((point, idx) => {
                         const isClicked = clickedLearningPoints.includes(idx);
-                        const isNarrating = isNarrationActive && narrationSource === `keypoint-${idx}`;
                         return (
-                          <div
+                          <button
                             key={idx}
-                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth animate-fadeIn ${
+                            onClick={() => {
+                              if (!isClicked) {
+                                setClickedLearningPoints([...clickedLearningPoints, idx]);
+                                if (clickedLearningPoints.length + 1 === currentCourse.content.keyPoints.length) {
+                                  setCurrentStep('laws');
+                                }
+                              }
+                            }}
+                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth text-left animate-fadeIn ${
                               isClicked
-                                ? 'bg-green-600/20 border-green-500'
-                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800'
+                                ? 'bg-green-600/20 border-green-500 cursor-default'
+                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800 cursor-pointer'
                             }`}
                             style={{ animationDelay: `${idx * 0.05}s` }}
+                            aria-label={`Learning point ${idx + 1}: ${point}`}
+                            aria-pressed={isClicked}
                             role="listitem"
                           >
-                            <button
-                              onClick={() => {
-                                if (!isClicked) {
-                                  setClickedLearningPoints([...clickedLearningPoints, idx]);
-                                  if (clickedLearningPoints.length + 1 === currentCourse.content.keyPoints.length) {
-                                    setCurrentStep('laws');
-                                  }
-                                }
-                              }}
-                              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
-                                isClicked
-                                  ? 'bg-green-500'
-                                  : 'bg-gradient-to-br from-blue-500 to-purple-500'
-                              }`}
-                              aria-label={`Mark learning point ${idx + 1} as reviewed`}
-                              aria-pressed={isClicked}
-                            >
+                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
+                              isClicked
+                                ? 'bg-green-500'
+                                : 'bg-gradient-to-br from-blue-500 to-purple-500'
+                            }`}>
                               {isClicked ? '✓' : idx + 1}
-                            </button>
-                            <span className={`flex-1 text-lg leading-relaxed ${
+                            </div>
+                            <span className={`text-lg leading-relaxed ${
                               isClicked ? 'text-green-300' : 'text-gray-300'
                             }`}>{point}</span>
-                            <button
-                              onClick={() => {
-                                if (isNarrating) {
-                                  stopNarration();
-                                } else {
-                                  handleNarration(point, `keypoint-${idx}`);
-                                }
-                              }}
-                              className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
-                                isNarrating
-                                  ? 'bg-red-500/80 hover:bg-red-600 text-white'
-                                  : 'bg-blue-500/30 hover:bg-blue-500/50 text-blue-300'
-                              }`}
-                              aria-label={isNarrating ? 'Stop narration' : `Listen to learning point ${idx + 1}`}
-                              title={isNarrating ? 'Stop' : 'Listen'}
-                            >
-                              {isNarrating ? '⏸️' : '🔊'}
-                            </button>
-                          </div>
+                          </button>
                         );
                       })}
                     </div>
@@ -3240,34 +3213,43 @@ function App() {
                         </p>
                       </div>
                       
-                      {/* Narration Button */}
-                      {speechSupported && (
-                        <div className="mt-4 flex justify-center">
-                          <button
-                            onClick={() => toggleNarration(currentScenario.situation)}
-                            className={`px-6 py-3 rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 ${
-                              isNarrating 
-                                ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
-                                : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700'
-                            }`}
-                            aria-label={isNarrating ? 'Stop scenario narration' : 'Listen to scenario narration'}
-                            aria-pressed={isNarrating}
-                            title={isNarrating ? 'Stop reading the scenario aloud' : 'Have the scenario read aloud to you'}
-                          >
-                            {isNarrating ? (
-                              <>
-                                <span className="text-xl" aria-hidden="true">⏸️</span>
-                                <span>Stop Narration</span>
-                              </>
-                            ) : (
-                              <>
-                                <span className="text-xl" aria-hidden="true">🔊</span>
-                                <span>Listen to Scenario</span>
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      )}
+                      {/* AWS Polly Narration Button */}
+                      <div className="mt-4 flex flex-col items-center gap-2">
+                        <button
+                          onClick={() => toggleNarration(currentScenario.situation)}
+                          className={`px-6 py-3 rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 ${
+                            isNarrating 
+                              ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
+                              : 'bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700'
+                          }`}
+                          aria-label={isNarrating ? 'Stop AWS Polly narration' : 'Listen with AWS Polly'}
+                          aria-pressed={isNarrating}
+                          title={isNarrating ? 'Stop AWS Polly narration' : 'Professional AI voice narration powered by AWS Polly'}
+                        >
+                          {isNarrating ? (
+                            <>
+                              <span className="text-xl" aria-hidden="true">⏸️</span>
+                              <span>Stop AWS Polly</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-xl" aria-hidden="true">🎙️</span>
+                              <span>Listen with AWS Polly</span>
+                            </>
+                          )}
+                        </button>
+                        <p className="text-xs text-gray-400 italic">Powered by AWS Polly Neural Voice</p>
+                        
+                        {/* Error Message */}
+                        {narrationError && (
+                          <div className="mt-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg max-w-md">
+                            <p className="text-red-300 text-sm flex items-center gap-2">
+                              <span className="text-xl">⚠️</span>
+                              <span>{narrationError}</span>
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
