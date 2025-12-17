@@ -2171,6 +2171,15 @@ function App() {
                   <label className="block text-sm font-semibold text-gray-300 mb-2">
                     Email Address
                   </label>
+                      required
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-300 mb-2">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     value={formData.email}
@@ -2213,7 +2222,7 @@ function App() {
 
                 <button
                   type="submit"
-                  className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-lg transition-all shadow-lg transform hover:scale-105"
                 >
                   {authMode === 'signin' ? '🔓 Sign In' : '✨ Create Account'}
                 </button>
@@ -3474,7 +3483,7 @@ function App() {
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-3xl shadow-lg">
-                  👨‍💼
+                  �
                 </div>
                 <h1 className="text-4xl font-bold text-white">My Profile</h1>
               </div>
@@ -3490,12 +3499,12 @@ function App() {
             <div className="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-sm p-8 rounded-2xl border-2 border-purple-500/30 mb-8 shadow-xl">
               <div className="flex items-start gap-6">
                 <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-5xl shadow-lg">
-                  👨‍�
+                  �
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-3xl font-bold text-white mb-2">{userName}</h2>
-                  <p className="text-blue-300 text-lg mb-4">{userEmail}</p>
-                  {userProfile && (
+                  <h2 className="text-3xl font-bold text-white mb-2">{userName || 'User'}</h2>
+                  <p className="text-blue-300 text-lg mb-4">{userEmail || 'No email provided'}</p>
+                  {userProfile ? (
                     <div className="grid grid-cols-2 gap-4 mt-4">
                       <div>
                         <p className="text-gray-400 text-sm">Sector</p>
@@ -3514,6 +3523,8 @@ function App() {
                         <p className="text-white font-semibold">{userProfile.rank}</p>
                       </div>
                     </div>
+                  ) : (
+                    <p className="text-gray-400 text-sm mt-4">Loading profile information...</p>
                   )}
                 </div>
               </div>
