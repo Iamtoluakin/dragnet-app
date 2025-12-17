@@ -2171,15 +2171,6 @@ function App() {
                   <label className="block text-sm font-semibold text-gray-300 mb-2">
                     Email Address
                   </label>
-                      required
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-2">
-                    Email Address
-                  </label>
                   <input
                     type="email"
                     value={formData.email}
