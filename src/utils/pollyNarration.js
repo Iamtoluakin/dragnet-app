@@ -1,47 +1,42 @@
-// AWS Polly Narration Utility
-import { getFunctions, httpsCallable } from 'firebase/functions';
+// Enhanced Browser Text-to-Speech Narration (100% Free)
+// Uses Web Speech API with optimized settings for better quality
 
+let currentUtterance = null;
 let currentAudio = null;
 
 /**
- * Convert text to speech using AWS Polly via Firebase Function
- * @param {string} text - Text to convert to speech
- * @param {Object} options - Voice options
- * @returns {Promise<string>} - Audio URL
+ * Initialize speech synthesis and get best available voice
  */
-export const textToSpeechPolly = async (text, options = {}) => {
-  try {
-    const functions = getFunctions();
-    const textToSpeechUrl = httpsCallable(functions, 'textToSpeechUrl');
-    
-    const result = await textToSpeechUrl({
-      text: text,
-      voiceId: options.voiceId || 'Joanna', // US English female
-      languageCode: options.languageCode || 'en-US',
-    });
+const getBestVoice = () => {
+  const voices = window.speechSynthesis.getVoices();
+  
+  // Prefer these voices in order (they sound most natural)
+  const preferredVoices = [
+    'Samantha', // macOS - very natural
+    'Google US English', // Chrome - good quality
+    'Microsoft Zira Desktop', // Windows - decent
+    'Karen', // macOS alternative
+    'Alex', // macOS male
+  ];
 
-    if (result.data.success) {
-      return result.data.url;
-    } else {
-      throw new Error('Failed to generate speech');
-    }
-  } catch (error) {
-    console.error('Error generating speech with Polly:', error);
-    throw error;
+  // Try to find preferred voice
+  for (const preferred of preferredVoices) {
+    const voice = voices.find(v => v.name.includes(preferred));
+    if (voice) return voice;
   }
+
+  // Fallback: find any English voice
+  const englishVoice = voices.find(v => v.lang.startsWith('en-'));
+  return englishVoice || voices[0];
 };
 
 /**
- * Play audio from URL
+ * Play audio from URL (kept for compatibility)
  * @param {string} audioUrl - URL of the audio file
  * @param {Function} onEnd - Callback when audio ends
  */
 export const playAudio = (audioUrl, onEnd) => {
-  // Stop any currently playing audio
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio = null;
-  }
+  stopAudio();
 
   currentAudio = new Audio(audioUrl);
   
@@ -63,9 +58,16 @@ export const playAudio = (audioUrl, onEnd) => {
 };
 
 /**
- * Stop currently playing audio
+ * Stop currently playing audio or speech
  */
 export const stopAudio = () => {
+  // Stop speech synthesis
+  if (window.speechSynthesis && window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
+  currentUtterance = null;
+
+  // Stop audio element if any
   if (currentAudio) {
     currentAudio.pause();
     currentAudio.currentTime = 0;
@@ -74,38 +76,89 @@ export const stopAudio = () => {
 };
 
 /**
- * Check if audio is currently playing
+ * Check if audio or speech is currently playing
  */
 export const isAudioPlaying = () => {
-  return currentAudio !== null && !currentAudio.paused;
+  const isSpeaking = window.speechSynthesis && window.speechSynthesis.speaking;
+  const isAudioActive = currentAudio !== null && !currentAudio.paused;
+  return isSpeaking || isAudioActive;
 };
 
 /**
- * Main narration function - AWS Polly ONLY
- * @param {string} text - Text to narrate
- * @param {Object} options - Narration options (voiceId, languageCode)
- * @returns {Promise} - Resolves when audio finishes playing
+ * Get available voices
  */
-export const narrate = async (text, options = {}) => {
-  try {
-    console.log('🎙️ Using AWS Polly for narration...');
-    const audioUrl = await textToSpeechPolly(text, options);
-    return new Promise((resolve, reject) => {
-      const audio = playAudio(audioUrl, resolve);
-      if (!audio) {
-        reject(new Error('Failed to play audio'));
+export const getAvailableVoices = () => {
+  if (!('speechSynthesis' in window)) return [];
+  return window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en-'));
+};
+
+/**
+ * Main narration function using browser TTS
+ * @param {string} text - Text to narrate
+ * @param {Object} options - Narration options (rate, pitch, volume)
+ * @returns {Promise} - Resolves when speech finishes
+ */
+export const narrate = (text, options = {}) => {
+  return new Promise((resolve, reject) => {
+    try {
+      // Stop any current narration
+      stopAudio();
+
+      // Check if speech synthesis is available
+      if (!('speechSynthesis' in window)) {
+        reject(new Error('Text-to-speech not supported in this browser'));
+        return;
       }
-    });
-  } catch (error) {
-    console.error('❌ AWS Polly narration failed:', error);
-    throw new Error('AWS Polly is not configured. Please check Firebase Functions deployment.');
-  }
+
+      // Wait for voices to load if needed
+      const startSpeech = () => {
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        
+        // Get the best available voice
+        const bestVoice = getBestVoice();
+        if (bestVoice) {
+          currentUtterance.voice = bestVoice;
+          console.log('🎙️ Using voice:', bestVoice.name);
+        }
+
+        // Optimize speech parameters for better quality
+        currentUtterance.rate = options.rate || 0.95; // Slightly slower for clarity
+        currentUtterance.pitch = options.pitch || 1.0; // Natural pitch
+        currentUtterance.volume = options.volume || 1.0; // Full volume
+        currentUtterance.lang = options.lang || 'en-US';
+
+        // Event handlers
+        currentUtterance.onend = () => {
+          currentUtterance = null;
+          resolve();
+        };
+
+        currentUtterance.onerror = (event) => {
+          currentUtterance = null;
+          reject(new Error(`Speech synthesis error: ${event.error}`));
+        };
+
+        // Start speaking
+        window.speechSynthesis.speak(currentUtterance);
+      };
+
+      // Some browsers need voices to load first
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        window.speechSynthesis.addEventListener('voiceschanged', startSpeech, { once: true });
+      } else {
+        startSpeech();
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
 };
 
 export default {
   narrate,
-  textToSpeechPolly,
   playAudio,
   stopAudio,
   isAudioPlaying,
+  getAvailableVoices,
 };

@@ -47,24 +47,25 @@ function App() {
     };
   }, [currentScenario]);
 
-  // Function to narrate text using AWS Polly ONLY
+  // Function to narrate text using browser TTS (100% FREE)
   const narrateText = async (text) => {
     try {
       setIsNarrating(true);
       setNarrationError(null);
       
-      console.log('🎙️ Starting AWS Polly narration...');
+      console.log('🎙️ Starting narration...');
       await narrate(text, {
-        voiceId: 'Joanna', // US English female neural voice
-        languageCode: 'en-US'
+        rate: 0.95, // Slightly slower for clarity
+        pitch: 1.0,
+        volume: 1.0
       });
       
       setIsNarrating(false);
       console.log('✅ Narration completed successfully');
     } catch (error) {
-      console.error('❌ AWS Polly narration failed:', error);
+      console.error('❌ Narration failed:', error);
       setIsNarrating(false);
-      setNarrationError('AWS Polly is not configured. Please deploy Firebase Functions.');
+      setNarrationError('Unable to play narration. Please check your browser settings.');
       
       // Show error to user for 5 seconds
       setTimeout(() => setNarrationError(null), 5000);
@@ -3231,32 +3232,32 @@ function App() {
                         </p>
                       </div>
                       
-                      {/* AWS Polly Narration Button */}
+                      {/* Narration Button */}
                       <div className="mt-4 flex flex-col items-center gap-2">
                         <button
                           onClick={() => toggleNarration(currentScenario.situation)}
                           className={`px-6 py-3 rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 ${
                             isNarrating 
                               ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
-                              : 'bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700'
+                              : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'
                           }`}
-                          aria-label={isNarrating ? 'Stop AWS Polly narration' : 'Listen with AWS Polly'}
+                          aria-label={isNarrating ? 'Stop narration' : 'Listen to narration'}
                           aria-pressed={isNarrating}
-                          title={isNarrating ? 'Stop AWS Polly narration' : 'Professional AI voice narration powered by AWS Polly'}
+                          title={isNarrating ? 'Stop narration' : 'Listen to scenario narration'}
                         >
                           {isNarrating ? (
                             <>
                               <span className="text-xl" aria-hidden="true">⏸️</span>
-                              <span>Stop AWS Polly</span>
+                              <span>Stop Narration</span>
                             </>
                           ) : (
                             <>
                               <span className="text-xl" aria-hidden="true">🎙️</span>
-                              <span>Listen with AWS Polly</span>
+                              <span>Listen to Scenario</span>
                             </>
                           )}
                         </button>
-                        <p className="text-xs text-gray-400 italic">Powered by AWS Polly Neural Voice</p>
+                        <p className="text-xs text-gray-400 italic">Click to hear the scenario read aloud</p>
                         
                         {/* Error Message */}
                         {narrationError && (
