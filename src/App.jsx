@@ -19,6 +19,7 @@ function App() {
   const [currentScenario, setCurrentScenario] = useState(null);
   const [scenarioAnswer, setScenarioAnswer] = useState('');
   const [scenarioResult, setScenarioResult] = useState(null);
+  const [hasReadScenario, setHasReadScenario] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizResult, setQuizResult] = useState(null);
@@ -2690,6 +2691,7 @@ function App() {
                             setCurrentScenario(scenario);
                             setScenarioAnswer('');
                             setScenarioResult(null);
+                            setHasReadScenario(false);
                             setCurrentStep('scenarios');
                           }}
                           className="w-full p-6 bg-gray-800/80 hover:bg-gray-700 border-2 border-gray-600 hover:border-orange-500 rounded-xl text-left transition-smooth group relative overflow-hidden animate-fadeIn"
@@ -3204,8 +3206,27 @@ function App() {
                 </div>
               </div>
 
-              {!scenarioResult ? (
-                <div className="bg-gray-800/80 backdrop-blur-sm p-8 rounded-xl border-2 border-gray-700">
+              {/* Continue Button - Shows before options */}
+              {!hasReadScenario && !scenarioResult && (
+                <div className="bg-gradient-to-br from-blue-900/40 to-indigo-900/40 backdrop-blur-sm p-8 rounded-xl border-2 border-blue-500/50 text-center animate-fadeIn">
+                  <div className="mb-4">
+                    <p className="text-xl text-white mb-2">📖 Take your time to read and understand the scenario above</p>
+                    <p className="text-gray-300">Think carefully about the ethical implications before making your choice</p>
+                  </div>
+                  <button
+                    onClick={() => setHasReadScenario(true)}
+                    className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-smooth flex items-center gap-3 mx-auto text-lg"
+                    aria-label="Continue to answer options"
+                  >
+                    <span className="text-2xl">✅</span>
+                    <span>I've Read the Scenario - Show Me the Options</span>
+                    <span className="text-2xl">➡️</span>
+                  </button>
+                </div>
+              )}
+
+              {hasReadScenario && !scenarioResult ? (
+                <div className="bg-gray-800/80 backdrop-blur-sm p-8 rounded-xl border-2 border-gray-700 animate-fadeIn">
                   <h2 className="text-xl font-bold text-white mb-6">🤔 What would you do? Select your response:</h2>
                   <div className="space-y-4">
                     {currentScenario.options.map((option, index) => (
@@ -3329,6 +3350,7 @@ function App() {
                         setCurrentScenario(null);
                         setScenarioAnswer('');
                         setScenarioResult(null);
+                        setHasReadScenario(false);
                         setScenarioBranch([]);
                         setShowKeyLearning(true);
                         setCurrentStep('keyPoints');
@@ -3356,6 +3378,7 @@ function App() {
                             setCurrentScenario(currentCourse.scenarios[nextIndex]);
                             setScenarioAnswer('');
                             setScenarioResult(null);
+                            setHasReadScenario(false);
                           }}
                           className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-all"
                         >
