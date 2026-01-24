@@ -39,6 +39,8 @@ function App() {
     password: '',
     confirmPassword: ''
   });
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState(null);
 
   // Stop narration when scenario changes or component unmounts
   useEffect(() => {
@@ -90,28 +92,28 @@ function App() {
   const sectors = [
     { value: 'police', label: 'Police', icon: '🚔', color: 'from-blue-600 to-blue-800' },
     { value: 'civil', label: 'Civil Service', icon: '🏛️', color: 'from-purple-600 to-purple-800' },
-    { value: 'student', label: 'Student', icon: '🎓', color: 'from-green-600 to-green-800' },
+    { value: 'customs_immigration', label: 'Customs & Immigration', icon: '🛂', color: 'from-green-600 to-green-800' },
     { value: 'private', label: 'Private Sector', icon: '💼', color: 'from-orange-600 to-orange-800' }
   ];
 
   const rolesBySection = {
     police: ['Traffic Officer', 'Sergeant', 'Inspector', 'Detective', 'Corporal', 'Constable'],
     civil: ['Procurement Officer', 'Finance Officer', 'Admin Officer', 'IT Officer', 'HR Officer', 'Legal Officer'],
-    student: ['Student Leader', 'NYSC Intern', 'Graduate Student', 'Undergraduate', 'Class Representative'],
+    customs_immigration: ['Immigration Officer', 'Customs Officer', 'Border Control Agent', 'Passport Control Officer', 'Senior Immigration Officer', 'Chief Customs Officer'],
     private: ['Bank Teller', 'Customer Service Rep', 'Manager', 'Accountant', 'Sales Rep', 'IT Staff']
   };
 
   const departmentsBySection = {
     police: ['Operations', 'Traffic', 'Criminal Investigation', 'Intelligence', 'Administration'],
     civil: ['Finance', 'Procurement', 'IT', 'HR', 'Legal', 'Administration'],
-    student: ['Education', 'Student Affairs', 'Administration', 'Community Service'],
+    customs_immigration: ['Passport Control', 'Border Operations', 'Visa Processing', 'Customs Enforcement', 'Investigation & Compliance', 'Airport Operations'],
     private: ['Finance', 'IT', 'Healthcare', 'Customer Service', 'Operations', 'Sales']
   };
 
   const ranksBySection = {
     police: ['Constable', 'Corporal', 'Sergeant', 'Inspector', 'Chief Inspector', 'Superintendent'],
     civil: ['GL06', 'GL07', 'GL08', 'GL09', 'GL10', 'GL12', 'GL14', 'GL15'],
-    student: ['Freshman', 'Sophomore', 'Junior', 'Senior', 'NYSC Intern', 'Graduate Student'],
+    customs_immigration: ['Assistant Immigration Officer I', 'Assistant Immigration Officer II', 'Immigration Officer I', 'Immigration Officer II', 'Chief Immigration Officer', 'Deputy Comptroller'],
     private: ['Intern', 'Junior Officer', 'Officer', 'Senior Officer', 'Manager', 'Senior Manager']
   };
 
@@ -1134,120 +1136,148 @@ function App() {
         ]
       }
     ],
-    student: [
+    customs_immigration: [
       { 
         id: 7,
-        title: 'Academic Integrity',
-        description: 'Understanding exam malpractice and plagiarism',
+        title: 'Customs & Immigration Compliance',
+        description: 'Best practices for passport processing, border control, and anti-corruption',
         progress: 0,
-        risk: 'low',
-        duration: '15 min',
+        risk: 'high',
+        duration: '18 min',
         content: {
-          introduction: 'Academic integrity is the foundation of quality education and personal development. Engaging in exam malpractice or plagiarism not only violates university rules but also undermines your own learning and future career.',
+          introduction: 'As a customs or immigration officer, you are entrusted with upholding national security, facilitating lawful travel, and ensuring the integrity of border processes. Strict compliance with regulations and ethical standards is essential to prevent fraud, protect citizens, and maintain public trust.',
           keyPoints: [
-            'Plagiarism is presenting someone else\'s work as your own',
-            'Exam malpractice includes cheating, impersonation, and using unauthorized materials',
-            'Penalties range from failing grades to expulsion',
-            'Academic dishonesty can damage your reputation permanently',
-            'Always cite sources properly and do your own work'
+            'Always verify the authenticity of documents and applicant identity',
+            'Never accept bribes or gifts in exchange for services',
+            'Follow due process for passport issuance and border checks',
+            'Report any suspicious activity or attempted fraud immediately',
+            'Respect the rights and dignity of all applicants and travelers'
           ],
           laws: [
-            'University Regulations on Academic Misconduct',
-            'Examination Malpractice Act (1999)',
-            'NYSC Act - Ethical Conduct Requirements'
+            'Nigeria Immigration Act (2015)',
+            'Passport (Miscellaneous Provisions) Act',
+            'Corrupt Practices and Other Related Offences Act (2000)',
+            'Nigerian Customs Service Act',
+            'Public Service Rules'
           ]
         },
         scenarios: [
           {
-            id: 'student-integrity-1',
-            title: 'Group Project Plagiarism',
-            situation: 'Your group is working on a major project due tomorrow. One member suggests copying entire sections from online sources and just changing a few words, saying "everyone does it and we won\'t get caught."',
+            id: 'immigration-passport-1',
+            title: 'Passport Application Bribery',
+            videoUrl: 'https://www.youtube.com/embed/lwfijBPReoY?si=tibk_8nq7269WZ43',
+            videoThumbnail: '🎥',
+            situation: 'You are working at the passport office. An applicant offers you ₦20,000 to "fast-track" their passport application, claiming they are in a hurry and know "this is how things work."',
             options: [
               {
                 id: 'a',
-                text: 'Go along with it to avoid conflict and meet the deadline',
+                text: 'Accept the money and process the application quickly',
                 correct: false,
-                feedback: '❌ INCORRECT: This is plagiarism and academic dishonesty. All group members can be held responsible. Plagiarism detection software is very sophisticated and will likely catch this, resulting in failing grades or expulsion.'
+                feedback: '❌ INCORRECT: Accepting a bribe is illegal and unethical. You risk dismissal, prosecution, and imprisonment under the Corrupt Practices Act.',
+                consequence: 'You are reported by a colleague and face disciplinary action.',
+                points: -10
               },
               {
                 id: 'b',
-                text: 'Refuse, explain the risks, and insist the group writes original content with proper citations',
+                text: 'Refuse the bribe and process the application according to standard procedure',
                 correct: true,
-                feedback: '✅ CORRECT: Excellent decision. Stand firm on academic integrity. Explain that plagiarism puts everyone at risk and undermines learning. Write original content and cite all sources properly. If needed, request a deadline extension from your professor.'
+                feedback: '✅ CORRECT: This is the right action. Refuse any inducement, follow due process, and document the attempted bribery.',
+                consequence: 'You maintain your integrity and set a positive example for others.',
+                points: 10
               },
               {
                 id: 'c',
-                text: 'Let them plagiarize but write your own section originally',
+                text: 'Ignore the offer and continue processing without reporting',
                 correct: false,
-                feedback: '⚠️ PARTIALLY INCORRECT: As a group member, you share responsibility for the entire project. If plagiarism is detected, all members can face consequences. You must insist on integrity for the entire submission.'
+                feedback: '⚠️ PARTIALLY CORRECT: While you did not accept the bribe, failing to report the attempt is a violation of anti-corruption policy.',
+                consequence: 'The applicant tries to bribe another officer.',
+                points: -3
               },
               {
                 id: 'd',
-                text: 'Submit the plagiarized work and hope no one notices',
+                text: 'Tell the applicant to come back after office hours',
                 correct: false,
-                feedback: '❌ INCORRECT: Modern plagiarism detection tools are highly effective. This strategy will likely fail and result in serious academic penalties for all group members, including failing grades and disciplinary action.'
+                feedback: '❌ INCORRECT: This creates suspicion and may be seen as soliciting a bribe. Always maintain transparency.',
+                consequence: 'You are placed under investigation for improper conduct.',
+                points: -8
               }
             ]
           },
           {
-            id: 'student-integrity-2',
-            title: 'Exam Cheating Opportunity',
-            situation: 'During a final exam, you notice that you can clearly see another student\'s answers. That student is one of the top performers in the class. You\'re struggling with several questions.',
+            id: 'immigration-border-1',
+            title: 'Suspicious Traveler at Border',
+            situation: 'At a border post, a traveler presents a passport with signs of tampering. They become agitated and offer you a "gift" to let them pass without further checks.',
             options: [
               {
                 id: 'a',
-                text: 'Copy their answers for questions you don\'t know',
+                text: 'Accept the gift and allow passage',
                 correct: false,
-                feedback: '❌ INCORRECT: This is exam malpractice and academic dishonesty. If caught, you could face a failing grade, suspension, or expulsion. Moreover, you\'re cheating yourself of genuine learning and understanding.'
+                feedback: '❌ INCORRECT: Accepting gifts in exchange for official action is bribery and a serious offense.',
+                consequence: 'You are caught in a sting operation and arrested.',
+                points: -10
               },
               {
                 id: 'b',
-                text: 'Focus on your own paper and answer based on your own knowledge',
+                text: 'Refuse the gift, detain the traveler, and follow protocol for document verification',
                 correct: true,
-                feedback: '✅ CORRECT: This is the right choice. Academic integrity means doing your own work, even when it\'s difficult. Your honest effort reflects your true understanding and builds character. If you need help, seek legitimate tutoring or study support.'
+                feedback: '✅ CORRECT: Detain the traveler, verify the document, and report the incident to your supervisor and security agencies.',
+                consequence: 'You prevent a potential security breach and uphold the law.',
+                points: 10
               },
               {
                 id: 'c',
-                text: 'Look at their answers "just to confirm" your own',
+                text: 'Let the traveler go to avoid confrontation',
                 correct: false,
-                feedback: '❌ INCORRECT: This is still cheating. Looking at another student\'s answers during an exam, for any reason, violates exam rules and constitutes academic dishonesty. Keep your eyes on your own paper.'
+                feedback: '❌ INCORRECT: Allowing passage without proper checks endangers national security.',
+                consequence: 'The traveler is later found to be on a watchlist.',
+                points: -8
               },
               {
                 id: 'd',
-                text: 'Take a photo of their paper for later use',
+                text: 'Confiscate the passport but do not report the incident',
                 correct: false,
-                feedback: '❌ INCORRECT: This is a serious violation of exam rules and academic integrity. Using phones or cameras during exams is strictly prohibited and can result in immediate expulsion from the exam and severe disciplinary action.'
+                feedback: '⚠️ PARTIALLY CORRECT: Confiscating the document is right, but you must also report and document the incident.',
+                consequence: 'The incident is not properly recorded, leading to accountability issues.',
+                points: -5
               }
             ]
           },
           {
-            id: 'student-integrity-3',
-            title: 'Paid Essay Service Temptation',
-            situation: 'You have three major essays due the same week along with exams. A friend tells you about a website where you can buy pre-written essays that are "guaranteed original and undetectable."',
+            id: 'immigration-data-1',
+            title: 'Data Privacy Violation',
+            situation: 'A friend asks you to check the immigration records of someone they are suspicious about, offering you a small token of appreciation.',
             options: [
               {
                 id: 'a',
-                text: 'Buy the essays to save time',
+                text: 'Access and share the information as a favor',
                 correct: false,
-                feedback: '❌ INCORRECT: This is academic fraud and plagiarism. Universities use sophisticated detection software that can identify purchased essays. If caught, you face expulsion and a permanent mark on your academic record.'
+                feedback: '❌ INCORRECT: Sharing confidential data without authorization is illegal and a breach of privacy laws.',
+                consequence: 'You are disciplined for violating data protection regulations.',
+                points: -10
               },
               {
                 id: 'b',
-                text: 'Manage your time, prioritize, and complete your own work, seeking extensions if needed',
+                text: 'Refuse the request and explain the importance of data privacy',
                 correct: true,
-                feedback: '✅ CORRECT: This is the responsible and honest approach. Talk to your professors about your workload - they may offer extensions or guidance. Doing your own work, even if imperfect, is better than cheating and maintains your integrity.'
+                feedback: '✅ CORRECT: You must protect confidential records and refuse any unauthorized request.',
+                consequence: 'You uphold professional standards and avoid legal trouble.',
+                points: 10
               },
               {
                 id: 'c',
-                text: 'Buy one essay and write the others yourself',
+                text: 'Check the records but do not share any information',
                 correct: false,
-                feedback: '❌ INCORRECT: Buying even one essay is still academic fraud. It\'s plagiarism and can result in failing grades or expulsion. Moreover, the inconsistency in writing style may raise red flags with your professors.'
+                feedback: '❌ INCORRECT: Accessing records without official reason is still a violation.',
+                consequence: 'Your access is logged and you are questioned by IT security.',
+                points: -5
               },
               {
                 id: 'd',
-                text: 'Use the purchased essay as a "reference" and paraphrase it',
+                text: 'Tell your friend you will try but do nothing',
                 correct: false,
-                feedback: '❌ INCORRECT: This is still plagiarism and academic dishonesty. The work is not your own original thinking. Do your own research and writing. If you need help with structure or writing skills, visit your university\'s writing center.'
+                feedback: '⚠️ INCORRECT: Even implying willingness to break the rules is unethical.',
+                consequence: 'Your friend pressures you again, putting you in a difficult position.',
+                points: -3
               }
             ]
           }
@@ -1255,160 +1285,52 @@ function App() {
         quiz: [
           {
             id: 'q1',
-            question: 'What is plagiarism?',
+            question: 'What is the correct procedure if an applicant offers a bribe for faster passport processing?',
             options: [
-              { id: 'a', text: 'Studying with friends', correct: false },
-              { id: 'b', text: 'Presenting someone else\'s work as your own', correct: true },
-              { id: 'c', text: 'Reading books for research', correct: false },
-              { id: 'd', text: 'Asking questions in class', correct: false }
+              { id: 'a', text: 'Accept and process quickly', correct: false },
+              { id: 'b', text: 'Refuse, process normally, and report the attempt', correct: true },
+              { id: 'c', text: 'Ignore and continue', correct: false },
+              { id: 'd', text: 'Tell them to come back later', correct: false }
             ]
           },
           {
             id: 'q2',
-            question: 'What should you do if your group wants to plagiarize content for a project?',
+            question: 'Which law governs the issuance of Nigerian passports?',
             options: [
-              { id: 'a', text: 'Go along to avoid conflict', correct: false },
-              { id: 'b', text: 'Refuse, explain the risks, and insist on original content with proper citations', correct: true },
-              { id: 'c', text: 'Submit it and hope no one notices', correct: false },
-              { id: 'd', text: 'Let them do it and write your section only', correct: false }
+              { id: 'a', text: 'Nigerian Customs Service Act', correct: false },
+              { id: 'b', text: 'Passport (Miscellaneous Provisions) Act', correct: true },
+              { id: 'c', text: 'Public Procurement Act', correct: false },
+              { id: 'd', text: 'Criminal Code Act', correct: false }
             ]
           },
           {
             id: 'q3',
-            question: 'Is it acceptable to copy answers from another student during an exam?',
+            question: 'What should you do if you suspect a traveler\'s passport is fake at a border post?',
             options: [
-              { id: 'a', text: 'Yes, if they are a top student', correct: false },
-              { id: 'b', text: 'Yes, to confirm your own answers', correct: false },
-              { id: 'c', text: 'No, this is exam malpractice and academic dishonesty', correct: true },
-              { id: 'd', text: 'Yes, if you don\'t get caught', correct: false }
+              { id: 'a', text: 'Let them go if they offer a gift', correct: false },
+              { id: 'b', text: 'Detain the traveler, verify the document, and report', correct: true },
+              { id: 'c', text: 'Confiscate the passport and ignore the rest', correct: false },
+              { id: 'd', text: 'Allow passage to avoid confrontation', correct: false }
             ]
           },
           {
             id: 'q4',
-            question: 'Can you buy essays online and submit them as your own work?',
+            question: 'Is it ever acceptable to access immigration records for personal reasons?',
             options: [
-              { id: 'a', text: 'Yes, if they are "original"', correct: false },
-              { id: 'b', text: 'Yes, if time is limited', correct: false },
-              { id: 'c', text: 'No, this is academic fraud and plagiarism', correct: true },
-              { id: 'd', text: 'Yes, just for one essay', correct: false }
+              { id: 'a', text: 'Yes, if a friend asks', correct: false },
+              { id: 'b', text: 'No, it is a violation of data privacy laws', correct: true },
+              { id: 'c', text: 'Yes, if you do not share the information', correct: false },
+              { id: 'd', text: 'Yes, if you are curious', correct: false }
             ]
           },
           {
             id: 'q5',
-            question: 'What is the best approach when facing multiple deadlines?',
+            question: 'Which of the following is NOT a best practice for customs and immigration officers?',
             options: [
-              { id: 'a', text: 'Buy some essays to save time', correct: false },
-              { id: 'b', text: 'Copy from online sources', correct: false },
-              { id: 'c', text: 'Manage time, prioritize, complete own work, and request extensions if needed', correct: true },
-              { id: 'd', text: 'Cheat during exams', correct: false }
-            ]
-          }
-        ]
-      },
-      { 
-        id: 9,
-        title: 'Ethical Leadership & Conduct',
-        description: 'Principles of ethical leadership for student representatives',
-        progress: 0,
-        risk: 'medium',
-        duration: '12 min',
-        content: {
-          introduction: 'As a student leader, you represent your peers and hold a position of trust. Ethical leadership means serving with integrity, transparency, and accountability.',
-          keyPoints: [
-            'Use student funds transparently and for their intended purpose',
-            'Represent all students fairly, not just your friends',
-            'Disclose any conflicts of interest in decisions',
-            'Do not accept bribes or kickbacks from vendors',
-            'Keep accurate records and report honestly to students'
-          ],
-          laws: [
-            'University Student Union Constitution',
-            'Student Leadership Code of Conduct',
-            'Anti-Corruption Laws'
-          ]
-        },
-        scenarios: [
-          {
-            id: 'student-leadership-1',
-            title: 'Student Fund Misuse',
-            situation: 'As student union treasurer, a fellow executive member suggests "borrowing" ₦50,000 from student activity funds for a personal emergency, promising to return it next month.',
-            options: [
-              {
-                id: 'a',
-                text: 'Allow the "loan" since they promise to return it',
-                correct: false,
-                feedback: '❌ INCORRECT: This is misappropriation of student funds. Student money must only be used for approved student activities. Personal use, even if temporary, is a serious breach of trust and may violate criminal law.'
-              },
-              {
-                id: 'b',
-                text: 'Refuse, explain it violates student union rules, and suggest proper alternatives',
-                correct: true,
-                feedback: '✅ CORRECT: Student funds are held in trust and must never be used for personal purposes. Suggest legitimate alternatives like student welfare schemes or financial aid. If pressure continues, report to university administration.'
-              },
-              {
-                id: 'c',
-                text: 'Allow it but don\'t document it',
-                correct: false,
-                feedback: '❌ INCORRECT: This is both misappropriation and fraud. Concealing unauthorized use of funds is a criminal offense. You have a fiduciary duty to protect student money and maintain transparent records.'
-              },
-              {
-                id: 'd',
-                text: 'Take a vote among executives',
-                correct: false,
-                feedback: '❌ INCORRECT: Misuse of student funds cannot be legitimized by a vote. Student money is held in trust for specific purposes and cannot be diverted to personal use, regardless of who agrees.'
-              }
-            ]
-          }
-        ],
-        quiz: [
-          {
-            id: 'q1',
-            question: 'Can student union funds be used for personal emergencies by executives?',
-            options: [
-              { id: 'a', text: 'Yes, if they promise to return the money', correct: false },
-              { id: 'b', text: 'Yes, if other executives agree', correct: false },
-              { id: 'c', text: 'No, student funds must only be used for approved student activities', correct: true },
-              { id: 'd', text: 'Yes, in emergencies', correct: false }
-            ]
-          },
-          {
-            id: 'q2',
-            question: 'As a student leader, who should you represent?',
-            options: [
-              { id: 'a', text: 'Only your friends', correct: false },
-              { id: 'b', text: 'All students fairly and equally', correct: true },
-              { id: 'c', text: 'Only your department', correct: false },
-              { id: 'd', text: 'Only those who voted for you', correct: false }
-            ]
-          },
-          {
-            id: 'q3',
-            question: 'Should student leaders accept kickbacks from vendors providing services?',
-            options: [
-              { id: 'a', text: 'Yes, as a commission', correct: false },
-              { id: 'b', text: 'Yes, if small amounts', correct: false },
-              { id: 'c', text: 'No, this is bribery and corruption', correct: true },
-              { id: 'd', text: 'Yes, if shared with team', correct: false }
-            ]
-          },
-          {
-            id: 'q4',
-            question: 'What should you do if another executive suggests misusing student funds?',
-            options: [
-              { id: 'a', text: 'Allow it if they promise to return it', correct: false },
-              { id: 'b', text: 'Refuse, explain the rules, and report if pressure continues', correct: true },
-              { id: 'c', text: 'Take a vote', correct: false },
-              { id: 'd', text: 'Allow it but don\'t document it', correct: false }
-            ]
-          },
-          {
-            id: 'q5',
-            question: 'Why is transparency important in student leadership?',
-            options: [
-              { id: 'a', text: 'It\'s not important', correct: false },
-              { id: 'b', text: 'To maintain trust and accountability to students', correct: true },
-              { id: 'c', text: 'Only for legal requirements', correct: false },
-              { id: 'd', text: 'To impress administration', correct: false }
+              { id: 'a', text: 'Accepting gifts from applicants', correct: true },
+              { id: 'b', text: 'Verifying document authenticity', correct: false },
+              { id: 'c', text: 'Reporting suspicious activity', correct: false },
+              { id: 'd', text: 'Respecting applicant rights', correct: false }
             ]
           }
         ]
@@ -2213,27 +2135,28 @@ function App() {
 
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-lg transition-all shadow-lg transform hover:scale-105"
+                  disabled={authLoading}
+                  className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {authMode === 'signin' ? '🔓 Sign In' : '✨ Create Account'}
+                  {authLoading ? '⏳ Processing...' : (authMode === 'signin' ? 'Sign In' : 'Create Account')}
                 </button>
+
+                {authError && (
+                  <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
+                    <p className="text-red-300 text-sm">{authError}</p>
+                  </div>
+                )}
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-gray-400">
+                <button
+                  onClick={() => setAuthMode(authMode === 'signin' ? 'signup' : 'signin')}
+                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                >
                   {authMode === 'signin' 
-                    ? "Don't have an account? " 
-                    : "Already have an account? "}
-                  <button
-                    onClick={() => {
-                      setAuthMode(authMode === 'signin' ? 'signup' : 'signin');
-                      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
-                    }}
-                    className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
-                  >
-                    {authMode === 'signin' ? 'Sign Up' : 'Sign In'}
-                  </button>
-                </p>
+                    ? "Don't have an account? Sign up" 
+                    : 'Already have an account? Sign in'}
+                </button>
               </div>
             </div>
           </div>
@@ -2714,7 +2637,7 @@ function App() {
                         src={
                           userProfile?.sector === 'police' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
                           userProfile?.sector === 'civil' ? 'https://www.youtube.com/embed/3ilFN6NaHVk' :
-                          userProfile?.sector === 'student' ? 'https://www.youtube.com/embed/8amOKakZJwk' :
+                          userProfile?.sector === 'customs_immigration' ? 'https://www.youtube.com/embed/lwfijBPReoY' :
                           userProfile?.sector === 'private' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
                           'https://www.youtube.com/embed/eeM1Ga76bA4'
                         }
