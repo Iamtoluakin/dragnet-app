@@ -2501,19 +2501,19 @@ function App() {
                       ></div>
                     </div>
                     <div className="flex justify-between items-center">
-                      <p className="text-sm text-gray-400">{course.progress}% Complete</p>
+                      <p className="text-xs sm:text-sm text-gray-400">{course.progress}% Complete</p>
                       <button 
                         onClick={() => {
                           setCurrentCourse(course);
                           setView('course');
                         }}
-                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                        className={`px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition-all touch-manipulation ${
                           course.progress === 100 
-                            ? 'bg-green-600 hover:bg-green-700 text-white' 
-                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                            ? 'bg-green-600 hover:bg-green-700 active:bg-green-800 text-white' 
+                            : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white'
                         }`}
                       >
-                        {course.progress === 100 ? '✓ Completed Module' : 'Start Module →'}
+                        {course.progress === 100 ? '✓ Completed' : 'Start Module →'}
                       </button>
                     </div>
                   </div>
@@ -2535,12 +2535,12 @@ function App() {
 
           {/* Progress Indicator */}
           {currentCourse && !currentScenario && (
-            <div className="mb-6 bg-gray-800/50 p-4 rounded-lg border border-gray-700" role="navigation" aria-label="Learning progress">
+            <div className="mb-4 sm:mb-6 bg-gray-800/50 p-3 sm:p-4 rounded-lg border border-gray-700" role="navigation" aria-label="Learning progress">
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-sm font-semibold text-gray-300">Learning Progress</h2>
+                <h2 className="text-xs sm:text-sm font-semibold text-gray-300">Learning Progress</h2>
                 <span className="text-xs text-gray-400">Step {['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].indexOf(currentStep) + 1} of 5</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-1 sm:gap-2">
                 {['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].map((step, index) => (
                   <div 
                     key={step}
@@ -2556,7 +2556,7 @@ function App() {
                   />
                 ))}
               </div>
-              <div className="flex justify-between mt-2 text-xs text-gray-400">
+              <div className="hidden sm:flex justify-between mt-2 text-xs text-gray-400">
                 <span>📹 Video</span>
                 <span>🎭 Scenarios</span>
                 <span>💡 Key Points</span>
@@ -2566,7 +2566,46 @@ function App() {
             </div>
           )}
 
-          <div className="mb-6 flex items-center justify-between">
+          {/* Mobile Learning Flow Guide */}
+          {currentCourse && !currentScenario && (
+            <div className="mb-4 sm:mb-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border-2 border-blue-500/50 p-4 rounded-xl sm:hidden animate-fadeIn">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="text-3xl">📚</div>
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-1">Learning Journey</h3>
+                  <p className="text-sm text-gray-300">Follow these steps in order:</p>
+                </div>
+              </div>
+              <div className="space-y-2 text-sm">
+                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'video' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
+                  <span className="text-lg">1️⃣</span>
+                  <span className="font-semibold">Watch the training video below</span>
+                </div>
+                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'scenarios' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
+                  <span className="text-lg">2️⃣</span>
+                  <span>Practice with interactive scenarios</span>
+                </div>
+                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'keyPoints' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
+                  <span className="text-lg">3️⃣</span>
+                  <span>Review key learning points</span>
+                </div>
+                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'laws' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
+                  <span className="text-lg">4️⃣</span>
+                  <span>Study relevant laws</span>
+                </div>
+                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'assessment' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
+                  <span className="text-lg">5️⃣</span>
+                  <span>Complete final assessment</span>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center gap-2 text-xs text-blue-300 bg-blue-900/30 p-2 rounded">
+                <span className="text-base">👇</span>
+                <span className="font-semibold">Scroll down to start with the video!</span>
+              </div>
+            </div>
+          )}
+
+          <div className="mb-4 sm:mb-6 flex items-center justify-between">
             <button 
               onClick={() => {
                 setView('dashboard');
@@ -2588,41 +2627,58 @@ function App() {
           </div>
 
           {currentCourse && !currentScenario && (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Course Header with Visual */}
-              <div className="relative bg-gradient-to-br from-blue-600 to-purple-600 p-8 rounded-2xl text-white overflow-hidden">
+              <div className="relative bg-gradient-to-br from-blue-600 to-purple-600 p-4 sm:p-6 md:p-8 rounded-2xl text-white overflow-hidden">
                 {/* Decorative Background Elements */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
-                <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+                <div className="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-24 sm:-mr-32 -mt-24 sm:-mt-32"></div>
+                <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-16 sm:-ml-24 -mb-16 sm:-mb-24"></div>
                 
-                <div className="relative z-10 flex items-start gap-6">
+                <div className="relative z-10 flex items-start gap-3 sm:gap-4 md:gap-6">
                   {/* Course Icon/Illustration */}
-                  <div className="flex-shrink-0 w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center text-5xl backdrop-blur-sm border-2 border-white/30">
+                  <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-white/20 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl md:text-5xl backdrop-blur-sm border-2 border-white/30">
                     {currentCourse.id === 1 ? '🚫' : currentCourse.id === 2 ? '🛡️' : currentCourse.id === 3 ? '⚖️' : '🔍'}
                   </div>
                   
-                  <div className="flex-1">
-                    <h1 className="text-4xl font-bold mb-3">{currentCourse.title}</h1>
-                    <p className="text-xl text-blue-100 mb-4">{currentCourse.description}</p>
-                    <div className="flex gap-4 text-sm">
-                      <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">⏱️ {currentCourse.duration}</span>
-                      <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">📊 {currentCourse.progress}% Complete</span>
-                      <span className="px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm">🎯 {currentCourse.scenarios?.length || 0} Scenarios</span>
+                  <div className="flex-1 min-w-0">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3">{currentCourse.title}</h1>
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl text-blue-100 mb-3 sm:mb-4">{currentCourse.description}</p>
+                    <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm">
+                      <span className="px-2 sm:px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm whitespace-nowrap">⏱️ {currentCourse.duration}</span>
+                      <span className="px-2 sm:px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm whitespace-nowrap">📊 {currentCourse.progress}% Complete</span>
+                      <span className="px-2 sm:px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm whitespace-nowrap">🎯 {currentCourse.scenarios?.length || 0} Scenarios</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* 1. VIDEO TRAINING - First Section */}
-              <div className="relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-purple-500/50 p-8 rounded-xl overflow-hidden">
-                <div className="absolute top-0 left-0 text-9xl opacity-10">🎥</div>
+              <div id="video-section" className="relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-purple-500/50 p-4 sm:p-6 md:p-8 rounded-xl overflow-hidden scroll-mt-4">
+                {/* Mobile "START HERE" Badge */}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 sm:hidden z-20">
+                  <div className="bg-gradient-to-r from-green-500 to-emerald-500 px-4 py-1 rounded-full shadow-lg border-2 border-white animate-bounce">
+                    <span className="text-white font-bold text-sm flex items-center gap-2">
+                      <span className="text-lg">👆</span>
+                      START HERE
+                      <span className="text-lg">👆</span>
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="absolute top-0 left-0 text-6xl sm:text-9xl opacity-10">🎥</div>
                 
                 <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-2xl">
+                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-xl sm:text-2xl">
                       🎥
                     </div>
-                    <h2 className="text-2xl font-bold text-white">Video Training</h2>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-xl sm:text-2xl font-bold text-white">Step 1: Video Training</h2>
+                        <span className="px-2 py-0.5 bg-green-500/20 text-green-300 text-xs font-bold rounded sm:hidden">REQUIRED</span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-purple-300">Watch this first before continuing</p>
+                    </div>
                   </div>
                   
                   <div className="bg-purple-900/20 p-4 rounded-lg mb-6 border-l-4 border-purple-500">
@@ -2631,8 +2687,8 @@ function App() {
                     </p>
                   </div>
                   
-                  <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 p-4 rounded-xl border-2 border-purple-600/30">
-                    <div className="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-2xl mb-4">
+                  <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 p-3 sm:p-4 md:p-6 rounded-xl border-2 border-purple-600/30">
+                    <div className="aspect-video w-full min-h-[200px] sm:min-h-[300px] md:min-h-[400px] bg-black rounded-lg overflow-hidden shadow-2xl mb-4">
                       <iframe
                         className="w-full h-full"
                         src={
@@ -2666,19 +2722,22 @@ function App() {
 
               {/* 2. INTERACTIVE SCENARIO SIMULATIONS - Second Section */}
               {currentCourse.scenarios && currentCourse.scenarios.length > 0 && (
-                <div className="relative bg-gradient-to-br from-orange-600/20 to-red-600/20 border-2 border-orange-500/50 p-8 rounded-xl overflow-hidden">
-                  <div className="absolute top-0 right-0 text-9xl opacity-10">🎭</div>
+                <div className="relative bg-gradient-to-br from-orange-600/20 to-red-600/20 border-2 border-orange-500/50 p-4 sm:p-6 md:p-8 rounded-xl overflow-hidden">
+                  <div className="absolute top-0 right-0 text-6xl sm:text-9xl opacity-10">🎭</div>
                   
                   <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 bg-orange-500/30 rounded-lg flex items-center justify-center text-2xl">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500/30 rounded-lg flex items-center justify-center text-xl sm:text-2xl">
                         🎭
                       </div>
-                      <h2 className="text-2xl font-bold text-white mb-2">Interactive Scenario Simulations</h2>
+                      <div>
+                        <h2 className="text-lg sm:text-2xl font-bold text-white">Step 2: Interactive Scenarios</h2>
+                        <p className="text-xs sm:text-sm text-orange-300">Practice with real-world situations</p>
+                      </div>
                     </div>
                     
-                    <div className="bg-orange-900/20 p-4 rounded-lg mb-6 border-l-4 border-orange-500">
-                      <p className="text-gray-300">
+                    <div className="bg-orange-900/20 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 border-l-4 border-orange-500">
+                      <p className="text-sm sm:text-base text-gray-300">
                         🎯 Test your understanding with realistic ethical dilemma scenarios. Choose the best course of action based on what you've learned.
                       </p>
                     </div>
@@ -2694,24 +2753,24 @@ function App() {
                             setHasReadScenario(false);
                             setCurrentStep('scenarios');
                           }}
-                          className="w-full p-6 bg-gray-800/80 hover:bg-gray-700 border-2 border-gray-600 hover:border-orange-500 rounded-xl text-left transition-smooth group relative overflow-hidden animate-fadeIn"
+                          className="w-full p-4 sm:p-5 md:p-6 min-h-[88px] bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 border-2 border-gray-600 hover:border-orange-500 rounded-xl text-left transition-smooth group relative overflow-hidden animate-fadeIn touch-manipulation"
                           style={{ animationDelay: `${idx * 0.1}s` }}
                           aria-label={`Practice scenario ${idx + 1}: ${scenario.title}`}
                         >
                           {/* Animated hover effect */}
                           <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/10 to-orange-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
                           
-                          <div className="relative flex items-center gap-4">
-                            <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                          <div className="relative flex items-center gap-3 sm:gap-4">
+                            <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center text-2xl sm:text-3xl group-hover:scale-110 transition-transform">
                               {idx === 0 ? '🚦' : idx === 1 ? '🔍' : '📋'}
                             </div>
-                            <div className="flex-1">
-                              <h3 className="text-xl font-semibold text-white group-hover:text-orange-400 transition-colors mb-1">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white group-hover:text-orange-400 transition-colors mb-1">
                                 Scenario {idx + 1}: {scenario.title}
                               </h3>
-                              <p className="text-sm text-gray-400">🎮 Click to begin interactive simulation</p>
+                              <p className="text-xs sm:text-sm text-gray-400">🎮 Click to begin interactive simulation</p>
                             </div>
-                            <div className="flex-shrink-0 text-3xl group-hover:translate-x-2 transition-transform">
+                            <div className="flex-shrink-0 text-2xl sm:text-3xl group-hover:translate-x-2 transition-transform">
                               ➡️
                             </div>
                           </div>
@@ -2724,17 +2783,20 @@ function App() {
 
               {/* 3. KEY LEARNING POINTS - Third Section (Shows after scenarios) */}
               {currentCourse.content && showKeyLearning && (
-                <div ref={keyLearningRef} className="relative bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm p-8 rounded-xl border-2 border-blue-700/50 overflow-hidden animate-fadeIn" id="main-content">
-                  <div className="absolute bottom-0 right-0 text-9xl opacity-10" aria-hidden="true">🎯</div>
+                <div ref={keyLearningRef} className="relative bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border-2 border-blue-700/50 overflow-hidden animate-fadeIn" id="main-content">
+                  <div className="absolute bottom-0 right-0 text-6xl sm:text-9xl opacity-10" aria-hidden="true">🎯</div>
                   <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-12 h-12 bg-blue-500/30 rounded-lg flex items-center justify-center text-2xl" aria-hidden="true">
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/30 rounded-lg flex items-center justify-center text-xl sm:text-2xl" aria-hidden="true">
                         🎯
                       </div>
-                      <h2 className="text-2xl font-bold text-white">Key Learning Points</h2>
+                      <div>
+                        <h2 className="text-lg sm:text-2xl font-bold text-white">Step 3: Key Learning Points</h2>
+                        <p className="text-xs sm:text-sm text-blue-300">Review essential takeaways</p>
+                      </div>
                     </div>
-                    <div className="bg-blue-900/20 p-4 rounded-lg mb-6 border-l-4 border-blue-500" role="status" aria-live="polite">
-                      <p className="text-gray-300">
+                    <div className="bg-blue-900/20 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 border-l-4 border-blue-500" role="status" aria-live="polite">
+                      <p className="text-sm sm:text-base text-gray-300">
                         📝 Click on each learning point to review before taking the assessment. ({clickedLearningPoints.length}/{currentCourse.content.keyPoints.length} reviewed)
                       </p>
                     </div>
@@ -2752,24 +2814,24 @@ function App() {
                                 }
                               }
                             }}
-                            className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-smooth text-left animate-fadeIn ${
+                            className={`flex items-start gap-3 sm:gap-4 p-4 sm:p-5 min-h-[72px] rounded-lg border-2 transition-smooth text-left animate-fadeIn touch-manipulation ${
                               isClicked
                                 ? 'bg-green-600/20 border-green-500 cursor-default'
-                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 hover:bg-gray-800 cursor-pointer'
+                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 active:border-blue-400 hover:bg-gray-800 active:bg-gray-700 cursor-pointer'
                             }`}
                             style={{ animationDelay: `${idx * 0.05}s` }}
                             aria-label={`Learning point ${idx + 1}: ${point}`}
                             aria-pressed={isClicked}
                             role="listitem"
                           >
-                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm transition-all ${
+                            <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base transition-all ${
                               isClicked
                                 ? 'bg-green-500'
                                 : 'bg-gradient-to-br from-blue-500 to-purple-500'
                             }`}>
                               {isClicked ? '✓' : idx + 1}
                             </div>
-                            <span className={`text-lg leading-relaxed ${
+                            <span className={`text-base sm:text-lg leading-relaxed ${
                               isClicked ? 'text-green-300' : 'text-gray-300'
                             }`}>{point}</span>
                           </button>
@@ -2782,17 +2844,20 @@ function App() {
 
               {/* 4. RELEVANT LAWS & REGULATIONS - Fourth Section (Shows after all key points clicked) */}
               {currentCourse.content && showKeyLearning && clickedLearningPoints.length === currentCourse.content.keyPoints.length && (
-                <div className="relative bg-gradient-to-br from-purple-900/20 to-indigo-900/20 backdrop-blur-sm p-8 rounded-xl border-2 border-purple-700/50 overflow-hidden animate-fadeIn">
-                  <div className="absolute top-0 left-0 text-9xl opacity-10">⚖️</div>
+                <div className="relative bg-gradient-to-br from-purple-900/20 to-indigo-900/20 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border-2 border-purple-700/50 overflow-hidden animate-fadeIn">
+                  <div className="absolute top-0 left-0 text-6xl sm:text-9xl opacity-10">⚖️</div>
                   <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-12 h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-2xl">
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-xl sm:text-2xl">
                         ⚖️
                       </div>
-                      <h2 className="text-2xl font-bold text-white">Relevant Laws & Regulations</h2>
+                      <div>
+                        <h2 className="text-lg sm:text-2xl font-bold text-white">Step 4: Laws & Regulations</h2>
+                        <p className="text-xs sm:text-sm text-purple-300">Know the legal framework</p>
+                      </div>
                     </div>
-                    <div className="bg-purple-900/20 p-4 rounded-lg mb-6 border-l-4 border-purple-500">
-                      <p className="text-gray-300">
+                    <div className="bg-purple-900/20 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 border-l-4 border-purple-500">
+                      <p className="text-sm sm:text-base text-gray-300">
                         ⚖️ Understand the legal framework that governs your professional conduct and responsibilities.
                       </p>
                     </div>
@@ -2832,49 +2897,49 @@ function App() {
 
           {/* Quiz Assessment */}
           {currentCourse && showQuiz && !quizResult && (
-            <div className="space-y-6">
-              <div className="relative bg-gradient-to-br from-green-600 to-emerald-600 p-8 rounded-2xl text-white overflow-hidden">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-24 -mt-24"></div>
-                <div className="relative z-10 flex items-center gap-6">
-                  <div className="flex-shrink-0 w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-4xl backdrop-blur-sm border-2 border-white/30">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="relative bg-gradient-to-br from-green-600 to-emerald-600 p-4 sm:p-6 md:p-8 rounded-2xl text-white overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-white/10 rounded-full -mr-16 sm:-mr-24 -mt-16 sm:-mt-24"></div>
+                <div className="relative z-10 flex items-center gap-4 sm:gap-6">
+                  <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl backdrop-blur-sm border-2 border-white/30">
                     📝
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold mb-2">Final Assessment</h1>
-                    <p className="text-lg text-green-100">Answer all 5 questions • Pass Mark: 80% (4/5 correct)</p>
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">Step 5: Final Assessment</h1>
+                    <p className="text-sm sm:text-base md:text-lg text-green-100">Answer all 5 questions • Pass Mark: 80% (4/5 correct)</p>
                   </div>
                 </div>
               </div>
 
               {currentCourse.quiz && currentCourse.quiz.map((question, qIdx) => (
-                <div key={question.id} className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border-2 border-gray-700">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
+                <div key={question.id} className="bg-gray-800/80 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border-2 border-gray-700">
+                  <div className="flex items-start gap-3 sm:gap-4 mb-4">
+                    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg">
                       {qIdx + 1}
                     </div>
-                    <h3 className="text-lg font-semibold text-white">{question.question}</h3>
+                    <h3 className="text-base sm:text-lg font-semibold text-white leading-snug">{question.question}</h3>
                   </div>
                   
-                  <div className="space-y-3 ml-14">
+                  <div className="space-y-2 sm:space-y-3 ml-0 sm:ml-14">
                     {question.options.map((option) => (
                       <button
                         key={option.id}
                         onClick={() => setQuizAnswers({...quizAnswers, [question.id]: option.id})}
-                        className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
+                        className={`w-full p-3 sm:p-4 min-h-[56px] text-left rounded-lg border-2 transition-all touch-manipulation ${
                           quizAnswers[question.id] === option.id
                             ? 'bg-green-600/20 border-green-500 shadow-lg'
-                            : 'bg-gray-700/50 border-gray-600 hover:border-gray-500 hover:bg-gray-700'
+                            : 'bg-gray-700/50 border-gray-600 hover:border-gray-500 active:border-gray-400 hover:bg-gray-700 active:bg-gray-600'
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                          <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                             quizAnswers[question.id] === option.id
                               ? 'border-green-500 bg-green-500'
                               : 'border-gray-500'
                           }`}>
                             {quizAnswers[question.id] === option.id && <span className="text-white text-sm">✓</span>}
                           </div>
-                          <span className="text-white">{option.text}</span>
+                          <span className="text-white text-sm sm:text-base leading-relaxed">{option.text}</span>
                         </div>
                       </button>
                     ))}
@@ -2882,7 +2947,7 @@ function App() {
                 </div>
               ))}
 
-              <div className="flex justify-center gap-4">
+              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                 <button
                   onClick={() => {
                     setShowQuiz(false);
@@ -2897,7 +2962,7 @@ function App() {
                       });
                     }, 100);
                   }}
-                  className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold transition-all"
+                  className="w-full sm:w-auto px-5 sm:px-6 py-3 min-h-[48px] bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white rounded-lg font-semibold transition-all touch-manipulation"
                 >
                   ← Back to Course
                 </button>
@@ -2939,7 +3004,7 @@ function App() {
                     }
                   }}
                   disabled={Object.keys(quizAnswers).length < (currentCourse.quiz?.length || 0)}
-                  className="px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 min-h-[48px] bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 active:from-green-800 active:to-emerald-800 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                 >
                   Submit Assessment →
                 </button>
@@ -3146,22 +3211,22 @@ function App() {
                   
                   {/* Scenario Description with Comic Style */}
                   <div className="flex-1">
-                    <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border-2 border-white/20 relative">
+                    <div className="bg-white/10 backdrop-blur-sm p-3 sm:p-4 rounded-lg border-2 border-white/20 relative">
                       <div className="absolute -top-3 left-4 bg-gradient-to-r from-yellow-400 to-orange-400 px-3 py-1 rounded-full text-xs font-bold text-gray-900">
                         💭 SCENARIO STORY
                       </div>
-                      <p className="text-sm text-gray-400 mb-2 italic">You are in this situation...</p>
-                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 p-4 rounded-lg border-l-4 border-orange-500">
-                        <p className="text-white text-lg leading-relaxed">
+                      <p className="text-xs sm:text-sm text-gray-400 mb-2 italic mt-2 sm:mt-0">You are in this situation...</p>
+                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 p-3 sm:p-4 md:p-5 rounded-lg border-l-4 border-orange-500">
+                        <p className="text-white text-base sm:text-lg leading-relaxed">
                           {currentScenario.situation}
                         </p>
                       </div>
                       
                       {/* Narration Button */}
-                      <div className="mt-4 flex flex-col items-center gap-2">
+                      <div className="mt-3 sm:mt-4 flex flex-col items-center gap-2">
                         <button
                           onClick={() => toggleNarration(currentScenario.situation)}
-                          className={`px-6 py-3 rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 ${
+                          className={`px-4 sm:px-6 py-2 sm:py-3 min-h-[48px] rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-100 flex items-center gap-2 text-sm sm:text-base touch-manipulation ${
                             isNarrating 
                               ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
                               : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'
@@ -3208,27 +3273,27 @@ function App() {
 
               {/* Continue Button - Shows before options */}
               {!hasReadScenario && !scenarioResult && (
-                <div className="bg-gradient-to-br from-blue-900/40 to-indigo-900/40 backdrop-blur-sm p-8 rounded-xl border-2 border-blue-500/50 text-center animate-fadeIn">
-                  <div className="mb-4">
-                    <p className="text-xl text-white mb-2">📖 Take your time to read and understand the scenario above</p>
-                    <p className="text-gray-300">Think carefully about the ethical implications before making your choice</p>
+                <div className="bg-gradient-to-br from-blue-900/40 to-indigo-900/40 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border-2 border-blue-500/50 text-center animate-fadeIn">
+                  <div className="mb-4 sm:mb-6">
+                    <p className="text-lg sm:text-xl text-white mb-2">📖 Take your time to read and understand the scenario above</p>
+                    <p className="text-sm sm:text-base text-gray-300">Think carefully about the ethical implications before making your choice</p>
                   </div>
                   <button
                     onClick={() => setHasReadScenario(true)}
-                    className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-smooth flex items-center gap-3 mx-auto text-lg"
+                    className="px-6 sm:px-8 py-3 sm:py-4 min-h-[56px] bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 active:from-green-800 active:to-emerald-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-100 transition-smooth flex items-center gap-2 sm:gap-3 mx-auto text-base sm:text-lg touch-manipulation"
                     aria-label="Continue to answer options"
                   >
-                    <span className="text-2xl">✅</span>
-                    <span>I've Read the Scenario - Show Me the Options</span>
-                    <span className="text-2xl">➡️</span>
+                    <span className="text-xl sm:text-2xl">✅</span>
+                    <span className="whitespace-nowrap sm:whitespace-normal">I've Read the Scenario - Show Options</span>
+                    <span className="text-xl sm:text-2xl">➡️</span>
                   </button>
                 </div>
               )}
 
               {hasReadScenario && !scenarioResult ? (
-                <div className="bg-gray-800/80 backdrop-blur-sm p-8 rounded-xl border-2 border-gray-700 animate-fadeIn">
-                  <h2 className="text-xl font-bold text-white mb-6">🤔 What would you do? Select your response:</h2>
-                  <div className="space-y-4">
+                <div className="bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border-2 border-gray-700 animate-fadeIn">
+                  <h2 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6">🤔 What would you do? Select your response:</h2>
+                  <div className="space-y-3 sm:space-y-4">
                     {currentScenario.options.map((option, index) => (
                       <button
                         key={option.id}
@@ -3237,23 +3302,23 @@ function App() {
                           setScenarioResult(option);
                           setShowAnimation(true);
                         }}
-                        className={`w-full p-6 text-left rounded-xl border-2 transition-smooth animate-fadeIn ${
+                        className={`w-full p-4 sm:p-5 md:p-6 min-h-[80px] text-left rounded-xl border-2 transition-smooth animate-fadeIn touch-manipulation ${
                           scenarioAnswer === option.id
                             ? 'bg-blue-600/20 border-blue-500 shadow-lg animate-pulse'
-                            : 'bg-gray-700/50 border-gray-600 hover:border-gray-500 hover:bg-gray-700'
+                            : 'bg-gray-700/50 border-gray-600 hover:border-gray-500 active:border-gray-400 hover:bg-gray-700 active:bg-gray-600'
                         }`}
                         style={{ animationDelay: `${index * 0.1}s` }}
                         aria-label={`Option ${option.id.toUpperCase()}: ${option.text}`}
                         aria-pressed={scenarioAnswer === option.id}
                       >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-start gap-3 sm:gap-4">
                           <div 
-                            className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold flex-shrink-0"
+                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold text-base sm:text-lg flex-shrink-0"
                             aria-hidden="true"
                           >
                             {option.id.toUpperCase()}
                           </div>
-                          <p className="text-white text-lg">{option.text}</p>
+                          <p className="text-white text-base sm:text-lg leading-relaxed">{option.text}</p>
                         </div>
                       </button>
                     ))}
