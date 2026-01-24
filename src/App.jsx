@@ -2328,125 +2328,132 @@ function App() {
         </div>
       ) : view === 'dashboard' ? (
         <div className="p-3 sm:p-6 md:p-8">
-          <nav className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8 bg-gray-800/50 backdrop-blur-sm p-4 sm:p-4 rounded-xl border-2 border-gray-700">
-            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-              <button 
-                onClick={() => setView('profile')}
-                className="w-12 h-12 sm:w-12 sm:h-12 flex-shrink-0 bg-gradient-to-br from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 active:from-purple-700 active:to-blue-700 rounded-full flex items-center justify-center text-xl sm:text-2xl transition-all transform hover:scale-110 active:scale-105 shadow-lg touch-manipulation"
-                title="View Profile"
-                aria-label="View your profile"
-              >
-                👨‍💼
-              </button>
-              <div className="flex-1 min-w-0">
-                <h2 className="text-lg sm:text-2xl font-bold text-white truncate">
-                  📊 Welcome, {userProfile?.name || userName}! 👋
-                </h2>
-                {userProfile && (
-                  <p className="text-xs sm:text-sm text-gray-400 mt-1 truncate">
-                    {userProfile.role} • {userProfile.department}
-                  </p>
-                )}
+          {/* Clean Mobile Header */}
+          <nav className="mb-6 sm:mb-8 bg-gray-800/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl border border-gray-700">
+            {/* Top Row: Profile Info */}
+            <div className="flex items-center justify-between mb-3 sm:mb-0">
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <button 
+                  onClick={() => setView('profile')}
+                  className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-lg sm:text-xl transition-all shadow-md hover:shadow-lg touch-manipulation"
+                  aria-label="View profile"
+                >
+                  �
+                </button>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-base sm:text-xl font-bold text-white truncate">
+                    Welcome, {userProfile?.name || userName}
+                  </h2>
+                  {userProfile && (
+                    <p className="text-xs sm:text-sm text-gray-400 truncate">
+                      {userProfile.role}
+                    </p>
+                  )}
+                </div>
+              </div>
+              {/* Desktop buttons */}
+              <div className="hidden sm:flex gap-2">
+                <button 
+                  onClick={() => setView('landing')}
+                  className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all font-medium text-sm"
+                >
+                  ← Home
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all font-medium text-sm"
+                >
+                  Logout
+                </button>
               </div>
             </div>
-            <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
+            
+            {/* Mobile Only: Bottom Row Buttons */}
+            <div className="flex sm:hidden gap-2 mt-3">
               <button 
                 onClick={() => setView('landing')}
-                className="flex-1 sm:flex-none px-3 sm:px-4 py-2 min-h-[44px] bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white rounded-lg transition-all font-semibold text-sm sm:text-base touch-manipulation"
-                aria-label="Go to home page"
+                className="flex-1 px-3 py-2.5 bg-gray-700 active:bg-gray-600 text-white rounded-lg font-medium text-sm touch-manipulation"
               >
-                <span className="hidden sm:inline">← Home</span>
-                <span className="sm:hidden">🏠 Home</span>
+                Home
               </button>
               <button 
                 onClick={handleLogout}
-                className="flex-1 sm:flex-none px-3 sm:px-4 py-2 min-h-[44px] bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-lg transition-all font-semibold text-sm sm:text-base touch-manipulation"
-                aria-label="Logout"
+                className="flex-1 px-3 py-2.5 bg-red-600 active:bg-red-700 text-white rounded-lg font-medium text-sm touch-manipulation"
               >
-                🚪 Logout
+                Logout
               </button>
             </div>
           </nav>
 
-          {/* Welcome Message */}
+          {/* Clean Welcome Message - Mobile Friendly */}
           {userProfile && (
-            <div className="max-w-7xl mx-auto mb-4 sm:mb-6 bg-blue-600/20 border-2 border-blue-500/50 rounded-xl p-4 sm:p-4">
-              <div className="flex items-start sm:items-center gap-3">
-                <span className="text-2xl sm:text-3xl flex-shrink-0">✨</span>
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white">
-                    Training Plan Ready, {userProfile.name}!
-                  </h3>
-                  <p className="text-sm sm:text-base text-blue-200 mt-1">
-                    We've analyzed your role as {userProfile.role} and assigned {userProfile.courses.length} personalized compliance modules.
-                  </p>
-                </div>
-              </div>
+            <div className="max-w-7xl mx-auto mb-4 bg-blue-600/10 border border-blue-500/30 rounded-lg p-3 sm:p-4">
+              <h3 className="text-sm sm:text-base font-semibold text-white mb-1">
+                Training Plan Ready
+              </h3>
+              <p className="text-xs sm:text-sm text-blue-200">
+                {userProfile.courses.length} compliance modules assigned for your role
+              </p>
             </div>
           )}
 
-          {/* Risk Level Alert */}
+          {/* Risk Level Alert - Simplified for Mobile */}
           {userProfile && userProfile.riskLevel === 'high' && (
-            <div className="max-w-7xl mx-auto mb-4 sm:mb-6 bg-red-600/20 border-2 border-red-500/50 rounded-xl p-4 sm:p-4">
-              <div className="flex items-start sm:items-center gap-3">
-                <span className="text-2xl sm:text-3xl flex-shrink-0">⚠️</span>
+            <div className="max-w-7xl mx-auto mb-4 bg-red-600/10 border border-red-500/30 rounded-lg p-3 sm:p-4">
+              <div className="flex items-start gap-2">
+                <span className="text-lg flex-shrink-0">⚠️</span>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-white">High-Risk Position Detected</h3>
-                  <p className="text-sm sm:text-base text-red-200 mt-1">
-                    Your role requires enhanced compliance training and more frequent assessments.
+                  <h3 className="text-sm sm:text-base font-semibold text-white">High-Risk Position</h3>
+                  <p className="text-xs sm:text-sm text-red-200 mt-0.5">
+                    Enhanced training required
                   </p>
                 </div>
               </div>
             </div>
           )}
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-7xl mx-auto mb-6 sm:mb-8">
-            <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-4 sm:p-6 rounded-xl shadow-xl">
-              <h3 className="text-base sm:text-xl font-bold text-white mb-2">Progress</h3>
-              <p className="text-3xl sm:text-4xl font-bold text-white">
+          {/* Stats Cards - Clean Mobile Design */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 max-w-7xl mx-auto mb-6 sm:mb-8">
+            <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3 sm:p-5 rounded-lg shadow-lg">
+              <p className="text-xs sm:text-sm text-blue-100 mb-1">Progress</p>
+              <p className="text-2xl sm:text-3xl font-bold text-white">
                 {userProfile ? Math.round((completedCourses.length / userProfile.courses.length) * 100) : 0}%
               </p>
-              <p className="text-xs sm:text-sm text-blue-200 mt-2">Overall Completion</p>
             </div>
             
-            <div className="bg-gradient-to-br from-green-600 to-green-800 p-4 sm:p-6 rounded-xl shadow-xl">
-              <h3 className="text-base sm:text-xl font-bold text-white mb-2">Assigned Courses</h3>
-              <p className="text-3xl sm:text-4xl font-bold text-white">{userProfile?.courses.length || 0}</p>
-              <p className="text-xs sm:text-sm text-green-200 mt-2">AI-Selected Modules</p>
+            <div className="bg-gradient-to-br from-green-600 to-green-700 p-3 sm:p-5 rounded-lg shadow-lg">
+              <p className="text-xs sm:text-sm text-green-100 mb-1">Assigned</p>
+              <p className="text-2xl sm:text-3xl font-bold text-white">{userProfile?.courses.length || 0}</p>
             </div>
             
-            <div className="bg-gradient-to-br from-yellow-600 to-orange-600 p-4 sm:p-6 rounded-xl shadow-xl">
-              <h3 className="text-base sm:text-xl font-bold text-white mb-2">Completed</h3>
-              <p className="text-3xl sm:text-4xl font-bold text-white">{completedCourses.length}</p>
-              <p className="text-xs sm:text-sm text-yellow-200 mt-2">Modules Passed</p>
+            <div className="bg-gradient-to-br from-orange-600 to-orange-700 p-3 sm:p-5 rounded-lg shadow-lg">
+              <p className="text-xs sm:text-sm text-orange-100 mb-1">Completed</p>
+              <p className="text-2xl sm:text-3xl font-bold text-white">{completedCourses.length}</p>
             </div>
             
-            <div className="bg-gradient-to-br from-purple-600 to-purple-800 p-4 sm:p-6 rounded-xl shadow-xl">
-              <h3 className="text-base sm:text-xl font-bold text-white mb-2">Risk Level</h3>
-              <p className="text-3xl sm:text-4xl font-bold text-white uppercase">{userProfile?.riskLevel || 'N/A'}</p>
-              <p className="text-xs sm:text-sm text-purple-200 mt-2">Assessment Frequency</p>
+            <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-3 sm:p-5 rounded-lg shadow-lg">
+              <p className="text-xs sm:text-sm text-purple-100 mb-1">Risk Level</p>
+              <p className="text-xl sm:text-2xl font-bold text-white uppercase">{userProfile?.riskLevel || 'N/A'}</p>
             </div>
           </div>
           
-          {/* Completed Courses Section */}
+          {/* Completed Courses Section - Simplified */}
           {completedCourses.length > 0 && (
             <div className="mt-6 sm:mt-8 max-w-7xl mx-auto">
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
-                🏆 Completed Courses & Certificates
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 flex items-center gap-2">
+                <span>✓</span> Completed Courses
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {completedCourses.map((completed, idx) => (
-                  <div key={idx} className="bg-gradient-to-br from-green-600/20 to-emerald-600/20 border-2 border-green-500/50 p-4 sm:p-6 rounded-xl">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-start gap-2">
-                        <span className="text-2xl sm:text-3xl flex-shrink-0">✅</span>
-                        <div className="min-w-0">
-                          <h4 className="text-base sm:text-lg font-bold text-white break-words">{completed.courseName}</h4>
-                          <p className="text-xs sm:text-sm text-gray-400">Completed: {completed.completedDate}</p>
-                        </div>
+                  <div key={idx} className="bg-green-600/10 border border-green-500/30 p-3 sm:p-4 rounded-lg">
+                    <div className="flex items-start gap-2 mb-2">
+                      <span className="text-lg flex-shrink-0">✓</span>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="text-sm sm:text-base font-semibold text-white break-words">{completed.courseName}</h4>
+                        <p className="text-xs text-gray-400 mt-0.5">{completed.completedDate}</p>
                       </div>
                     </div>
-                    <div className="bg-green-900/30 p-3 rounded-lg">
+                    <div className="bg-green-900/20 p-2 rounded">
                       <div className="flex items-center justify-between">
                         <span className="text-sm sm:text-base text-green-300 font-semibold">Final Score:</span>
                         <span className="text-xl sm:text-2xl font-bold text-green-400">{completed.score}%</span>
@@ -2464,72 +2471,68 @@ function App() {
           )}
 
           <div className="mt-6 sm:mt-8 max-w-7xl mx-auto">
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
-              📚 Your Personalized Training Modules
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
+              Your Training Modules
             </h3>
             {userProfile && userProfile.courses.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 {userProfile.courses.map((course) => (
                   <div 
                     key={course.id}
-                    className="bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl border-2 border-gray-700 hover:border-blue-500 active:border-blue-400 transition-all cursor-pointer group"
+                    className="bg-gray-800/70 border border-gray-700 hover:border-blue-500 p-3 sm:p-5 rounded-lg transition-all"
                   >
-                    <div className="flex flex-col sm:flex-row items-start justify-between mb-3 gap-2">
-                      <h4 className="text-lg sm:text-xl font-bold text-white group-hover:text-blue-400 transition-colors break-words">
+                    <div className="flex items-start justify-between mb-2 gap-2">
+                      <h4 className="text-base sm:text-lg font-semibold text-white break-words flex-1">
                         {course.title}
                       </h4>
                       {course.risk === 'high' && (
-                        <span className="px-2 py-1 bg-red-500/20 text-red-300 text-xs font-semibold rounded whitespace-nowrap flex-shrink-0">
+                        <span className="px-2 py-0.5 bg-red-500/20 text-red-300 text-xs font-medium rounded whitespace-nowrap">
                           HIGH RISK
                         </span>
                       )}
                     </div>
-                    <p className="text-sm sm:text-base text-gray-300 mb-4">{course.description}</p>
+                    <p className="text-xs sm:text-sm text-gray-300 mb-3 line-clamp-2">{course.description}</p>
                     
+                    {/* Simplified scenarios list for mobile */}
                     {course.scenarios && course.scenarios.length > 0 && (
-                      <div className="mb-4">
-                        <p className="text-xs sm:text-sm font-semibold text-blue-400 mb-2 flex items-center gap-2">
-                          🎭 Included Scenarios ({course.scenarios.length})
+                      <div className="mb-3">
+                        <p className="text-xs text-blue-400 font-medium mb-1.5">
+                          {course.scenarios.length} Interactive Scenarios
                         </p>
-                        <ul className="text-xs sm:text-sm text-gray-400 space-y-1">
-                          {course.scenarios.map((scenario, idx) => (
-                            <li key={idx} className="flex items-start gap-1">
-                              <span className="flex-shrink-0">•</span>
-                              <span className="break-words">{scenario.title || scenario}</span>
-                            </li>
-                          ))}
-                        </ul>
                       </div>
                     )}
                     
-                    <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
+                    {/* Progress Bar */}
+                    <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
                       <div 
-                        className="bg-blue-500 h-2 rounded-full transition-all" 
+                        className="bg-blue-500 h-1.5 rounded-full transition-all" 
                         style={{width: `${course.progress}%`}}
                       ></div>
                     </div>
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                      <p className="text-xs sm:text-sm text-gray-400">{course.progress}% Complete</p>
+                    
+                    {/* Footer */}
+                    <div className="flex justify-between items-center gap-2">
+                      <p className="text-xs text-gray-400">{course.progress}% Complete</p>
                       <button 
                         onClick={() => {
                           setCurrentCourse(course);
                           setView('course');
                         }}
-                        className={`w-full sm:w-auto px-4 sm:px-4 py-2 sm:py-2 min-h-[48px] rounded-lg text-sm sm:text-base font-semibold transition-all touch-manipulation ${
+                        className={`px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-xs sm:text-sm font-medium transition-all touch-manipulation ${
                           course.progress === 100 
-                            ? 'bg-green-600 hover:bg-green-700 active:bg-green-800 text-white' 
-                            : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white'
+                            ? 'bg-green-600 hover:bg-green-700 text-white' 
+                            : 'bg-blue-600 hover:bg-blue-700 text-white'
                         }`}
                       >
-                        {course.progress === 100 ? '✓ Completed' : 'Start Module →'}
+                        {course.progress === 100 ? 'Review' : 'Start'}
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center text-gray-400 py-12">
-                <p className="text-xl">No courses assigned yet. Complete your profile to get started.</p>
+              <div className="text-center text-gray-400 py-8">
+                <p className="text-sm sm:text-base">No courses assigned yet</p>
               </div>
             )}
           </div>
