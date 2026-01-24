@@ -3152,7 +3152,7 @@ function App() {
               </div>
 
               {/* Scenario Video (if available) */}
-              {currentScenario.videoUrl && (
+              {currentScenario && currentScenario.videoUrl && (
                 <div className="relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-purple-500/50 p-3 sm:p-4 md:p-6 rounded-xl overflow-hidden">
                   <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500/30 rounded-lg flex items-center justify-center text-lg sm:text-xl">
@@ -3352,7 +3352,9 @@ function App() {
                     ))}
                   </div>
                 </div>
-              ) : (
+              ) : null}
+
+              {scenarioResult && (
                 <div 
                   className={`p-8 rounded-xl border-2 animate-fadeIn ${
                     scenarioResult.correct 
