@@ -1207,6 +1207,8 @@ function App() {
           {
             id: 'immigration-border-1',
             title: 'Suspicious Traveler at Border',
+            videoUrl: 'https://www.youtube.com/embed/lwfijBPReoY?si=tibk_8nq7269WZ43',
+            videoThumbnail: '🎥',
             situation: 'At a border post, a traveler presents a passport with signs of tampering. They become agitated and offer you a "gift" to let them pass without further checks.',
             options: [
               {
@@ -1246,6 +1248,8 @@ function App() {
           {
             id: 'immigration-data-1',
             title: 'Data Privacy Violation',
+            videoUrl: 'https://www.youtube.com/embed/lwfijBPReoY?si=tibk_8nq7269WZ43',
+            videoThumbnail: '🎥',
             situation: 'A friend asks you to check the immigration records of someone they are suspicious about, offering you a small token of appreciation.',
             options: [
               {
