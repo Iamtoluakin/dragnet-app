@@ -1162,13 +1162,12 @@ function App() {
             'Public Service Rules'
           ]
         },
-        scenarios: [
-          {
-            id: 'immigration-passport-1',
-            title: 'Passport Application Bribery',
-            videoUrl: 'https://www.youtube.com/embed/lwfijBPReoY?si=tibk_8nq7269WZ43',
-            videoThumbnail: '🎥',
-            situation: 'You are working at the passport office. An applicant offers you ₦20,000 to "fast-track" their passport application, claiming they are in a hurry and know "this is how things work."',
+        scenarios: [        {
+          id: 'immigration-passport-1',
+          title: 'Passport Application Bribery',
+          videoUrl: 'https://www.youtube.com/embed/lwfijBPReoY',
+          videoThumbnail: '🎥',
+          situation: 'You are working at the passport office. An applicant offers you ₦20,000 to "fast-track" their passport application, claiming they are in a hurry and know "this is how things work."',
             options: [
               {
                 id: 'a',
@@ -1207,7 +1206,7 @@ function App() {
           {
             id: 'immigration-border-1',
             title: 'Suspicious Traveler at Border',
-            videoUrl: 'https://www.youtube.com/embed/lwfijBPReoY?si=tibk_8nq7269WZ43',
+            videoUrl: 'https://www.youtube.com/embed/lwfijBPReoY',
             videoThumbnail: '🎥',
             situation: 'At a border post, a traveler presents a passport with signs of tampering. They become agitated and offer you a "gift" to let them pass without further checks.',
             options: [
@@ -1248,7 +1247,7 @@ function App() {
           {
             id: 'immigration-data-1',
             title: 'Data Privacy Violation',
-            videoUrl: 'https://www.youtube.com/embed/lwfijBPReoY?si=tibk_8nq7269WZ43',
+            videoUrl: 'https://www.youtube.com/embed/lwfijBPReoY',
             videoThumbnail: '🎥',
             situation: 'A friend asks you to check the immigration records of someone they are suspicious about, offering you a small token of appreciation.',
             options: [
@@ -2698,7 +2697,7 @@ function App() {
                         src={
                           userProfile?.sector === 'police' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
                           userProfile?.sector === 'civil' ? 'https://www.youtube.com/embed/3ilFN6NaHVk' :
-                          userProfile?.sector === 'immigration' ? 'https://www.youtube.com/embed/8amOKakZJwk' :
+                          userProfile?.sector === 'immigration' ? 'https://www.youtube.com/embed/lwfijBPReoY' :
                           userProfile?.sector === 'private' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
                           'https://www.youtube.com/embed/eeM1Ga76bA4'
                         }
@@ -3134,26 +3133,51 @@ function App() {
 
           {/* Scenario Simulator with Visuals */}
           {currentScenario && (
-            <div className="space-y-6">
-              <div className="relative bg-gradient-to-br from-orange-600 to-red-600 p-8 rounded-2xl text-white overflow-hidden">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="relative bg-gradient-to-br from-orange-600 to-red-600 p-4 sm:p-6 md:p-8 rounded-2xl text-white overflow-hidden">
                 {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-24 -mt-24"></div>
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full -ml-16 -mb-16"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-white/10 rounded-full -mr-16 sm:-mr-24 -mt-16 sm:-mt-24"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full -ml-12 sm:-ml-16 -mb-12 sm:-mb-16"></div>
                 
-                <div className="relative z-10 flex items-center gap-6">
+                <div className="relative z-10 flex items-center gap-3 sm:gap-4 md:gap-6">
                   {/* Scenario Icon */}
-                  <div className="flex-shrink-0 w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-4xl backdrop-blur-sm border-2 border-white/30 animate-pulse">
+                  <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl backdrop-blur-sm border-2 border-white/30 animate-pulse">
                     🎭
                   </div>
-                  <div>
-                    <h1 className="text-3xl font-bold mb-2">{currentScenario.title}</h1>
-                    <p className="text-lg text-orange-100">🎮 Interactive Ethical Dilemma Simulation</p>
+                  <div className="flex-1 min-w-0">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">{currentScenario.title}</h1>
+                    <p className="text-sm sm:text-base md:text-lg text-orange-100">🎮 Interactive Ethical Dilemma Simulation</p>
                   </div>
                 </div>
               </div>
 
+              {/* Scenario Video (if available) */}
+              {currentScenario.videoUrl && (
+                <div className="relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-purple-500/50 p-3 sm:p-4 md:p-6 rounded-xl overflow-hidden">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500/30 rounded-lg flex items-center justify-center text-lg sm:text-xl">
+                      🎥
+                    </div>
+                    <div>
+                      <h3 className="text-base sm:text-lg font-bold text-white">Scenario Context Video</h3>
+                      <p className="text-xs sm:text-sm text-purple-300">Watch for background context</p>
+                    </div>
+                  </div>
+                  <div className="aspect-video w-full min-h-[180px] sm:min-h-[250px] md:min-h-[350px] bg-black rounded-lg overflow-hidden shadow-xl">
+                    <iframe
+                      className="w-full h-full"
+                      src={currentScenario.videoUrl}
+                      title={`${currentScenario.title} - Context Video`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </div>
+              )}
+
               {/* Cartoon Illustration Section */}
-              <div className="relative bg-gradient-to-br from-indigo-900/40 to-purple-900/40 backdrop-blur-sm p-6 rounded-xl border-2 border-indigo-500/50 overflow-hidden">
+              <div className="relative bg-gradient-to-br from-indigo-900/40 to-purple-900/40 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border-2 border-indigo-500/50 overflow-hidden">
                 <div className="flex flex-col md:flex-row gap-6 items-center">
                   {/* Cartoon Visual Representation */}
                   <div className="flex-shrink-0">
