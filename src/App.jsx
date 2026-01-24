@@ -2530,7 +2530,7 @@ function App() {
           </div>
         </div>
       ) : view === 'course' ? (
-        <div className="p-8 max-w-5xl mx-auto">
+        <div className="p-3 sm:p-4 md:p-6 lg:p-8 max-w-5xl mx-auto">
           {/* Skip to main content link for accessibility */}
           <a href="#main-content" className="skip-link">
             Skip to main content
@@ -2608,7 +2608,7 @@ function App() {
             </div>
           )}
 
-          <div className="mb-4 sm:mb-6 flex items-center justify-between">
+          <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <button 
               onClick={() => {
                 setView('dashboard');
@@ -2617,13 +2617,13 @@ function App() {
                 setScenarioResult(null);
                 setCurrentStep('video');
               }}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-smooth"
+              className="px-4 py-2 min-h-[44px] bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white text-sm sm:text-base rounded-lg transition-smooth touch-manipulation w-full sm:w-auto"
               aria-label="Return to dashboard"
             >
               ← Back to Dashboard
             </button>
             {currentCourse && currentCourse.risk === 'high' && (
-              <span className="px-3 py-1 bg-red-500/20 text-red-300 text-sm font-semibold rounded" role="status">
+              <span className="px-3 py-1 bg-red-500/20 text-red-300 text-xs sm:text-sm font-semibold rounded whitespace-nowrap" role="status">
                 🔥 HIGH RISK MODULE
               </span>
             )}
@@ -2866,11 +2866,11 @@ function App() {
                     </div>
                     <div className="space-y-3">
                       {currentCourse.content.laws.map((law, idx) => (
-                        <div key={idx} className="flex items-start gap-4 p-4 bg-gray-800/60 rounded-lg border-l-4 border-purple-500 hover:bg-gray-800 transition-all">
-                          <div className="flex-shrink-0 w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-xl">
+                        <div key={idx} className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-800/60 rounded-lg border-l-4 border-purple-500 hover:bg-gray-800 transition-all">
+                          <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-lg sm:text-xl">
                             📜
                           </div>
-                          <span className="text-gray-300 leading-relaxed">{law}</span>
+                          <span className="text-sm sm:text-base text-gray-300 leading-relaxed">{law}</span>
                         </div>
                       ))}
                     </div>
@@ -2888,7 +2888,7 @@ function App() {
                       setQuizResult(null);
                       setCurrentStep('assessment');
                     }}
-                    className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-semibold text-lg transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 animate-pulse"
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 min-h-[52px] bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 active:from-green-800 active:to-emerald-800 text-white rounded-xl font-semibold text-base sm:text-lg transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-100 animate-pulse touch-manipulation"
                     aria-label="Start final assessment with 5 questions"
                   >
                     📝 Take Final Assessment (5 Questions)
@@ -3437,7 +3437,7 @@ function App() {
                     </div>
                   )}
 
-                  <div className="flex gap-4 mt-6">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
                     <button
                       onClick={() => {
                         setCurrentScenario(null);
@@ -3455,7 +3455,7 @@ function App() {
                           });
                         }, 100);
                       }}
-                      className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-smooth"
+                      className="w-full sm:w-auto px-5 sm:px-6 py-3 min-h-[48px] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg font-semibold transition-smooth touch-manipulation"
                       aria-label="Go back to course overview"
                     >
                       ← Back to Course
@@ -3473,7 +3473,7 @@ function App() {
                             setScenarioResult(null);
                             setHasReadScenario(false);
                           }}
-                          className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-all"
+                          className="w-full sm:w-auto px-5 sm:px-6 py-3 min-h-[48px] bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white rounded-lg font-semibold transition-all touch-manipulation"
                         >
                           Next Scenario ({currentIndex + 2}/{currentCourse.scenarios.length}) →
                         </button>
