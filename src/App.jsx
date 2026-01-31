@@ -1878,7 +1878,7 @@ function App() {
               🎯 DragNet
             </h1>
             <p className="text-2xl text-blue-300 mb-8">
-              AI-Powered Compliance Training Platform
+              Compliance Training Platform
             </p>
             <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
               Master compliance and ethical practices in your workplace and daily life
@@ -2024,7 +2024,7 @@ function App() {
                 <div>
                   <div className="text-5xl font-bold text-pink-400 mb-2">100%</div>
                   <p className="text-xl text-gray-300">Personalized</p>
-                  <p className="text-sm text-gray-400 mt-2">AI-powered training plans</p>
+                  <p className="text-sm text-gray-400 mt-2">Customized training plans</p>
                 </div>
               </div>
             </div>
@@ -2180,7 +2180,7 @@ function App() {
                 🧠 Hi {userName}! Let's Analyze Your Role
               </h2>
               <p className="text-gray-300 mb-8">
-                Select your sector and role. Our AI will automatically assign the right compliance training, policies, and assessments for your position.
+                Select your sector and role. We'll automatically assign the right compliance training, policies, and assessments for your position.
               </p>
 
               {/* Sector Selection */}
@@ -2262,10 +2262,10 @@ function App() {
                     onClick={handleCompleteOnboarding}
                     className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
-                    🚀 Start AI Analysis & Get My Training Plan
+                    🚀 Analyze My Role & Get Training Plan
                   </button>
                   <p className="text-center text-gray-400 text-sm mt-4">
-                    AI will analyze your role and assign personalized compliance courses
+                    We'll analyze your role and assign personalized compliance courses
                   </p>
                 </div>
               )}
@@ -2577,45 +2577,6 @@ function App() {
             </div>
           )}
 
-          {/* Mobile Learning Flow Guide */}
-          {currentCourse && !currentScenario && (
-            <div className="mb-4 sm:mb-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border-2 border-blue-500/50 p-4 rounded-xl sm:hidden animate-fadeIn">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="text-3xl">📚</div>
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-1">Learning Journey</h3>
-                  <p className="text-sm text-gray-300">Follow these steps in order:</p>
-                </div>
-              </div>
-              <div className="space-y-2 text-sm">
-                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'video' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
-                  <span className="text-lg">1️⃣</span>
-                  <span className="font-semibold">Watch the training video below</span>
-                </div>
-                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'scenarios' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
-                  <span className="text-lg">2️⃣</span>
-                  <span>Practice with interactive scenarios</span>
-                </div>
-                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'keyPoints' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
-                  <span className="text-lg">3️⃣</span>
-                  <span>Review key learning points</span>
-                </div>
-                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'laws' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
-                  <span className="text-lg">4️⃣</span>
-                  <span>Study relevant laws</span>
-                </div>
-                <div className={`flex items-center gap-2 p-2 rounded ${currentStep === 'assessment' ? 'bg-blue-500/30 border-l-4 border-blue-500' : 'text-gray-400'}`}>
-                  <span className="text-lg">5️⃣</span>
-                  <span>Complete final assessment</span>
-                </div>
-              </div>
-              <div className="mt-3 flex items-center gap-2 text-xs text-blue-300 bg-blue-900/30 p-2 rounded">
-                <span className="text-base">👇</span>
-                <span className="font-semibold">Scroll down to start with the video!</span>
-              </div>
-            </div>
-          )}
-
           <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <button 
               onClick={() => {
@@ -2665,16 +2626,6 @@ function App() {
 
               {/* 1. VIDEO TRAINING - First Section */}
               <div id="video-section" className="relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-purple-500/50 p-4 sm:p-6 md:p-8 rounded-xl overflow-hidden scroll-mt-4">
-                {/* Mobile "START HERE" Badge */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 sm:hidden z-20">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-500 px-4 py-1 rounded-full shadow-lg border-2 border-white animate-bounce">
-                    <span className="text-white font-bold text-sm flex items-center gap-2">
-                      <span className="text-lg">👆</span>
-                      START HERE
-                      <span className="text-lg">👆</span>
-                    </span>
-                  </div>
-                </div>
                 
                 <div className="absolute top-0 left-0 text-6xl sm:text-9xl opacity-10">🎥</div>
                 
@@ -2853,40 +2804,7 @@ function App() {
                 </div>
               )}
 
-              {/* 4. RELEVANT LAWS & REGULATIONS - Fourth Section (Shows after all key points clicked) */}
-              {currentCourse.content && showKeyLearning && clickedLearningPoints.length === currentCourse.content.keyPoints.length && (
-                <div className="relative bg-gradient-to-br from-purple-900/20 to-indigo-900/20 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border-2 border-purple-700/50 overflow-hidden animate-fadeIn">
-                  <div className="absolute top-0 left-0 text-6xl sm:text-9xl opacity-10">⚖️</div>
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-xl sm:text-2xl">
-                        ⚖️
-                      </div>
-                      <div>
-                        <h2 className="text-lg sm:text-2xl font-bold text-white">Step 4: Laws & Regulations</h2>
-                        <p className="text-xs sm:text-sm text-purple-300">Know the legal framework</p>
-                      </div>
-                    </div>
-                    <div className="bg-purple-900/20 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 border-l-4 border-purple-500">
-                      <p className="text-sm sm:text-base text-gray-300">
-                        ⚖️ Understand the legal framework that governs your professional conduct and responsibilities.
-                      </p>
-                    </div>
-                    <div className="space-y-3">
-                      {currentCourse.content.laws.map((law, idx) => (
-                        <div key={idx} className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-800/60 rounded-lg border-l-4 border-purple-500 hover:bg-gray-800 transition-all">
-                          <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-lg sm:text-xl">
-                            📜
-                          </div>
-                          <span className="text-sm sm:text-base text-gray-300 leading-relaxed">{law}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* 5. TAKE ASSESSMENT BUTTON - Fifth Section (Shows after all key points clicked) */}
+              {/* TAKE ASSESSMENT BUTTON - Shows after all key points clicked */}
               {showKeyLearning && clickedLearningPoints.length === currentCourse.content.keyPoints.length && (
                 <div className="flex justify-center pt-6 animate-fadeIn">
                   <button
