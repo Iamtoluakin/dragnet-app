@@ -2672,13 +2672,6 @@ function App() {
                       </span>
                     </div>
                   </div>
-                  
-                  {currentCourse.content && (
-                    <div className="mt-6 p-4 bg-gray-800/50 rounded-lg border border-purple-500/30">
-                      <h3 className="text-lg font-semibold text-purple-300 mb-2">📖 Video Overview:</h3>
-                      <p className="text-gray-300">{currentCourse.content.introduction}</p>
-                    </div>
-                  )}
                 </div>
               </div>
 
