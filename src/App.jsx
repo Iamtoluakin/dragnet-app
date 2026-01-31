@@ -2397,8 +2397,9 @@ function App() {
             </div>
           )}
 
+          {/* Risk Level Alert - Simplified for Mobile */}
           {/* Stats Cards - Clean Mobile Design */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 max-w-7xl mx-auto mb-6 sm:mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 max-w-7xl mx-auto mb-6 sm:mb-8">
             <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3 sm:p-5 rounded-lg shadow-lg">
               <p className="text-xs sm:text-sm text-blue-100 mb-1">Progress</p>
               <p className="text-2xl sm:text-3xl font-bold text-white">
@@ -2414,6 +2415,11 @@ function App() {
             <div className="bg-gradient-to-br from-orange-600 to-orange-700 p-3 sm:p-5 rounded-lg shadow-lg">
               <p className="text-xs sm:text-sm text-orange-100 mb-1">Completed</p>
               <p className="text-2xl sm:text-3xl font-bold text-white">{completedCourses.length}</p>
+            </div>
+            
+            <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-3 sm:p-5 rounded-lg shadow-lg">
+              <p className="text-xs sm:text-sm text-purple-100 mb-1">Risk Level</p>
+              <p className="text-xl sm:text-2xl font-bold text-white uppercase">{userProfile?.riskLevel || 'N/A'}</p>
             </div>
           </div>
           
