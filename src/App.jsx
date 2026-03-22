@@ -368,7 +368,16 @@ function App() {
                 id: 'b',
                 text: 'Maintain distance, use calm verbal commands, and call for backup',
                 correct: true,
-                feedback: '✅ CORRECT: Excellent approach. Maintain a safe distance, use calm and clear verbal commands to de-escalate, and call for backup. This follows proper escalation of force protocol.'
+                feedback: '✅ CORRECT: Excellent approach. Maintain a safe distance, use calm and clear verbal commands to de-escalate, and call for backup. This follows proper escalation of force protocol.',
+                points: 10,
+                followUp: {
+                  situation: 'Backup arrives, but the driver is still agitated. What do you do next?',
+                  options: [
+                    { id: 'b1', text: 'Work with backup to calmly issue the citation and explain the process', correct: true, feedback: '✅ Perfect! Teamwork and clear communication help de-escalate the situation.' },
+                    { id: 'b2', text: 'Have backup physically restrain the driver immediately', correct: false, feedback: '❌ Physical force is not warranted yet. Continue verbal de-escalation.' },
+                    { id: 'b3', text: 'Let them go now that backup is here', correct: false, feedback: '❌ You still need to complete your duty. Issue the citation properly.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -401,7 +410,16 @@ function App() {
                 id: 'b',
                 text: 'Give loud verbal warnings, take cover, and order them to drop the weapon',
                 correct: true,
-                feedback: '✅ CORRECT: Perfect response. Issue clear verbal commands, take tactical cover, and assess the threat level. Only use lethal force if they point the weapon and pose an immediate deadly threat. Always attempt to de-escalate first.'
+                feedback: '✅ CORRECT: Perfect response. Issue clear verbal commands, take tactical cover, and assess the threat level. Only use lethal force if they point the weapon and pose an immediate deadly threat. Always attempt to de-escalate first.',
+                points: 10,
+                followUp: {
+                  situation: 'The suspect drops the weapon and raises their hands. What is your next action?',
+                  options: [
+                    { id: 'b1', text: 'Approach cautiously, secure the weapon, and detain the suspect safely', correct: true, feedback: '✅ Excellent! Proper arrest procedure while maintaining officer safety.' },
+                    { id: 'b2', text: 'Keep your weapon pointed and wait for backup before approaching', correct: true, feedback: '✅ Also correct! Waiting for backup before approaching is a safe tactical decision.' },
+                    { id: 'b3', text: 'Rush forward immediately to handcuff them', correct: false, feedback: '❌ Too hasty. Ensure the area is secure and the suspect poses no further threat before approaching.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -434,7 +452,16 @@ function App() {
                 id: 'b',
                 text: 'Use calm verbal commands, create space, and separate the parties',
                 correct: true,
-                feedback: '✅ CORRECT: Excellent de-escalation approach. Speak calmly but firmly, create physical space, separate the individuals, and assess the situation. Most domestic situations can be resolved without force through proper communication.'
+                feedback: '✅ CORRECT: Excellent de-escalation approach. Speak calmly but firmly, create physical space, separate the individuals, and assess the situation. Most domestic situations can be resolved without force through proper communication.',
+                points: 10,
+                followUp: {
+                  situation: 'After separation, the wife reveals she has been physically abused. What do you do?',
+                  options: [
+                    { id: 'b1', text: 'Document the abuse, take statements, and arrest the husband if evidence supports it', correct: true, feedback: '✅ Correct! Domestic violence must be taken seriously. Document and follow proper legal procedures.' },
+                    { id: 'b2', text: 'Tell them to work it out and leave', correct: false, feedback: '❌ Never dismiss domestic violence. You have a legal duty to investigate and protect victims.' },
+                    { id: 'b3', text: 'Only give a warning to the husband', correct: false, feedback: '❌ Domestic violence is a criminal offense. A warning is insufficient if evidence of abuse exists.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -544,7 +571,16 @@ function App() {
                 id: 'b',
                 text: 'Refuse entry, obtain proper search warrant, and document the refusal',
                 correct: true,
-                feedback: '✅ CORRECT: Respect the constitutional right to privacy. Obtain a search warrant from a magistrate with probable cause. Document everything properly. This protects the integrity of your investigation and respects citizens\' rights.'
+                feedback: '✅ CORRECT: Respect the constitutional right to privacy. Obtain a search warrant from a magistrate with probable cause. Document everything properly. This protects the integrity of your investigation and respects citizens\' rights.',
+                points: 10,
+                followUp: {
+                  situation: 'While waiting for the warrant, your supervisor threatens to write you up for "refusing orders." What do you do?',
+                  options: [
+                    { id: 'b1', text: 'Stand firm and explain the constitutional and legal requirements', correct: true, feedback: '✅ Correct! You have a duty to uphold the law, even when pressured by superiors.' },
+                    { id: 'b2', text: 'Give in and enter without a warrant to avoid trouble', correct: false, feedback: '❌ Violating citizens\' rights to please a supervisor is still wrong. You could face criminal charges.' },
+                    { id: 'b3', text: 'Report the supervisor to internal affairs or anti-corruption unit', correct: true, feedback: '✅ Also correct! Reporting unlawful orders is your duty and protects you legally.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1035,7 +1071,16 @@ function App() {
                 id: 'b',
                 text: 'Disclose the relationship, recuse yourself from the evaluation, and have another officer handle it',
                 correct: true,
-                feedback: '✅ CORRECT: This is the proper action. Immediately disclose the conflict of interest to your supervisor, recuse yourself from the entire process, and ensure another qualified officer conducts the evaluation.'
+                feedback: '✅ CORRECT: This is the proper action. Immediately disclose the conflict of interest to your supervisor, recuse yourself from the entire process, and ensure another qualified officer conducts the evaluation.',
+                points: 10,
+                followUp: {
+                  situation: 'Your brother calls you upset, saying you\'re "betraying the family." How do you respond?',
+                  options: [
+                    { id: 'b1', text: 'Explain that ethics and law require you to recuse yourself, and the process will be fair', correct: true, feedback: '✅ Excellent! Upholding professional ethics protects everyone, including your brother.' },
+                    { id: 'b2', text: 'Give in and secretly influence the evaluation', correct: false, feedback: '❌ This is corruption and violates the law. Never compromise your professional integrity.' },
+                    { id: 'b3', text: 'Get angry and refuse to speak to your brother', correct: false, feedback: '⚠️ Communication is important. Explain your ethical obligations calmly and professionally.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1066,7 +1111,16 @@ function App() {
                 id: 'b',
                 text: 'Return the gift and report the incident to your supervisor',
                 correct: true,
-                feedback: '✅ CORRECT: Excellent decision. Return the gift immediately with a polite note, and report the incident to your supervisor. Document everything to protect yourself from any future allegations.'
+                feedback: '✅ CORRECT: Excellent decision. Return the gift immediately with a polite note, and report the incident to your supervisor. Document everything to protect yourself from any future allegations.',
+                points: 10,
+                followUp: {
+                  situation: 'The company representative seems offended and says "everyone else accepts gifts." What do you do?',
+                  options: [
+                    { id: 'b1', text: 'Politely but firmly explain your ethical obligations and organizational policy', correct: true, feedback: '✅ Perfect! Maintain professionalism and stand by your principles.' },
+                    { id: 'b2', text: 'Reconsider and accept the gift to maintain the relationship', correct: false, feedback: '❌ Never compromise your ethics because of pressure. This is how corruption starts.' },
+                    { id: 'b3', text: 'Report them for attempted bribery', correct: true, feedback: '✅ Also correct! If they persist, this could constitute attempted bribery and should be reported.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1183,7 +1237,15 @@ function App() {
                 correct: true,
                 feedback: '✅ CORRECT: This is the right action. Refuse any inducement, follow due process, and document the attempted bribery.',
                 consequence: 'You maintain your integrity and set a positive example for others.',
-                points: 10
+                points: 10,
+                followUp: {
+                  situation: 'The applicant becomes aggressive and threatens to "report you to your boss." What do you do?',
+                  options: [
+                    { id: 'b1', text: 'Remain calm, explain the process, and document their threats', correct: true, feedback: '✅ Excellent! Stay professional and document all threats for your protection.' },
+                    { id: 'b2', text: 'Give in to avoid trouble', correct: false, feedback: '❌ Never compromise your integrity due to threats. This is how corruption thrives.' },
+                    { id: 'b3', text: 'Call security and report the threatening behavior', correct: true, feedback: '✅ Also correct! Threatening behavior should be reported to security immediately.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1224,7 +1286,15 @@ function App() {
                 correct: true,
                 feedback: '✅ CORRECT: Detain the traveler, verify the document, and report the incident to your supervisor and security agencies.',
                 consequence: 'You prevent a potential security breach and uphold the law.',
-                points: 10
+                points: 10,
+                followUp: {
+                  situation: 'Document verification reveals the passport is forged. What is your next action?',
+                  options: [
+                    { id: 'b1', text: 'Arrest the traveler and hand them over to law enforcement with full documentation', correct: true, feedback: '✅ Perfect! Document forgery is a serious crime requiring law enforcement involvement.' },
+                    { id: 'b2', text: 'Just send them back without arrest', correct: false, feedback: '❌ Passport forgery is a criminal offense. The traveler must be arrested and prosecuted.' },
+                    { id: 'b3', text: 'Confiscate the passport and let them go', correct: false, feedback: '❌ This allows a criminal to escape justice and potentially endanger national security.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1265,7 +1335,15 @@ function App() {
                 correct: true,
                 feedback: '✅ CORRECT: You must protect confidential records and refuse any unauthorized request.',
                 consequence: 'You uphold professional standards and avoid legal trouble.',
-                points: 10
+                points: 10,
+                followUp: {
+                  situation: 'Your friend persists, saying "just this once, no one will know." How do you respond?',
+                  options: [
+                    { id: 'b1', text: 'Firmly refuse again and explain the legal consequences for both of you', correct: true, feedback: '✅ Excellent! Stand firm on your principles and educate your friend about the law.' },
+                    { id: 'b2', text: 'Give in to preserve the friendship', correct: false, feedback: '❌ Real friends respect boundaries. Compromising your integrity will only lead to more requests.' },
+                    { id: 'b3', text: 'Report your friend to authorities', correct: false, feedback: '⚠️ This might be extreme for a first offense. A firm refusal and education is usually sufficient.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1380,7 +1458,16 @@ function App() {
                 id: 'b',
                 text: 'Follow standard verification procedures regardless of the relationship',
                 correct: true,
-                feedback: '✅ CORRECT: Security procedures exist for a reason. Verify identity, check account status, and follow all standard protocols. Explain to your friend that these procedures protect them and the bank from fraud.'
+                feedback: '✅ CORRECT: Security procedures exist for a reason. Verify identity, check account status, and follow all standard protocols. Explain to your friend that these procedures protect them and the bank from fraud.',
+                points: 10,
+                followUp: {
+                  situation: 'Your friend gets upset and says you\'re being "too rigid" and "making it personal." How do you respond?',
+                  options: [
+                    { id: 'b1', text: 'Explain calmly that these procedures protect everyone, including your friend', correct: true, feedback: '✅ Perfect! Professional boundaries protect both the institution and customers.' },
+                    { id: 'b2', text: 'Give in to maintain the friendship', correct: false, feedback: '❌ Compromising security for personal relationships puts your career and the bank at risk.' },
+                    { id: 'b3', text: 'Report your friend for trying to pressure you', correct: true, feedback: '✅ Also correct if they persist! Pressure to bypass procedures should be documented.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1411,7 +1498,16 @@ function App() {
                 id: 'b',
                 text: 'Refuse, explain this is illegal financial fraud, and report to compliance or senior management',
                 correct: true,
-                feedback: '✅ CORRECT: Excellent decision. Falsifying financial records is a serious crime under CAMA and EFCC regulations. Refuse to participate, document the request, and report to compliance, internal audit, or senior management immediately.'
+                feedback: '✅ CORRECT: Excellent decision. Falsifying financial records is a serious crime under CAMA and EFCC regulations. Refuse to participate, document the request, and report to compliance, internal audit, or senior management immediately.',
+                points: 10,
+                followUp: {
+                  situation: 'Your manager warns that "not being a team player" could affect your career. What do you do?',
+                  options: [
+                    { id: 'b1', text: 'Stand firm and escalate to senior management or compliance', correct: true, feedback: '✅ Excellent! Retaliation for refusing fraud is itself illegal. Document and escalate.' },
+                    { id: 'b2', text: 'Give in due to career pressure', correct: false, feedback: '❌ Career threats don\'t justify fraud. You could face imprisonment and loss of your career anyway.' },
+                    { id: 'b3', text: 'Consult with HR or a whistleblower hotline', correct: true, feedback: '✅ Perfect! Use official channels to report retaliation and protect yourself legally.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1442,7 +1538,16 @@ function App() {
                 id: 'b',
                 text: 'File a Suspicious Transaction Report (STR) with your compliance officer immediately',
                 correct: true,
-                feedback: '✅ CORRECT: This pattern strongly indicates structuring to evade reporting requirements, which is illegal. File an STR with your compliance officer immediately. Do not alert the customer. This protects the financial system from money laundering.'
+                feedback: '✅ CORRECT: This pattern strongly indicates structuring to evade reporting requirements, which is illegal. File an STR with your compliance officer immediately. Do not alert the customer. This protects the financial system from money laundering.',
+                points: 10,
+                followUp: {
+                  situation: 'After filing the STR, the customer asks why their recent transactions are taking longer. What do you say?',
+                  options: [
+                    { id: 'b1', text: 'Give a general explanation about standard processing without mentioning the STR', correct: true, feedback: '✅ Perfect! Never reveal that an STR has been filed. "Tipping off" is a criminal offense.' },
+                    { id: 'b2', text: 'Tell them you filed a suspicious transaction report', correct: false, feedback: '❌ This is "tipping off" and is illegal under anti-money laundering laws. Never disclose STR filing.' },
+                    { id: 'b3', text: 'Blame it on "system issues" without details', correct: true, feedback: '✅ Also acceptable. A vague explanation protects you from tipping off allegations.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1551,7 +1656,16 @@ function App() {
                 id: 'b',
                 text: 'Refuse, report the incident to your compliance officer and senior management',
                 correct: true,
-                feedback: '✅ CORRECT: Excellent decision. Refuse the bribery request, document the conversation, and report immediately to your compliance officer and management. Your company may also need to report to anti-corruption authorities. Win business on merit, not through corruption.'
+                feedback: '✅ CORRECT: Excellent decision. Refuse the bribery request, document the conversation, and report immediately to your compliance officer and management. Your company may also need to report to anti-corruption authorities. Win business on merit, not through corruption.',
+                points: 10,
+                followUp: {
+                  situation: 'The procurement officer warns that refusing means your company "won\'t be considered for future contracts." What do you do?',
+                  options: [
+                    { id: 'b1', text: 'Maintain your refusal and document the threats for your company\'s legal team', correct: true, feedback: '✅ Perfect! Threats prove corruption. Document everything and report to authorities if needed.' },
+                    { id: 'b2', text: 'Reconsider and pay to protect future business', correct: false, feedback: '❌ Threats don\'t justify bribery. Paying now means you\'ll face demands forever.' },
+                    { id: 'b3', text: 'Report to EFCC or ICPC with evidence of solicitation and threats', correct: true, feedback: '✅ Excellent! This is extortion and should be reported to anti-corruption agencies.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1582,7 +1696,16 @@ function App() {
                 id: 'b',
                 text: 'Return the gift, explain company policy, and report to your compliance officer',
                 correct: true,
-                feedback: '✅ CORRECT: Return the gift with a polite explanation of company policy. Report the incident to your compliance officer. This protects both your integrity and the business relationship, which should be based on quality and value, not gifts.'
+                feedback: '✅ CORRECT: Return the gift with a polite explanation of company policy. Report the incident to your compliance officer. This protects both your integrity and the business relationship, which should be based on quality and value, not gifts.',
+                points: 10,
+                followUp: {
+                  situation: 'The supplier seems offended and suggests this could affect your business relationship. How do you handle this?',
+                  options: [
+                    { id: 'b1', text: 'Reassure them the relationship is based on quality and value, not gifts', correct: true, feedback: '✅ Excellent! Ethical suppliers respect compliance with policy. This builds trust.' },
+                    { id: 'b2', text: 'Accept the gift to preserve the relationship', correct: false, feedback: '❌ A supplier who bases relationships on expensive gifts is a compliance risk.' },
+                    { id: 'b3', text: 'Report their reaction to compliance as potential corruption red flag', correct: true, feedback: '✅ Also correct! Suppliers who pressure you to accept gifts may be attempting bribery.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1613,7 +1736,16 @@ function App() {
                 id: 'b',
                 text: 'Refuse to participate and report the fraud if you become aware of specific incidents',
                 correct: true,
-                feedback: '✅ CORRECT: Submit only accurate expense claims with legitimate receipts. If you become aware of ongoing fraud by others, report to your manager, compliance, or internal audit. Protect your own integrity and your company\'s interests.'
+                feedback: '✅ CORRECT: Submit only accurate expense claims with legitimate receipts. If you become aware of ongoing fraud by others, report to your manager, compliance, or internal audit. Protect your own integrity and your company\'s interests.',
+                points: 10,
+                followUp: {
+                  situation: 'Your colleague warns you that "snitching" on others will make you unpopular. What is your response?',
+                  options: [
+                    { id: 'b1', text: 'Explain that reporting fraud protects the company and honest employees', correct: true, feedback: '✅ Excellent! True professionalism means protecting the organization from fraud.' },
+                    { id: 'b2', text: 'Decide not to report to avoid being unpopular', correct: false, feedback: '❌ Popularity doesn\'t justify allowing theft. You have an ethical duty to report fraud.' },
+                    { id: 'b3', text: 'Use anonymous whistleblower channels to report safely', correct: true, feedback: '✅ Perfect! Whistleblower channels protect your identity while stopping fraud.' }
+                  ]
+                }
               },
               {
                 id: 'c',
@@ -1872,29 +2004,29 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
       {view === 'landing' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen p-8">
-          <div className="text-center max-w-4xl">
-            <h1 className="text-6xl font-bold text-white mb-6">
+        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-10 sm:p-8">
+          <div className="text-center max-w-4xl w-full">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6">
               🎯 DragNet
             </h1>
-            <p className="text-2xl text-blue-300 mb-8">
+            <p className="text-lg sm:text-xl md:text-2xl text-blue-300 mb-4 sm:mb-8">
               Compliance Training Platform
             </p>
-            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-10 max-w-2xl mx-auto px-2">
               Master compliance and ethical practices in your workplace and daily life
             </p>
             
-            <div className="flex gap-4 justify-center mb-16">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-10 sm:mb-16 px-4 sm:px-0">
               <button 
                 onClick={() => setView('auth')}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 active:from-blue-700 active:to-purple-700 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 shadow-lg touch-manipulation"
               >
                 Get Started →
               </button>
               {isAuthenticated && (
                 <button 
                   onClick={() => setView('dashboard')}
-                  className="px-8 py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                  className="w-full sm:w-auto px-8 py-4 bg-gray-700 active:bg-gray-600 hover:bg-gray-600 text-white rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 shadow-lg touch-manipulation"
                 >
                   View Dashboard
                 </button>
@@ -1902,53 +2034,53 @@ function App() {
             </div>
           </div>
 
-          {/* Main Feature Cards - 6 Key Features */}
-          <div className="max-w-7xl mx-auto mb-16">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-300">
-                <div className="text-4xl mb-3">📚</div>
-                <h4 className="text-lg font-bold text-white mb-3">Nigerian Laws & Regulations</h4>
-                <p className="text-gray-300 text-sm">
+          {/* Main Feature Cards */}
+          <div className="w-full max-w-7xl mx-auto mb-10 sm:mb-16 px-4 sm:px-0">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-300">
+                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">📚</div>
+                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Nigerian Laws & Regulations</h4>
+                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
                   ICPC Act, Criminal Code, and sector-specific regulations explained clearly
                 </p>
               </div>
               
-              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300">
-                <div className="text-4xl mb-3">🎭</div>
-                <h4 className="text-lg font-bold text-white mb-3">50+ Real Scenarios</h4>
-                <p className="text-gray-300 text-sm">
+              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300">
+                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">🎭</div>
+                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">50+ Real Scenarios</h4>
+                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
                   Practice with actual ethical dilemmas from Nigerian workplaces
                 </p>
               </div>
               
-              <div className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-pink-500/30 hover:border-pink-400/60 transition-all duration-300">
-                <div className="text-4xl mb-3">🎥</div>
-                <h4 className="text-lg font-bold text-white mb-3">Video Training</h4>
-                <p className="text-gray-300 text-sm">
+              <div className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-pink-500/30 hover:border-pink-400/60 transition-all duration-300">
+                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">🎥</div>
+                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Video Training</h4>
+                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
                   Sector-specific video lessons tailored to your role
                 </p>
               </div>
               
-              <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300">
-                <div className="text-4xl mb-3">🔊</div>
-                <h4 className="text-lg font-bold text-white mb-3">Audio Narration</h4>
-                <p className="text-gray-300 text-sm">
+              <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300">
+                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">🔊</div>
+                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Audio Narration</h4>
+                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
                   Listen to lessons while multitasking with text-to-speech
                 </p>
               </div>
               
-              <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-indigo-500/30 hover:border-indigo-400/60 transition-all duration-300">
-                <div className="text-4xl mb-3">🏆</div>
-                <h4 className="text-lg font-bold text-white mb-3">AI Career Recommendations</h4>
-                <p className="text-gray-300 text-sm">
+              <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-indigo-500/30 hover:border-indigo-400/60 transition-all duration-300">
+                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">🏆</div>
+                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Career Recommendations</h4>
+                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
                   Get personalized career path suggestions based on your training
                 </p>
               </div>
               
-              <div className="bg-gradient-to-br from-teal-900/40 to-teal-800/20 backdrop-blur-sm p-6 rounded-2xl border-2 border-teal-500/30 hover:border-teal-400/60 transition-all duration-300">
-                <div className="text-4xl mb-3">�</div>
-                <h4 className="text-lg font-bold text-white mb-3">Progress Tracking</h4>
-                <p className="text-gray-300 text-sm">
+              <div className="bg-gradient-to-br from-teal-900/40 to-teal-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-teal-500/30 hover:border-teal-400/60 transition-all duration-300">
+                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">📊</div>
+                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Progress Tracking</h4>
+                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
                   Track completed courses, achievements, and learning milestones
                 </p>
               </div>
@@ -1956,51 +2088,49 @@ function App() {
           </div>
 
           {/* How It Works Section */}
-          <div className="max-w-7xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <div className="w-full max-w-7xl mx-auto mb-10 sm:mb-16 px-4 sm:px-0">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-8 sm:mb-12">
               How DragNet Works
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
               <div className="text-center">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <span className="text-3xl text-white font-bold">1</span>
+                <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
+                  <span className="text-xl sm:text-3xl text-white font-bold">1</span>
                 </div>
-                <div className="text-6xl mb-4">📝</div>
-                <h3 className="text-xl font-bold text-white mb-2">Sign Up</h3>
-                <p className="text-gray-400">
+                <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">📝</div>
+                <h3 className="text-base sm:text-xl font-bold text-white mb-1 sm:mb-2">Sign Up</h3>
+                <p className="text-gray-400 text-xs sm:text-base hidden sm:block">
                   Create your account and tell us about your sector and role
                 </p>
               </div>
-
               <div className="text-center">
-                <div className="bg-gradient-to-br from-purple-500 to-purple-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <span className="text-3xl text-white font-bold">2</span>
+                <div className="bg-gradient-to-br from-purple-500 to-purple-700 w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
+                  <span className="text-xl sm:text-3xl text-white font-bold">2</span>
                 </div>
-                <div className="text-6xl mb-4">🤖</div>
-                <h3 className="text-xl font-bold text-white mb-2">Get Your Plan</h3>
-                <p className="text-gray-400">
-                  AI analyzes your profile and creates personalized training
+                <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">🎯</div>
+                <h3 className="text-base sm:text-xl font-bold text-white mb-1 sm:mb-2">Get Your Plan</h3>
+                <p className="text-gray-400 text-xs sm:text-base hidden sm:block">
+                  We analyze your profile and create personalized training
                 </p>
               </div>
-
               <div className="text-center">
-                <div className="bg-gradient-to-br from-pink-500 to-pink-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <span className="text-3xl text-white font-bold">3</span>
+                <div className="bg-gradient-to-br from-pink-500 to-pink-700 w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
+                  <span className="text-xl sm:text-3xl text-white font-bold">3</span>
                 </div>
-                <div className="text-6xl mb-4">🎮</div>
-                <h3 className="text-xl font-bold text-white mb-2">Learn by Doing</h3>
-                <p className="text-gray-400">
+                <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">🎮</div>
+                <h3 className="text-base sm:text-xl font-bold text-white mb-1 sm:mb-2">Learn by Doing</h3>
+                <p className="text-gray-400 text-xs sm:text-base hidden sm:block">
                   Practice with interactive scenarios and real case studies
                 </p>
               </div>
 
               <div className="text-center">
-                <div className="bg-gradient-to-br from-green-500 to-green-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <span className="text-3xl text-white font-bold">4</span>
+                <div className="bg-gradient-to-br from-green-500 to-green-700 w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
+                  <span className="text-xl sm:text-3xl text-white font-bold">4</span>
                 </div>
-                <div className="text-6xl mb-4">🏆</div>
-                <h3 className="text-xl font-bold text-white mb-2">Track & Grow</h3>
-                <p className="text-gray-400">
+                <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">🏆</div>
+                <h3 className="text-base sm:text-xl font-bold text-white mb-1 sm:mb-2">Track & Grow</h3>
+                <p className="text-gray-400 text-xs sm:text-base hidden sm:block">
                   Earn achievements and get career recommendations
                 </p>
               </div>
@@ -2008,46 +2138,46 @@ function App() {
           </div>
 
           {/* Statistics Section */}
-          <div className="max-w-7xl mx-auto mb-16">
-            <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 backdrop-blur-sm p-10 rounded-2xl border-2 border-purple-500/30">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div className="w-full max-w-7xl mx-auto mb-10 sm:mb-16 px-4 sm:px-0">
+            <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 backdrop-blur-sm p-6 sm:p-10 rounded-2xl border-2 border-purple-500/30">
+              <div className="grid grid-cols-3 gap-4 sm:gap-8 text-center">
                 <div>
-                  <div className="text-5xl font-bold text-blue-400 mb-2">10+</div>
-                  <p className="text-xl text-gray-300">Compliance Courses</p>
-                  <p className="text-sm text-gray-400 mt-2">Covering all major sectors</p>
+                  <div className="text-3xl sm:text-5xl font-bold text-blue-400 mb-1 sm:mb-2">10+</div>
+                  <p className="text-sm sm:text-xl text-gray-300">Courses</p>
+                  <p className="text-xs text-gray-400 mt-1 hidden sm:block">Covering all major sectors</p>
                 </div>
                 <div>
-                  <div className="text-5xl font-bold text-purple-400 mb-2">50+</div>
-                  <p className="text-xl text-gray-300">Real-World Scenarios</p>
-                  <p className="text-sm text-gray-400 mt-2">Practice ethical decision-making</p>
+                  <div className="text-3xl sm:text-5xl font-bold text-purple-400 mb-1 sm:mb-2">50+</div>
+                  <p className="text-sm sm:text-xl text-gray-300">Scenarios</p>
+                  <p className="text-xs text-gray-400 mt-1 hidden sm:block">Practice ethical decision-making</p>
                 </div>
                 <div>
-                  <div className="text-5xl font-bold text-pink-400 mb-2">100%</div>
-                  <p className="text-xl text-gray-300">Personalized</p>
-                  <p className="text-sm text-gray-400 mt-2">Customized training plans</p>
+                  <div className="text-3xl sm:text-5xl font-bold text-pink-400 mb-1 sm:mb-2">100%</div>
+                  <p className="text-sm sm:text-xl text-gray-300">Personalised</p>
+                  <p className="text-xs text-gray-400 mt-1 hidden sm:block">Customized training plans</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* CTA Section */}
-          <div className="max-w-7xl mx-auto mb-16">
+          <div className="w-full max-w-7xl mx-auto mb-10 sm:mb-16 px-4 sm:px-0">
             <div className="text-center">
-              <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm p-12 rounded-3xl border-2 border-blue-500/30">
-                <div className="text-6xl mb-6">🚀</div>
-                <h2 className="text-4xl font-bold text-white mb-6">
+              <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm p-8 sm:p-12 rounded-3xl border-2 border-blue-500/30">
+                <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🚀</div>
+                <h2 className="text-2xl sm:text-4xl font-bold text-white mb-4 sm:mb-6">
                   Ready to Build Your Compliance Knowledge?
                 </h2>
-                <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                <p className="text-base sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
                   Join thousands of Nigerian professionals strengthening their ethical decision-making skills
                 </p>
                 <button 
                   onClick={() => setView('auth')}
-                  className="px-12 py-5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-bold text-xl transition-all duration-200 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105"
+                  className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-purple-600 active:from-blue-700 active:to-purple-700 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-bold text-base sm:text-xl transition-all duration-200 shadow-2xl touch-manipulation"
                 >
                   Start Learning Today →
                 </button>
-                <p className="text-gray-400 mt-6">
+                <p className="text-gray-400 mt-4 sm:mt-6 text-sm">
                   No credit card required • Get started in 2 minutes
                 </p>
               </div>
@@ -2055,21 +2185,21 @@ function App() {
           </div>
         </div>
       ) : view === 'auth' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen p-8">
+        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-10 sm:p-8">
           <div className="max-w-md w-full">
             <button 
               onClick={() => setView('landing')}
-              className="mb-6 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all"
+              className="mb-6 px-4 py-2 min-h-[44px] bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white rounded-lg transition-all touch-manipulation"
             >
               ← Back
             </button>
             
-            <div className="bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl border-2 border-gray-700">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-white mb-2">
+            <div className="bg-gray-800/80 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border-2 border-gray-700">
+              <div className="text-center mb-6 sm:mb-8">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                   {authMode === 'signin' ? '👋 Welcome Back!' : '🚀 Create Account'}
                 </h2>
-                <p className="text-gray-300">
+                <p className="text-gray-300 text-sm sm:text-base">
                   {authMode === 'signin' 
                     ? 'Sign in to continue your compliance training' 
                     : 'Join DragNet to start your personalized training'}
@@ -2166,39 +2296,39 @@ function App() {
           </div>
         </div>
       ) : view === 'onboarding' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen p-8">
+        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-10 sm:p-8">
           <div className="max-w-4xl w-full">
             <button 
               onClick={() => setView('landing')}
-              className="mb-6 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all"
+              className="mb-6 px-4 py-2 min-h-[44px] bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white rounded-lg transition-all touch-manipulation"
             >
               ← Back
             </button>
             
-            <div className="bg-gray-800/80 backdrop-blur-sm p-8 rounded-2xl border-2 border-gray-700">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                🧠 Hi {userName}! Let's Analyze Your Role
+            <div className="bg-gray-800/80 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border-2 border-gray-700">
+              <h2 className="text-xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
+                🧠 Hi {userName}! Let's Analyse Your Role
               </h2>
-              <p className="text-gray-300 mb-8">
+              <p className="text-gray-300 text-sm sm:text-base mb-6 sm:mb-8">
                 Select your sector and role. We'll automatically assign the right compliance training, policies, and assessments for your position.
               </p>
 
               {/* Sector Selection */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-white mb-4">1. Select Your Sector</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mb-6 sm:mb-8">
+                <h3 className="text-base sm:text-xl font-semibold text-white mb-3 sm:mb-4">1. Select Your Sector</h3>
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   {sectors.map((sector) => (
                     <button
                       key={sector.value}
                       onClick={() => handleSectorSelect(sector.value)}
-                      className={`p-6 rounded-xl border-2 transition-all duration-200 ${
+                      className={`p-4 sm:p-6 rounded-xl border-2 transition-all duration-200 touch-manipulation ${
                         selectedSector === sector.value
                           ? `bg-gradient-to-br ${sector.color} border-white shadow-xl scale-105`
                           : 'bg-gray-700/50 border-gray-600 hover:border-gray-500'
                       }`}
                     >
-                      <div className="text-4xl mb-2">{sector.icon}</div>
-                      <div className="text-lg font-semibold text-white">{sector.label}</div>
+                      <div className="text-3xl sm:text-4xl mb-1 sm:mb-2">{sector.icon}</div>
+                      <div className="text-sm sm:text-lg font-semibold text-white">{sector.label}</div>
                     </button>
                   ))}
                 </div>
@@ -2206,12 +2336,12 @@ function App() {
 
               {/* Role Selection */}
               {selectedSector && (
-                <div className="mb-8 animate-fadeIn">
-                  <h3 className="text-xl font-semibold text-white mb-4">2. Select Your Role</h3>
+                <div className="mb-6 sm:mb-8 animate-fadeIn">
+                  <h3 className="text-base sm:text-xl font-semibold text-white mb-3 sm:mb-4">2. Select Your Role</h3>
                   <select
                     value={selectedRole}
                     onChange={(e) => setSelectedRole(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200"
+                    className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200 text-sm sm:text-base"
                   >
                     <option value="">Select your job title...</option>
                     {rolesBySection[selectedSector].map((role) => (
@@ -2223,12 +2353,12 @@ function App() {
 
               {/* Department */}
               {selectedRole && (
-                <div className="mb-8 animate-fadeIn">
-                  <h3 className="text-xl font-semibold text-white mb-4">3. Department</h3>
+                <div className="mb-6 sm:mb-8 animate-fadeIn">
+                  <h3 className="text-base sm:text-xl font-semibold text-white mb-3 sm:mb-4">3. Department</h3>
                   <select
                     value={selectedDepartment}
                     onChange={(e) => setSelectedDepartment(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200"
+                    className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200 text-sm sm:text-base"
                   >
                     <option value="">Select your department...</option>
                     {departmentsBySection[selectedSector]?.map((dept) => (
@@ -2240,12 +2370,12 @@ function App() {
 
               {/* Rank/Grade Level */}
               {selectedDepartment && (
-                <div className="mb-8 animate-fadeIn">
-                  <h3 className="text-xl font-semibold text-white mb-4">4. Rank / Grade Level</h3>
+                <div className="mb-6 sm:mb-8 animate-fadeIn">
+                  <h3 className="text-base sm:text-xl font-semibold text-white mb-3 sm:mb-4">4. Rank / Grade Level</h3>
                   <select
                     value={selectedRank}
                     onChange={(e) => setSelectedRank(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200"
+                    className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200 text-sm sm:text-base"
                   >
                     <option value="">Select your rank/grade...</option>
                     {ranksBySection[selectedSector]?.map((rank) => (
@@ -2260,12 +2390,12 @@ function App() {
                 <div className="animate-fadeIn">
                   <button
                     onClick={handleCompleteOnboarding}
-                    className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    className="w-full px-8 py-4 min-h-[52px] bg-gradient-to-r from-blue-600 to-purple-600 active:from-blue-700 active:to-purple-700 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 shadow-lg touch-manipulation"
                   >
-                    🚀 Analyze My Role & Get Training Plan
+                    🚀 Analyse My Role & Get Training Plan
                   </button>
-                  <p className="text-center text-gray-400 text-sm mt-4">
-                    We'll analyze your role and assign personalized compliance courses
+                  <p className="text-center text-gray-400 text-xs sm:text-sm mt-3 sm:mt-4">
+                    We'll analyse your role and assign personalised compliance courses
                   </p>
                 </div>
               )}
@@ -2418,8 +2548,12 @@ function App() {
             </div>
             
             <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-3 sm:p-5 rounded-lg shadow-lg">
-              <p className="text-xs sm:text-sm text-purple-100 mb-1">Risk Level</p>
-              <p className="text-xl sm:text-2xl font-bold text-white uppercase">{userProfile?.riskLevel || 'N/A'}</p>
+              <p className="text-xs sm:text-sm text-purple-100 mb-1">Level</p>
+              <p className="text-base sm:text-xl font-bold text-white">
+                {completedCourses.length === 0 ? 'Beginner' : 
+                 completedCourses.length < 3 ? 'Inter...' : 
+                 completedCourses.length < 5 ? 'Advanced' : 'Expert'}
+              </p>
             </div>
           </div>
           
@@ -3414,50 +3548,52 @@ function App() {
           )}
         </div>
       ) : view === 'profile' ? (
-        <div className="min-h-screen p-8">
+        <div className="min-h-screen px-4 py-6 sm:p-8">
           <div className="max-w-6xl mx-auto">
             {/* Profile Header */}
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-3xl shadow-lg">
-                  �
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-2xl sm:text-3xl shadow-lg flex-shrink-0">
+                  👤
                 </div>
-                <h1 className="text-4xl font-bold text-white">My Profile</h1>
+                <h1 className="text-2xl sm:text-4xl font-bold text-white">My Profile</h1>
               </div>
               <button 
                 onClick={() => setView('dashboard')}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all font-semibold shadow-lg"
+                className="w-full sm:w-auto px-5 sm:px-6 py-3 min-h-[44px] bg-gradient-to-r from-blue-600 to-purple-600 active:from-blue-700 active:to-purple-700 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all font-semibold shadow-lg touch-manipulation text-sm sm:text-base"
               >
                 ← Back to Dashboard
               </button>
             </div>
 
             {/* Profile Information Card */}
-            <div className="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-sm p-8 rounded-2xl border-2 border-purple-500/30 mb-8 shadow-xl">
-              <div className="flex items-start gap-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-5xl shadow-lg">
-                  �
+            <div className="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border-2 border-purple-500/30 mb-6 sm:mb-8 shadow-xl">
+              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-3xl sm:text-5xl shadow-lg flex-shrink-0">
+                  👤
                 </div>
-                <div className="flex-1">
-                  <h2 className="text-3xl font-bold text-white mb-2">{userName || 'User'}</h2>
-                  <p className="text-blue-300 text-lg mb-4">{userEmail || 'No email provided'}</p>
+                <div className="flex-1 w-full">
+                  <h2 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{userName || 'User'}</h2>
+                  <p className="text-blue-300 text-base sm:text-lg mb-3 sm:mb-4">{userEmail || 'No email provided'}</p>
                   {userProfile ? (
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                      <div>
-                        <p className="text-gray-400 text-sm">Sector</p>
-                        <p className="text-white font-semibold">{selectedSector}</p>
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-2 sm:mt-4">
+                      <div className="bg-gray-800/50 p-3 rounded-xl">
+                        <p className="text-gray-400 text-xs">Sector</p>
+                        <p className="text-white font-semibold text-sm sm:text-base mt-0.5">
+                          {sectors.find(s => s.value === selectedSector)?.label || selectedSector}
+                        </p>
                       </div>
-                      <div>
-                        <p className="text-gray-400 text-sm">Role</p>
-                        <p className="text-white font-semibold">{userProfile.role}</p>
+                      <div className="bg-gray-800/50 p-3 rounded-xl">
+                        <p className="text-gray-400 text-xs">Role</p>
+                        <p className="text-white font-semibold text-sm sm:text-base mt-0.5">{userProfile.role}</p>
                       </div>
-                      <div>
-                        <p className="text-gray-400 text-sm">Department</p>
-                        <p className="text-white font-semibold">{userProfile.department}</p>
+                      <div className="bg-gray-800/50 p-3 rounded-xl">
+                        <p className="text-gray-400 text-xs">Department</p>
+                        <p className="text-white font-semibold text-sm sm:text-base mt-0.5">{userProfile.department}</p>
                       </div>
-                      <div>
-                        <p className="text-gray-400 text-sm">Rank</p>
-                        <p className="text-white font-semibold">{userProfile.rank}</p>
+                      <div className="bg-gray-800/50 p-3 rounded-xl">
+                        <p className="text-gray-400 text-xs">Rank / Grade</p>
+                        <p className="text-white font-semibold text-sm sm:text-base mt-0.5">{userProfile.rank}</p>
                       </div>
                     </div>
                   ) : (
@@ -3468,43 +3604,41 @@ function App() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 backdrop-blur-sm p-6 rounded-2xl border-2 border-green-500/30">
-                <div className="text-4xl mb-2">🎓</div>
-                <p className="text-gray-400 text-sm">Completed Courses</p>
-                <p className="text-3xl font-bold text-white">{completedCourses.length}</p>
+            <div className="grid grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
+              <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-green-500/30 text-center">
+                <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">🎓</div>
+                <p className="text-gray-400 text-xs sm:text-sm">Completed</p>
+                <p className="text-2xl sm:text-3xl font-bold text-white">{completedCourses.length}</p>
               </div>
-              
-              <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 backdrop-blur-sm p-6 rounded-2xl border-2 border-blue-500/30">
-                <div className="text-4xl mb-2">⭐</div>
-                <p className="text-gray-400 text-sm">Achievement Level</p>
-                <p className="text-2xl font-bold text-white">
+              <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-blue-500/30 text-center">
+                <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">⭐</div>
+                <p className="text-gray-400 text-xs sm:text-sm">Level</p>
+                <p className="text-base sm:text-2xl font-bold text-white">
                   {completedCourses.length === 0 ? 'Beginner' : 
                    completedCourses.length < 3 ? 'Intermediate' : 
                    completedCourses.length < 5 ? 'Advanced' : 'Expert'}
                 </p>
               </div>
-              
-              <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 backdrop-blur-sm p-6 rounded-2xl border-2 border-purple-500/30">
-                <div className="text-4xl mb-2">🔥</div>
-                <p className="text-gray-400 text-sm">Total Modules</p>
-                <p className="text-3xl font-bold text-white">{userProfile?.courses?.length || 0}</p>
+              <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-purple-500/30 text-center">
+                <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">🔥</div>
+                <p className="text-gray-400 text-xs sm:text-sm">Modules</p>
+                <p className="text-2xl sm:text-3xl font-bold text-white">{userProfile?.courses?.length || 0}</p>
               </div>
             </div>
 
             {/* Completed Courses */}
             {completedCourses.length > 0 && (
-              <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border-2 border-gray-700 mb-8">
-                <h3 className="text-2xl font-bold text-white mb-6">📚 Completed Courses</h3>
-                <div className="space-y-4">
+              <div className="bg-gray-800/50 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border-2 border-gray-700 mb-6 sm:mb-8">
+                <h3 className="text-lg sm:text-2xl font-bold text-white mb-4 sm:mb-6">📚 Completed Courses</h3>
+                <div className="space-y-3">
                   {completedCourses.map((course, index) => (
-                    <div key={index} className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h4 className="text-lg font-semibold text-white">{course.title}</h4>
-                          <p className="text-gray-400 text-sm">Completed on {course.completedDate}</p>
+                    <div key={index} className="bg-gray-700/50 p-3 sm:p-4 rounded-lg border border-gray-600">
+                      <div className="flex justify-between items-center gap-2">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-sm sm:text-lg font-semibold text-white truncate">{course.title || course.courseName}</h4>
+                          <p className="text-gray-400 text-xs sm:text-sm">Completed on {course.completedDate}</p>
                         </div>
-                        <div className="text-green-400 text-2xl">✓</div>
+                        <div className="text-green-400 text-xl sm:text-2xl flex-shrink-0">✓</div>
                       </div>
                     </div>
                   ))}
@@ -3512,51 +3646,48 @@ function App() {
               </div>
             )}
 
-            {/* AI Career Recommendations */}
+            {/* Career Recommendations */}
             {userProfile && completedCourses.length > 0 && (() => {
               const recommendations = generateCareerRecommendations();
               return (
-                <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 backdrop-blur-sm p-8 rounded-2xl border-2 border-purple-500/30">
-                  <div className="flex items-center gap-3 mb-6">
-                    <span className="text-4xl">🤖</span>
-                    <h3 className="text-2xl font-bold text-white">AI Career Recommendations</h3>
+                <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border-2 border-purple-500/30">
+                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                    <span className="text-3xl sm:text-4xl">🌟</span>
+                    <h3 className="text-lg sm:text-2xl font-bold text-white">Career Recommendations</h3>
                   </div>
-                  
                   {recommendations.recommendations.length > 0 && (
-                    <div className="mb-6">
-                      <h4 className="text-lg font-semibold text-purple-300 mb-3">📈 Recommended Career Paths</h4>
+                    <div className="mb-4 sm:mb-6">
+                      <h4 className="text-base sm:text-lg font-semibold text-purple-300 mb-2 sm:mb-3">📈 Recommended Career Paths</h4>
                       <ul className="space-y-2">
                         {recommendations.recommendations.map((rec, index) => (
-                          <li key={index} className="flex items-start gap-2 text-gray-300">
-                            <span className="text-purple-400">●</span>
+                          <li key={index} className="flex items-start gap-2 text-gray-300 text-sm sm:text-base">
+                            <span className="text-purple-400 flex-shrink-0">●</span>
                             <span>{rec}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   )}
-
                   {recommendations.strengths.length > 0 && (
-                    <div className="mb-6">
-                      <h4 className="text-lg font-semibold text-blue-300 mb-3">💪 Your Strengths</h4>
+                    <div className="mb-4 sm:mb-6">
+                      <h4 className="text-base sm:text-lg font-semibold text-blue-300 mb-2 sm:mb-3">💪 Your Strengths</h4>
                       <ul className="space-y-2">
                         {recommendations.strengths.map((strength, index) => (
-                          <li key={index} className="flex items-start gap-2 text-gray-300">
-                            <span className="text-blue-400">✓</span>
+                          <li key={index} className="flex items-start gap-2 text-gray-300 text-sm sm:text-base">
+                            <span className="text-blue-400 flex-shrink-0">✓</span>
                             <span>{strength}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   )}
-
                   {recommendations.suitability.length > 0 && (
                     <div>
-                      <h4 className="text-lg font-semibold text-green-300 mb-3">🎯 Well-Suited For</h4>
+                      <h4 className="text-base sm:text-lg font-semibold text-green-300 mb-2 sm:mb-3">🎯 Well-Suited For</h4>
                       <ul className="space-y-2">
                         {recommendations.suitability.map((suit, index) => (
-                          <li key={index} className="flex items-start gap-2 text-gray-300">
-                            <span className="text-green-400">→</span>
+                          <li key={index} className="flex items-start gap-2 text-gray-300 text-sm sm:text-base">
+                            <span className="text-green-400 flex-shrink-0">→</span>
                             <span>{suit}</span>
                           </li>
                         ))}
@@ -3568,13 +3699,13 @@ function App() {
             })()}
 
             {completedCourses.length === 0 && (
-              <div className="bg-gray-800/30 backdrop-blur-sm p-12 rounded-2xl border-2 border-gray-700 text-center">
-                <div className="text-6xl mb-4">📚</div>
-                <h3 className="text-2xl font-bold text-white mb-2">No Courses Completed Yet</h3>
-                <p className="text-gray-400 mb-6">Start learning to unlock career recommendations and achievements!</p>
+              <div className="bg-gray-800/30 backdrop-blur-sm p-8 sm:p-12 rounded-2xl border-2 border-gray-700 text-center">
+                <div className="text-5xl sm:text-6xl mb-4">📚</div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">No Courses Completed Yet</h3>
+                <p className="text-gray-400 mb-6 text-sm sm:text-base">Start learning to unlock career recommendations and achievements!</p>
                 <button
                   onClick={() => setView('dashboard')}
-                  className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all"
+                  className="w-full sm:w-auto px-8 py-3 min-h-[44px] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg font-semibold transition-all touch-manipulation"
                 >
                   Go to Dashboard →
                 </button>
