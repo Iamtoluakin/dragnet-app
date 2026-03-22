@@ -2004,71 +2004,131 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
       {view === 'landing' ? (
-        <div className="min-h-screen flex flex-col items-center justify-center overflow-x-hidden px-5 py-12 sm:py-20">
+        <div className="min-h-screen flex flex-col overflow-x-hidden bg-gray-950">
 
-          {/* Nigerian flag accent */}
-          <div className="flex gap-0 mb-6 rounded-full overflow-hidden shadow-lg">
-            <div className="w-8 h-1.5 bg-green-600" />
-            <div className="w-8 h-1.5 bg-white" />
-            <div className="w-8 h-1.5 bg-green-600" />
-          </div>
+          {/* ─── HERO ─── */}
+          <section className="flex flex-col items-center justify-center text-center px-6 pt-20 pb-16 sm:pt-28 sm:pb-24 relative">
+            {/* Subtle top glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-green-600/10 blur-3xl rounded-full pointer-events-none" />
 
-          {/* Brand */}
-          <div className="text-5xl sm:text-6xl mb-3">🇳🇬</div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-2 tracking-tight">
-            DragNet
-          </h1>
-          <p className="text-sm sm:text-base font-bold text-green-400 uppercase tracking-widest mb-6">
-            Training · Discipline · Character
-          </p>
-
-          {/* Core message */}
-          <p className="text-sm sm:text-base text-gray-300 max-w-lg text-center leading-relaxed mb-8">
-            A training and development platform built for Nigerian professionals — police, civil servants, 
-            immigration, and private sector. We train against corruption and indiscipline, and develop 
-            the character needed to build a better Nigeria.
-          </p>
-
-          {/* Three pillars — compact horizontal chips */}
-          <div className="flex flex-wrap justify-center gap-2 mb-10 max-w-md">
-            <span className="flex items-center gap-1.5 bg-red-900/30 border border-red-500/30 text-red-300 text-xs font-semibold px-3 py-1.5 rounded-full">
-              🚫 Anti-Corruption
+            <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase text-green-500 mb-6 px-4 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full">
+              Training &amp; Development Platform
             </span>
-            <span className="flex items-center gap-1.5 bg-blue-900/30 border border-blue-500/30 text-blue-300 text-xs font-semibold px-3 py-1.5 rounded-full">
-              ⚖️ Professional Discipline
-            </span>
-            <span className="flex items-center gap-1.5 bg-green-900/30 border border-green-500/30 text-green-300 text-xs font-semibold px-3 py-1.5 rounded-full">
-              🌱 Character Development
-            </span>
-            <span className="flex items-center gap-1.5 bg-purple-900/30 border border-purple-500/30 text-purple-300 text-xs font-semibold px-3 py-1.5 rounded-full">
-              🏛️ Public Service Orientation
-            </span>
-          </div>
 
-          {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
-            <button
-              onClick={() => setView('auth')}
-              className="flex-1 py-4 bg-green-600 hover:bg-green-700 active:bg-green-800 text-white rounded-xl font-bold text-base shadow-xl touch-manipulation transition-all"
-            >
-              Begin Your Training →
-            </button>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-5 leading-tight tracking-tight max-w-2xl">
+              Build Character.<br />
+              <span className="text-green-400">Fight Corruption.</span><br />
+              Lead with Integrity.
+            </h1>
+
+            <p className="text-base sm:text-lg text-gray-400 max-w-md mx-auto mb-10 leading-relaxed">
+              A practical training platform for public servants and professionals who want to develop discipline, resist corruption, and become a force for good.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs mx-auto">
+              <button
+                onClick={() => setView('auth')}
+                className="w-full py-4 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white rounded-xl font-bold text-base shadow-lg touch-manipulation transition-all"
+              >
+                Start Training →
+              </button>
+            </div>
             {isAuthenticated && (
               <button
                 onClick={() => setView('dashboard')}
-                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-semibold text-base touch-manipulation transition-all"
+                className="mt-3 text-sm text-gray-400 hover:text-white underline underline-offset-4 touch-manipulation transition-all"
               >
-                My Dashboard
+                Go to my dashboard
               </button>
             )}
-          </div>
+            <p className="text-gray-600 text-xs mt-5">Free to join · No card required</p>
+          </section>
 
-          <p className="text-gray-500 text-xs mt-4">Free · For every Nigerian professional</p>
+          {/* ─── WHAT WE DO ─── */}
+          <section className="px-6 py-14 sm:py-20 max-w-3xl mx-auto w-full text-center">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">What is DragNet?</h2>
+            <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
+              DragNet trains individuals through real-world scenarios to recognise corruption, 
+              practise discipline, and build the character needed to drive positive change 
+              in their institutions and communities.
+            </p>
+          </section>
 
-          {/* Mission footnote */}
-          <p className="text-gray-600 text-xs text-center max-w-xs mt-8 leading-relaxed italic">
-            "A better Nigeria starts with better Nigerians — trained, disciplined, and committed to integrity."
-          </p>
+          {/* ─── PILLARS ─── */}
+          <section className="px-6 pb-16 sm:pb-20 max-w-4xl mx-auto w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                {
+                  icon: '🛡️',
+                  title: 'Integrity',
+                  desc: 'Know the difference between right and wrong — and have the courage to act on it, even under pressure.',
+                  color: 'border-green-500/20 bg-green-900/10',
+                  heading: 'text-green-400',
+                },
+                {
+                  icon: '⚖️',
+                  title: 'Discipline',
+                  desc: 'Build the habits and standards that define a professional others trust and respect.',
+                  color: 'border-blue-500/20 bg-blue-900/10',
+                  heading: 'text-blue-400',
+                },
+                {
+                  icon: '🔦',
+                  title: 'Leadership',
+                  desc: 'Take responsibility. Set the example. Inspire change in your workplace and your community.',
+                  color: 'border-purple-500/20 bg-purple-900/10',
+                  heading: 'text-purple-400',
+                },
+              ].map((p) => (
+                <div key={p.title} className={`rounded-2xl border p-6 sm:p-7 ${p.color}`}>
+                  <div className="text-3xl mb-4">{p.icon}</div>
+                  <h3 className={`text-base font-bold mb-2 ${p.heading}`}>{p.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* ─── HOW IT WORKS ─── */}
+          <section className="px-6 pb-16 sm:pb-20 max-w-2xl mx-auto w-full">
+            <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-8">How It Works</h2>
+            <div className="space-y-5">
+              {[
+                { n: '1', title: 'Create your profile', desc: 'Sign up and tell us your role and sector. Takes under 2 minutes.' },
+                { n: '2', title: 'Train through real scenarios', desc: 'Face situations drawn from real workplaces. Make decisions. See the consequences.' },
+                { n: '3', title: 'Track your growth', desc: 'Complete assessments and watch your knowledge and integrity score grow over time.' },
+              ].map((s) => (
+                <div key={s.n} className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-full bg-green-600/20 border border-green-500/30 flex items-center justify-center text-green-400 font-bold text-sm">
+                    {s.n}
+                  </div>
+                  <div>
+                    <p className="text-white font-semibold text-sm mb-0.5">{s.title}</p>
+                    <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* ─── BOTTOM CTA ─── */}
+          <section className="px-6 pb-20 sm:pb-28 max-w-xl mx-auto w-full text-center">
+            <div className="border border-gray-800 rounded-2xl p-8 sm:p-10 bg-gray-900/60">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-3">
+                Better people. Better institutions.
+              </h2>
+              <p className="text-gray-400 text-sm mb-7 leading-relaxed">
+                Change starts with one person deciding to do the right thing. That person can be you.
+              </p>
+              <button
+                onClick={() => setView('auth')}
+                className="w-full py-4 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white rounded-xl font-bold text-base shadow-lg touch-manipulation transition-all"
+              >
+                Join the Movement →
+              </button>
+              <p className="text-gray-600 text-xs mt-4">Free · Open to all professionals</p>
+            </div>
+          </section>
 
         </div>
       ) : view === 'auth' ? (
