@@ -2004,106 +2004,133 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
       {view === 'landing' ? (
-        <div className="min-h-screen flex flex-col overflow-x-hidden bg-gray-950">
+        <div className="min-h-screen flex flex-col overflow-x-hidden" style={{background: '#0a0a0a'}}>
 
-          {/* ─── HERO ─── */}
-          <section className="flex flex-col items-center justify-center text-center px-6 pt-20 pb-16 sm:pt-28 sm:pb-24 relative">
-            {/* Subtle top glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-green-600/10 blur-3xl rounded-full pointer-events-none" />
+          {/* ── NAV ── */}
+          <nav className="flex items-center justify-between px-6 sm:px-10 py-5 border-b border-white/5">
+            <span className="text-white font-extrabold text-xl tracking-tight">DragNet</span>
+            <div className="flex items-center gap-3">
+              {isAuthenticated ? (
+                <button
+                  onClick={() => setView('dashboard')}
+                  className="px-5 py-2 bg-white text-black rounded-lg font-semibold text-sm hover:bg-gray-100 active:bg-gray-200 touch-manipulation transition-all"
+                >
+                  Dashboard →
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => { setAuthMode('signin'); setView('auth'); }}
+                    className="px-4 py-2 text-gray-400 hover:text-white text-sm font-medium transition-colors touch-manipulation"
+                  >
+                    Sign in
+                  </button>
+                  <button
+                    onClick={() => { setAuthMode('signup'); setView('auth'); }}
+                    className="px-5 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg font-semibold text-sm touch-manipulation transition-all"
+                  >
+                    Get started
+                  </button>
+                </>
+              )}
+            </div>
+          </nav>
 
-            <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase text-green-500 mb-6 px-4 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full">
-              Training &amp; Development Platform
-            </span>
+          {/* ── HERO ── */}
+          <section className="flex flex-col items-center justify-center text-center px-6 pt-20 pb-20 sm:pt-28 sm:pb-28">
+            <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+              <span className="text-gray-400 text-xs font-medium tracking-wide uppercase">Professional Development Platform</span>
+            </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-5 leading-tight tracking-tight max-w-2xl">
-              Build Character.<br />
-              <span className="text-green-400">Fight Corruption.</span><br />
-              Lead with Integrity.
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight max-w-3xl">
+              Build the person <br className="hidden sm:block" />
+              <span className="text-green-400">your role demands.</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-gray-400 max-w-md mx-auto mb-10 leading-relaxed">
-              A practical training platform for public servants and professionals who want to develop discipline, resist corruption, and become a force for good.
+            <p className="text-base sm:text-lg text-gray-400 max-w-xl mb-10 leading-relaxed">
+              Real scenario-based training to develop discipline, integrity, and the 
+              moral clarity to resist corruption — in every professional setting.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs mx-auto">
+            <div className="flex flex-col sm:flex-row items-center gap-3">
               <button
-                onClick={() => setView('auth')}
-                className="w-full py-4 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white rounded-xl font-bold text-base shadow-lg touch-manipulation transition-all"
+                onClick={() => { setAuthMode('signup'); setView('auth'); }}
+                className="px-8 py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-base shadow-lg shadow-green-900/40 touch-manipulation transition-all"
               >
-                Start Training →
+                Start Training — It's Free
               </button>
+              {isAuthenticated && (
+                <button
+                  onClick={() => setView('dashboard')}
+                  className="px-8 py-4 bg-white/10 hover:bg-white/15 border border-white/10 text-white rounded-xl font-semibold text-base touch-manipulation transition-all"
+                >
+                  Go to Dashboard →
+                </button>
+              )}
             </div>
-            {isAuthenticated && (
-              <button
-                onClick={() => setView('dashboard')}
-                className="mt-3 text-sm text-gray-400 hover:text-white underline underline-offset-4 touch-manipulation transition-all"
-              >
-                Go to my dashboard
-              </button>
-            )}
-            <p className="text-gray-600 text-xs mt-5">Free to join · No card required</p>
+
+            <p className="text-gray-600 text-xs mt-5">No credit card needed · Start in under 2 minutes</p>
           </section>
 
-          {/* ─── WHAT WE DO ─── */}
-          <section className="px-6 py-14 sm:py-20 max-w-3xl mx-auto w-full text-center">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">What is DragNet?</h2>
+          {/* ── WHAT WE DO ── */}
+          <section className="px-6 pb-20 sm:pb-24 max-w-3xl mx-auto w-full text-center">
+            <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest mb-4">What DragNet does</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 leading-snug">
+              Training that changes how you think, decide, and act.
+            </h2>
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
-              DragNet trains individuals through real-world scenarios to recognise corruption, 
-              practise discipline, and build the character needed to drive positive change 
-              in their institutions and communities.
+              We put you through real-world situations drawn from public service, law enforcement, 
+              immigration, and the private sector. You face the pressure, make a decision, and learn 
+              from the outcome — building character through practice, not theory.
             </p>
           </section>
 
-          {/* ─── PILLARS ─── */}
-          <section className="px-6 pb-16 sm:pb-20 max-w-4xl mx-auto w-full">
+          {/* ── PILLARS ── */}
+          <section className="px-6 pb-20 sm:pb-24 max-w-4xl mx-auto w-full">
+            <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest text-center mb-10">What you develop</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 {
-                  icon: '🛡️',
-                  title: 'Integrity',
-                  desc: 'Know the difference between right and wrong — and have the courage to act on it, even under pressure.',
-                  color: 'border-green-500/20 bg-green-900/10',
-                  heading: 'text-green-400',
+                  icon: '🚫',
+                  title: 'Anti-Corruption',
+                  desc: 'Recognise bribery and abuse of power. Learn to say no — and why it matters.',
                 },
                 {
                   icon: '⚖️',
-                  title: 'Discipline',
-                  desc: 'Build the habits and standards that define a professional others trust and respect.',
-                  color: 'border-blue-500/20 bg-blue-900/10',
-                  heading: 'text-blue-400',
+                  title: 'Discipline & Integrity',
+                  desc: 'Develop the professional habits and ethics that define someone people trust.',
                 },
                 {
-                  icon: '🔦',
-                  title: 'Leadership',
-                  desc: 'Take responsibility. Set the example. Inspire change in your workplace and your community.',
-                  color: 'border-purple-500/20 bg-purple-900/10',
-                  heading: 'text-purple-400',
+                  icon: '🌱',
+                  title: 'Character & Leadership',
+                  desc: 'Go beyond rules. Become the kind of person who makes things better.',
                 },
               ].map((p) => (
-                <div key={p.title} className={`rounded-2xl border p-6 sm:p-7 ${p.color}`}>
+                <div key={p.title} className="border border-white/8 rounded-2xl p-6 hover:border-green-500/30 transition-all" style={{background: '#111111'}}>
                   <div className="text-3xl mb-4">{p.icon}</div>
-                  <h3 className={`text-base font-bold mb-2 ${p.heading}`}>{p.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{p.desc}</p>
+                  <h3 className="text-white font-bold text-base mb-2">{p.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{p.desc}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* ─── HOW IT WORKS ─── */}
-          <section className="px-6 pb-16 sm:pb-20 max-w-2xl mx-auto w-full">
-            <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-8">How It Works</h2>
-            <div className="space-y-5">
+          {/* ── HOW IT WORKS ── */}
+          <section className="px-6 pb-20 sm:pb-24 max-w-2xl mx-auto w-full">
+            <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest text-center mb-10">How it works</p>
+            <div className="space-y-6">
               {[
-                { n: '1', title: 'Create your profile', desc: 'Sign up and tell us your role and sector. Takes under 2 minutes.' },
-                { n: '2', title: 'Train through real scenarios', desc: 'Face situations drawn from real workplaces. Make decisions. See the consequences.' },
-                { n: '3', title: 'Track your growth', desc: 'Complete assessments and watch your knowledge and integrity score grow over time.' },
+                { n: '1', title: 'Create your profile', desc: 'Tell us your role and sector. Takes under 2 minutes.' },
+                { n: '2', title: 'Face real scenarios', desc: 'Work through situations pulled from actual professional environments. Make decisions under pressure.' },
+                { n: '3', title: 'Track your growth', desc: 'See how your thinking, discipline, and integrity develop over time.' },
               ].map((s) => (
-                <div key={s.n} className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-9 h-9 rounded-full bg-green-600/20 border border-green-500/30 flex items-center justify-center text-green-400 font-bold text-sm">
+                <div key={s.n} className="flex items-start gap-5">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-green-400 font-bold text-sm" style={{background: '#111111'}}>
                     {s.n}
                   </div>
                   <div>
-                    <p className="text-white font-semibold text-sm mb-0.5">{s.title}</p>
+                    <h3 className="text-white font-semibold text-sm mb-1">{s.title}</h3>
                     <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
                   </div>
                 </div>
@@ -2111,24 +2138,30 @@ function App() {
             </div>
           </section>
 
-          {/* ─── BOTTOM CTA ─── */}
-          <section className="px-6 pb-20 sm:pb-28 max-w-xl mx-auto w-full text-center">
-            <div className="border border-gray-800 rounded-2xl p-8 sm:p-10 bg-gray-900/60">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-3">
-                Better people. Better institutions.
+          {/* ── FINAL CTA ── */}
+          <section className="px-6 pb-24 sm:pb-32 max-w-xl mx-auto w-full text-center">
+            <div className="border border-white/8 rounded-2xl p-8 sm:p-12" style={{background: '#111111'}}>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 leading-snug">
+                The change starts with you.
               </h2>
-              <p className="text-gray-400 text-sm mb-7 leading-relaxed">
-                Change starts with one person deciding to do the right thing. That person can be you.
+              <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                Join professionals who are choosing to be the difference — through training, 
+                reflection, and daily discipline.
               </p>
               <button
-                onClick={() => setView('auth')}
-                className="w-full py-4 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white rounded-xl font-bold text-base shadow-lg touch-manipulation transition-all"
+                onClick={() => { setAuthMode('signup'); setView('auth'); }}
+                className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-base shadow-lg shadow-green-900/30 touch-manipulation transition-all"
               >
                 Join the Movement →
               </button>
-              <p className="text-gray-600 text-xs mt-4">Free · Open to all professionals</p>
+              <p className="text-gray-600 text-xs mt-4">Free · No card required</p>
             </div>
           </section>
+
+          {/* ── FOOTER ── */}
+          <footer className="border-t border-white/5 px-6 py-6 text-center">
+            <p className="text-gray-600 text-xs">© 2026 DragNet. Building better institutions, one person at a time.</p>
+          </footer>
 
         </div>
       ) : view === 'auth' ? (
