@@ -2002,7 +2002,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
+    <div className="min-h-screen" style={{background:'#0a0a0a'}}>
       {view === 'landing' ? (
         <div className="min-h-screen flex flex-col overflow-x-hidden" style={{background: '#0a0a0a'}}>
 
@@ -2165,83 +2165,84 @@ function App() {
 
         </div>
       ) : view === 'auth' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-10 sm:p-8">
+        <div className="flex flex-col items-center justify-center min-h-screen px-5 py-10">
           <div className="max-w-md w-full">
             <button 
               onClick={() => setView('landing')}
-              className="mb-6 px-4 py-2 min-h-[44px] bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white rounded-lg transition-all touch-manipulation"
+              className="mb-6 px-4 py-2 min-h-[44px] text-gray-500 hover:text-white text-sm transition-colors touch-manipulation"
             >
               ← Back
             </button>
+
+            <div className="text-center mb-8">
+              <span className="text-white font-extrabold text-2xl tracking-tight">DragNet</span>
+              <p className="text-gray-600 text-xs mt-1 uppercase tracking-widest">Training · Discipline · Character</p>
+            </div>
             
-            <div className="bg-gray-800/80 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border-2 border-gray-700">
-              <div className="text-center mb-6 sm:mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                  {authMode === 'signin' ? '👋 Welcome Back!' : '🚀 Create Account'}
+            <div className="p-6 sm:p-8 rounded-2xl border border-white/8" style={{background:'#111111'}}>
+              <div className="mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">
+                  {authMode === 'signin' ? 'Welcome back' : 'Create your account'}
                 </h2>
-                <p className="text-gray-300 text-sm sm:text-base">
+                <p className="text-gray-500 text-sm">
                   {authMode === 'signin' 
-                    ? 'Sign in to continue your compliance training' 
-                    : 'Join DragNet to start your personalized training'}
+                    ? 'Sign in to continue your training' 
+                    : 'Start your training journey today'}
                 </p>
               </div>
 
               <form onSubmit={handleAuth} className="space-y-4">
                 {authMode === 'signup' && (
                   <div>
-                    <label className="block text-sm font-semibold text-gray-300 mb-2">
-                      Full Name
-                    </label>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Full Name</label>
                     <input
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                       placeholder="Enter your full name"
-                      className="w-full px-4 py-3 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all"
+                      className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-green-500 focus:ring-1 focus:ring-green-500/50 outline-none transition-all text-sm"
+                      style={{background:'#1a1a1a'}}
                       required
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-2">
-                    Email Address
-                  </label>
+                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Email</label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    placeholder="your.email@example.com"
-                    className="w-full px-4 py-3 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all"
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-green-500 focus:ring-1 focus:ring-green-500/50 outline-none transition-all text-sm"
+                    style={{background:'#1a1a1a'}}
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-2">
-                    Password
-                  </label>
+                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Password</label>
                   <input
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-green-500 focus:ring-1 focus:ring-green-500/50 outline-none transition-all text-sm"
+                    style={{background:'#1a1a1a'}}
                     required
                   />
                 </div>
 
                 {authMode === 'signup' && (
                   <div>
-                    <label className="block text-sm font-semibold text-gray-300 mb-2">
-                      Confirm Password
-                    </label>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Confirm Password</label>
                     <input
                       type="password"
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all"
+                      className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-green-500 focus:ring-1 focus:ring-green-500/50 outline-none transition-all text-sm"
+                      style={{background:'#1a1a1a'}}
                       required
                     />
                   </div>
@@ -2250,22 +2251,22 @@ function App() {
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3.5 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                 >
-                  {authLoading ? '⏳ Processing...' : (authMode === 'signin' ? 'Sign In' : 'Create Account')}
+                  {authLoading ? 'Please wait...' : (authMode === 'signin' ? 'Sign In' : 'Create Account')}
                 </button>
 
                 {authError && (
-                  <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
-                    <p className="text-red-300 text-sm">{authError}</p>
+                  <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                    <p className="text-red-400 text-xs">{authError}</p>
                   </div>
                 )}
               </form>
 
-              <div className="mt-6 text-center">
+              <div className="mt-5 text-center">
                 <button
                   onClick={() => setAuthMode(authMode === 'signin' ? 'signup' : 'signin')}
-                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                  className="text-gray-600 hover:text-gray-300 text-sm transition-colors"
                 >
                   {authMode === 'signin' 
                     ? "Don't have an account? Sign up" 
@@ -2276,52 +2277,48 @@ function App() {
           </div>
         </div>
       ) : view === 'onboarding' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-10 sm:p-8">
-          <div className="max-w-4xl w-full">
+        <div className="flex flex-col items-center justify-center min-h-screen px-5 py-10">
+          <div className="max-w-2xl w-full">
             <button 
               onClick={() => setView('landing')}
-              className="mb-6 px-4 py-2 min-h-[44px] bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white rounded-lg transition-all touch-manipulation"
+              className="mb-6 text-gray-500 hover:text-white text-sm transition-colors touch-manipulation"
             >
               ← Back
             </button>
             
-            <div className="bg-gray-800/80 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border-2 border-gray-700">
-              <h2 className="text-xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
-                🧠 Hi {userName}! Let's Analyse Your Role
-              </h2>
-              <p className="text-gray-300 text-sm sm:text-base mb-6 sm:mb-8">
-                Select your sector and role. We'll automatically assign the right compliance training, policies, and assessments for your position.
-              </p>
+            <div className="p-6 sm:p-8 rounded-2xl border border-white/8" style={{background:'#111111'}}>
+              <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">Set up your profile</h2>
+              <p className="text-gray-500 text-sm mb-7">Tell us your role and we'll assign the right training modules.</p>
 
-              {/* Sector Selection */}
-              <div className="mb-6 sm:mb-8">
-                <h3 className="text-base sm:text-xl font-semibold text-white mb-3 sm:mb-4">1. Select Your Sector</h3>
-                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="mb-7">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">1. Your Sector</p>
+                <div className="grid grid-cols-2 gap-3">
                   {sectors.map((sector) => (
                     <button
                       key={sector.value}
                       onClick={() => handleSectorSelect(sector.value)}
-                      className={`p-4 sm:p-6 rounded-xl border-2 transition-all duration-200 touch-manipulation ${
+                      className={`p-4 sm:p-5 rounded-xl border transition-all duration-200 touch-manipulation text-left ${
                         selectedSector === sector.value
-                          ? `bg-gradient-to-br ${sector.color} border-white shadow-xl scale-105`
-                          : 'bg-gray-700/50 border-gray-600 hover:border-gray-500'
+                          ? 'border-green-500 bg-green-500/10'
+                          : 'border-white/8 hover:border-white/20'
                       }`}
+                      style={selectedSector !== sector.value ? {background:'#1a1a1a'} : {}}
                     >
-                      <div className="text-3xl sm:text-4xl mb-1 sm:mb-2">{sector.icon}</div>
-                      <div className="text-sm sm:text-lg font-semibold text-white">{sector.label}</div>
+                      <div className="text-2xl sm:text-3xl mb-2">{sector.icon}</div>
+                      <div className="text-sm font-semibold text-white">{sector.label}</div>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Role Selection */}
               {selectedSector && (
-                <div className="mb-6 sm:mb-8 animate-fadeIn">
-                  <h3 className="text-base sm:text-xl font-semibold text-white mb-3 sm:mb-4">2. Select Your Role</h3>
+                <div className="mb-7 animate-fadeIn">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">2. Your Role</p>
                   <select
                     value={selectedRole}
                     onChange={(e) => setSelectedRole(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200 text-sm sm:text-base"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-green-500 outline-none transition-all text-sm"
+                    style={{background:'#1a1a1a'}}
                   >
                     <option value="">Select your job title...</option>
                     {rolesBySection[selectedSector].map((role) => (
@@ -2331,14 +2328,14 @@ function App() {
                 </div>
               )}
 
-              {/* Department */}
               {selectedRole && (
-                <div className="mb-6 sm:mb-8 animate-fadeIn">
-                  <h3 className="text-base sm:text-xl font-semibold text-white mb-3 sm:mb-4">3. Department</h3>
+                <div className="mb-7 animate-fadeIn">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">3. Department</p>
                   <select
                     value={selectedDepartment}
                     onChange={(e) => setSelectedDepartment(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200 text-sm sm:text-base"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-green-500 outline-none transition-all text-sm"
+                    style={{background:'#1a1a1a'}}
                   >
                     <option value="">Select your department...</option>
                     {departmentsBySection[selectedSector]?.map((dept) => (
@@ -2348,14 +2345,14 @@ function App() {
                 </div>
               )}
 
-              {/* Rank/Grade Level */}
               {selectedDepartment && (
-                <div className="mb-6 sm:mb-8 animate-fadeIn">
-                  <h3 className="text-base sm:text-xl font-semibold text-white mb-3 sm:mb-4">4. Rank / Grade Level</h3>
+                <div className="mb-7 animate-fadeIn">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">4. Rank / Grade Level</p>
                   <select
                     value={selectedRank}
                     onChange={(e) => setSelectedRank(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-xl bg-gray-700 text-white border-2 border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200 text-sm sm:text-base"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-green-500 outline-none transition-all text-sm"
+                    style={{background:'#1a1a1a'}}
                   >
                     <option value="">Select your rank/grade...</option>
                     {ranksBySection[selectedSector]?.map((rank) => (
@@ -2365,500 +2362,282 @@ function App() {
                 </div>
               )}
 
-              {/* Submit Button */}
               {selectedRank && (
                 <div className="animate-fadeIn">
                   <button
                     onClick={handleCompleteOnboarding}
-                    className="w-full px-8 py-4 min-h-[52px] bg-gradient-to-r from-blue-600 to-purple-600 active:from-blue-700 active:to-purple-700 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 shadow-lg touch-manipulation"
+                    className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 touch-manipulation transition-all"
                   >
-                    🚀 Analyse My Role & Get Training Plan
+                    Get My Training Plan →
                   </button>
-                  <p className="text-center text-gray-400 text-xs sm:text-sm mt-3 sm:mt-4">
-                    We'll analyse your role and assign personalised compliance courses
-                  </p>
                 </div>
               )}
             </div>
           </div>
         </div>
-      ) : view === 'analysis' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen p-8">
-          <div className="max-w-2xl w-full">
-            <div className="bg-gray-800/80 backdrop-blur-sm p-12 rounded-2xl border-2 border-blue-500/50 shadow-2xl">
-              <div className="text-center mb-8">
-                <div className="text-6xl mb-4 animate-pulse">🧠</div>
-                <h2 className="text-3xl font-bold text-white mb-4">
-                  Analyzing Your Profile, {userName}...
-                </h2>
-                <p className="text-gray-300">
-                  Creating a personalized training plan based on your role as {selectedRole}
-                </p>
-              </div>
 
-              <div className="space-y-4">
+      ) : view === 'analysis' ? (
+        <div className="flex flex-col items-center justify-center min-h-screen px-5 py-10">
+          <div className="max-w-lg w-full">
+            <div className="p-8 sm:p-12 rounded-2xl border border-white/8 text-center" style={{background:'#111111'}}>
+              <div className="text-4xl mb-5 animate-pulse">⚙️</div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Setting up your profile</h2>
+              <p className="text-gray-500 text-sm mb-8">Building a training plan for {selectedRole}...</p>
+
+              <div className="space-y-3 text-left mb-8">
                 {analysisSteps.map((step, index) => (
                   <div 
                     key={index}
-                    className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-500 ${
+                    className={`flex items-center gap-3 p-3 rounded-xl border transition-all duration-500 ${
                       index < analysisStep 
-                        ? 'bg-green-600/20 border-2 border-green-500/50' 
+                        ? 'border-green-500/30 bg-green-500/5' 
                         : index === analysisStep 
-                        ? 'bg-blue-600/20 border-2 border-blue-500/50 animate-pulse' 
-                        : 'bg-gray-700/30 border-2 border-gray-600/30'
+                        ? 'border-white/15 animate-pulse' 
+                        : 'border-white/5'
                     }`}
                   >
-                    <div className="text-3xl">
-                      {index < analysisStep ? '✅' : index === analysisStep ? step.icon : '⏳'}
+                    <div className="text-base flex-shrink-0">
+                      {index < analysisStep ? '✓' : index === analysisStep ? step.icon : '·'}
                     </div>
-                    <div className="flex-1">
-                      <p className={`font-semibold ${
-                        index <= analysisStep ? 'text-white' : 'text-gray-500'
-                      }`}>
-                        {step.text}
-                      </p>
-                    </div>
+                    <p className={`text-sm ${
+                      index < analysisStep ? 'text-green-400' : index === analysisStep ? 'text-white' : 'text-gray-600'
+                    }`}>{step.text}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-8">
-                <div className="w-full bg-gray-700 rounded-full h-3">
-                  <div 
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500"
-                    style={{width: `${(analysisStep / analysisSteps.length) * 100}%`}}
-                  ></div>
-                </div>
-                <p className="text-center text-gray-400 text-sm mt-2">
-                  {Math.round((analysisStep / analysisSteps.length) * 100)}% Complete
-                </p>
+              <div className="w-full rounded-full h-1" style={{background:'#1a1a1a'}}>
+                <div 
+                  className="bg-green-500 h-1 rounded-full transition-all duration-500"
+                  style={{width: `${(analysisStep / analysisSteps.length) * 100}%`}}
+                />
               </div>
             </div>
           </div>
         </div>
       ) : view === 'dashboard' ? (
-        <div className="p-3 sm:p-6 md:p-8">
-          {/* Clean Mobile Header */}
-          <nav className="mb-6 sm:mb-8 bg-gray-800/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl border border-gray-700">
-            {/* Top Row: Profile Info */}
-            <div className="flex items-center justify-between mb-3 sm:mb-0">
-              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                <button 
-                  onClick={() => setView('profile')}
-                  className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-lg sm:text-xl transition-all shadow-md hover:shadow-lg touch-manipulation"
-                  aria-label="View profile"
-                >
-                  �
-                </button>
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-base sm:text-xl font-bold text-white truncate">
-                    Welcome, {userProfile?.name || userName}
-                  </h2>
-                  {userProfile && (
-                    <p className="text-xs sm:text-sm text-gray-400 truncate">
-                      {userProfile.role}
-                    </p>
-                  )}
-                </div>
-              </div>
-              {/* Desktop buttons */}
-              <div className="hidden sm:flex gap-2">
-                <button 
-                  onClick={() => setView('landing')}
-                  className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all font-medium text-sm"
-                >
-                  ← Home
-                </button>
-                <button 
-                  onClick={handleLogout}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all font-medium text-sm"
-                >
-                  Logout
-                </button>
+        <div className="min-h-screen px-4 sm:px-6 py-6 sm:py-8" style={{background:'#0a0a0a'}}>
+          <nav className="flex items-center justify-between mb-8 pb-5 border-b border-white/8 max-w-5xl mx-auto">
+            <div className="flex items-center gap-3">
+              <button onClick={() => setView('profile')} className="w-9 h-9 bg-green-500/20 border border-green-500/30 rounded-full flex items-center justify-center text-base touch-manipulation hover:bg-green-500/30 transition-all">👤</button>
+              <div>
+                <p className="text-white font-bold text-sm leading-tight">{userProfile?.name || userName}</p>
+                {userProfile && <p className="text-gray-500 text-xs truncate max-w-[160px]">{userProfile.role}</p>}
               </div>
             </div>
-            
-            {/* Mobile Only: Bottom Row Buttons */}
-            <div className="flex sm:hidden gap-2 mt-3">
-              <button 
-                onClick={() => setView('landing')}
-                className="flex-1 px-3 py-2.5 bg-gray-700 active:bg-gray-600 text-white rounded-lg font-medium text-sm touch-manipulation"
-              >
-                Home
-              </button>
-              <button 
-                onClick={handleLogout}
-                className="flex-1 px-3 py-2.5 bg-red-600 active:bg-red-700 text-white rounded-lg font-medium text-sm touch-manipulation"
-              >
-                Logout
-              </button>
+            <div className="flex gap-2">
+              <button onClick={() => setView('landing')} className="px-3 py-1.5 text-gray-500 hover:text-white text-xs transition-colors touch-manipulation">Home</button>
+              <button onClick={handleLogout} className="px-3 py-1.5 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 rounded-lg text-xs transition-all touch-manipulation">Sign out</button>
             </div>
           </nav>
 
-          {/* Clean Welcome Message - Mobile Friendly */}
-          {userProfile && (
-            <div className="max-w-7xl mx-auto mb-4 bg-blue-600/10 border border-blue-500/30 rounded-lg p-3 sm:p-4">
-              <h3 className="text-sm sm:text-base font-semibold text-white mb-1">
-                Training Plan Ready
-              </h3>
-              <p className="text-xs sm:text-sm text-blue-200">
-                {userProfile.courses.length} compliance modules assigned for your role
-              </p>
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+              {[
+                { label: 'Progress', value: `${userProfile ? Math.round((completedCourses.length / userProfile.courses.length) * 100) : 0}%`, color: 'text-green-400' },
+                { label: 'Modules', value: userProfile?.courses.length || 0, color: 'text-white' },
+                { label: 'Completed', value: completedCourses.length, color: 'text-green-400' },
+                { label: 'Level', value: completedCourses.length === 0 ? 'Beginner' : completedCourses.length < 3 ? 'Intermediate' : completedCourses.length < 5 ? 'Advanced' : 'Expert', color: 'text-white' },
+              ].map((s) => (
+                <div key={s.label} className="p-4 rounded-xl border border-white/8 text-center" style={{background:'#111111'}}>
+                  <p className={`text-xl sm:text-2xl font-bold ${s.color}`}>{s.value}</p>
+                  <p className="text-gray-500 text-xs mt-0.5">{s.label}</p>
+                </div>
+              ))}
             </div>
-          )}
 
-          {/* Risk Level Alert - Simplified for Mobile */}
-          {/* Stats Cards - Clean Mobile Design */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 max-w-7xl mx-auto mb-6 sm:mb-8">
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3 sm:p-5 rounded-lg shadow-lg">
-              <p className="text-xs sm:text-sm text-blue-100 mb-1">Progress</p>
-              <p className="text-2xl sm:text-3xl font-bold text-white">
-                {userProfile ? Math.round((completedCourses.length / userProfile.courses.length) * 100) : 0}%
-              </p>
-            </div>
-            
-            <div className="bg-gradient-to-br from-green-600 to-green-700 p-3 sm:p-5 rounded-lg shadow-lg">
-              <p className="text-xs sm:text-sm text-green-100 mb-1">Assigned</p>
-              <p className="text-2xl sm:text-3xl font-bold text-white">{userProfile?.courses.length || 0}</p>
-            </div>
-            
-            <div className="bg-gradient-to-br from-orange-600 to-orange-700 p-3 sm:p-5 rounded-lg shadow-lg">
-              <p className="text-xs sm:text-sm text-orange-100 mb-1">Completed</p>
-              <p className="text-2xl sm:text-3xl font-bold text-white">{completedCourses.length}</p>
-            </div>
-            
-            <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-3 sm:p-5 rounded-lg shadow-lg">
-              <p className="text-xs sm:text-sm text-purple-100 mb-1">Level</p>
-              <p className="text-base sm:text-xl font-bold text-white">
-                {completedCourses.length === 0 ? 'Beginner' : 
-                 completedCourses.length < 3 ? 'Inter...' : 
-                 completedCourses.length < 5 ? 'Advanced' : 'Expert'}
-              </p>
-            </div>
-          </div>
-          
-          {/* Completed Courses Section - Simplified */}
-          {completedCourses.length > 0 && (
-            <div className="mt-6 sm:mt-8 max-w-7xl mx-auto">
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 flex items-center gap-2">
-                <span>✓</span> Completed Courses
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                {completedCourses.map((completed, idx) => (
-                  <div key={idx} className="bg-green-600/10 border border-green-500/30 p-3 sm:p-4 rounded-lg">
-                    <div className="flex items-start gap-2 mb-2">
-                      <span className="text-lg flex-shrink-0">✓</span>
+            {completedCourses.length > 0 && (
+              <div className="mb-8">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Completed</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {completedCourses.map((completed, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 rounded-xl border border-green-500/20" style={{background:'#111111'}}>
+                      <span className="text-green-400 flex-shrink-0">✓</span>
                       <div className="min-w-0 flex-1">
-                        <h4 className="text-sm sm:text-base font-semibold text-white break-words">{completed.courseName}</h4>
-                        <p className="text-xs text-gray-400 mt-0.5">{completed.completedDate}</p>
+                        <p className="text-white text-sm font-semibold truncate">{completed.courseName}</p>
+                        <p className="text-gray-500 text-xs">{completed.completedDate} · {completed.score}%</p>
                       </div>
                     </div>
-                    <div className="bg-green-900/20 p-2 rounded">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm sm:text-base text-green-300 font-semibold">Final Score:</span>
-                        <span className="text-xl sm:text-2xl font-bold text-green-400">{completed.score}%</span>
-                      </div>
-                      <div className="mt-2 text-center">
-                        <span className="px-3 py-1 bg-green-500/20 text-green-300 text-xs font-semibold rounded-full">
-                          🏅 PASSED
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="mt-6 sm:mt-8 max-w-7xl mx-auto">
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
-              Your Training Modules
-            </h3>
-            {userProfile && userProfile.courses.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                {userProfile.courses.map((course) => (
-                  <div 
-                    key={course.id}
-                    className="bg-gray-800/70 border border-gray-700 hover:border-blue-500 p-3 sm:p-5 rounded-lg transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-2 gap-2">
-                      <h4 className="text-base sm:text-lg font-semibold text-white break-words flex-1">
-                        {course.title}
-                      </h4>
-                      {course.risk === 'high' && (
-                        <span className="px-2 py-0.5 bg-red-500/20 text-red-300 text-xs font-medium rounded whitespace-nowrap">
-                          HIGH RISK
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs sm:text-sm text-gray-300 mb-3 line-clamp-2">{course.description}</p>
-                    
-                    {/* Simplified scenarios list for mobile */}
-                    {course.scenarios && course.scenarios.length > 0 && (
-                      <div className="mb-3">
-                        <p className="text-xs text-blue-400 font-medium mb-1.5">
-                          {course.scenarios.length} Interactive Scenarios
-                        </p>
-                      </div>
-                    )}
-                    
-                    {/* Progress Bar */}
-                    <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
-                      <div 
-                        className="bg-blue-500 h-1.5 rounded-full transition-all" 
-                        style={{width: `${course.progress}%`}}
-                      ></div>
-                    </div>
-                    
-                    {/* Footer */}
-                    <div className="flex justify-between items-center gap-2">
-                      <p className="text-xs text-gray-400">{course.progress}% Complete</p>
-                      <button 
-                        onClick={() => {
-                          setCurrentCourse(course);
-                          setView('course');
-                        }}
-                        className={`px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-xs sm:text-sm font-medium transition-all touch-manipulation ${
-                          course.progress === 100 
-                            ? 'bg-green-600 hover:bg-green-700 text-white' 
-                            : 'bg-blue-600 hover:bg-blue-700 text-white'
-                        }`}
-                      >
-                        {course.progress === 100 ? 'Review' : 'Start'}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center text-gray-400 py-8">
-                <p className="text-sm sm:text-base">No courses assigned yet</p>
+                  ))}
+                </div>
               </div>
             )}
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Your Training Modules</p>
+              {userProfile && userProfile.courses.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {userProfile.courses.map((course) => (
+                    <div key={course.id} className="p-4 sm:p-5 rounded-xl border border-white/8 hover:border-white/20 transition-all" style={{background:'#111111'}}>
+                      <h4 className="text-white font-semibold text-sm mb-1">{course.title}</h4>
+                      <p className="text-gray-500 text-xs mb-4 line-clamp-2">{course.description}</p>
+                      <div className="w-full rounded-full h-0.5 mb-3" style={{background:'#1a1a1a'}}>
+                        <div className="bg-green-500 h-0.5 rounded-full" style={{width:`${course.progress}%`}} />
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <p className="text-gray-600 text-xs">{course.progress}% complete</p>
+                        <button 
+                          onClick={() => { setCurrentCourse(course); setView('course'); }}
+                          className={`px-4 py-2 rounded-lg text-xs font-bold touch-manipulation transition-all ${
+                            course.progress === 100 
+                              ? 'bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30' 
+                              : 'bg-green-500 hover:bg-green-400 text-white'
+                          }`}
+                        >
+                          {course.progress === 100 ? 'Review' : 'Start →'}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center text-gray-600 py-12 text-sm">No modules assigned yet.</div>
+              )}
+            </div>
           </div>
         </div>
       ) : view === 'course' ? (
-        <div className="p-3 sm:p-4 md:p-6 lg:p-8 max-w-5xl mx-auto">
-          {/* Skip to main content link for accessibility */}
-          <a href="#main-content" className="skip-link">
-            Skip to main content
-          </a>
+        <div className="px-4 sm:px-6 py-5 max-w-4xl mx-auto" style={{minHeight:'100vh'}}>
+          <a href="#main-content" className="skip-link">Skip to main content</a>
 
           {/* Progress Indicator */}
           {currentCourse && !currentScenario && (
-            <div className="mb-4 sm:mb-6 bg-gray-800/50 p-3 sm:p-4 rounded-lg border border-gray-700" role="navigation" aria-label="Learning progress">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xs sm:text-sm font-semibold text-gray-300">Learning Progress</h2>
-                <span className="text-xs text-gray-400">Step {['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].indexOf(currentStep) + 1} of 5</span>
-              </div>
-              <div className="flex gap-1 sm:gap-2">
+            <div className="mb-5 p-3 rounded-xl border border-white/8" style={{background:'#111111'}}>
+              <div className="flex gap-1.5">
                 {['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].map((step, index) => (
-                  <div 
-                    key={step}
-                    className={`flex-1 h-2 rounded-full transition-all duration-500 progress-step ${
-                      step === currentStep ? 'bg-blue-500 active animate-glow' : 
-                      ['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].indexOf(currentStep) > index ? 'bg-green-500 completed' : 'bg-gray-700'
-                    }`}
-                    role="progressbar"
-                    aria-valuenow={['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].indexOf(currentStep) + 1}
-                    aria-valuemin="1"
-                    aria-valuemax="5"
-                    aria-label={`${step.charAt(0).toUpperCase() + step.slice(1)} step`}
-                  />
+                  <div key={step} className={`flex-1 h-1 rounded-full transition-all duration-500 ${
+                    step === currentStep ? 'bg-green-500' : 
+                    ['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].indexOf(currentStep) > index ? 'bg-green-500/40' : 'bg-white/8'
+                  }`} />
                 ))}
-              </div>
-              <div className="hidden sm:flex justify-between mt-2 text-xs text-gray-400">
-                <span>📹 Video</span>
-                <span>🎭 Scenarios</span>
-                <span>💡 Key Points</span>
-                <span>⚖️ Laws</span>
-                <span>✅ Assessment</span>
               </div>
             </div>
           )}
 
-          <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="mb-5 flex items-center justify-between">
             <button 
-              onClick={() => {
-                setView('dashboard');
-                setCurrentCourse(null);
-                setCurrentScenario(null);
-                setScenarioResult(null);
-                setCurrentStep('video');
-              }}
-              className="px-4 py-2 min-h-[44px] bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white text-sm sm:text-base rounded-lg transition-smooth touch-manipulation w-full sm:w-auto"
-              aria-label="Return to dashboard"
+              onClick={() => { setView('dashboard'); setCurrentCourse(null); setCurrentScenario(null); setScenarioResult(null); setCurrentStep('video'); }}
+              className="text-gray-500 hover:text-white text-sm transition-colors touch-manipulation"
             >
-              ← Back to Dashboard
+              ← Dashboard
             </button>
-            {currentCourse && currentCourse.risk === 'high' && (
-              <span className="px-3 py-1 bg-red-500/20 text-red-300 text-xs sm:text-sm font-semibold rounded whitespace-nowrap" role="status">
-                🔥 HIGH RISK MODULE
-              </span>
-            )}
           </div>
 
           {currentCourse && !currentScenario && (
             <div className="space-y-4 sm:space-y-6">
-              {/* Course Header with Visual */}
-              <div className="relative bg-gradient-to-br from-blue-600 to-purple-600 p-4 sm:p-6 md:p-8 rounded-2xl text-white overflow-hidden">
-                {/* Decorative Background Elements */}
-                <div className="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-24 sm:-mr-32 -mt-24 sm:-mt-32"></div>
-                <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-16 sm:-ml-24 -mb-16 sm:-mb-24"></div>
-                
-                <div className="relative z-10 flex items-start gap-3 sm:gap-4 md:gap-6">
-                  {/* Course Icon/Illustration */}
-                  <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-white/20 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl md:text-5xl backdrop-blur-sm border-2 border-white/30">
+              {/* Course Header */}
+              <div className="p-5 sm:p-7 rounded-2xl border border-white/8 text-white" style={{background:'#111111'}}>
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-green-500/15 border border-green-500/30 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl">
                     {currentCourse.id === 1 ? '🚫' : currentCourse.id === 2 ? '🛡️' : currentCourse.id === 3 ? '⚖️' : '🔍'}
                   </div>
-                  
                   <div className="flex-1 min-w-0">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3">{currentCourse.title}</h1>
-                    <p className="text-sm sm:text-base md:text-lg lg:text-xl text-blue-100 mb-3 sm:mb-4">{currentCourse.description}</p>
-                    <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm">
-                      <span className="px-2 sm:px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm whitespace-nowrap">⏱️ {currentCourse.duration}</span>
-                      <span className="px-2 sm:px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm whitespace-nowrap">📊 {currentCourse.progress}% Complete</span>
-                      <span className="px-2 sm:px-3 py-1 bg-white/20 rounded-lg backdrop-blur-sm whitespace-nowrap">🎯 {currentCourse.scenarios?.length || 0} Scenarios</span>
+                    <h1 className="text-xl sm:text-2xl font-bold text-white mb-1">{currentCourse.title}</h1>
+                    <p className="text-sm text-gray-400 mb-3">{currentCourse.description}</p>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      <span className="px-2.5 py-1 bg-white/5 border border-white/8 rounded-lg text-gray-400 whitespace-nowrap">⏱️ {currentCourse.duration}</span>
+                      <span className="px-2.5 py-1 bg-white/5 border border-white/8 rounded-lg text-gray-400 whitespace-nowrap">📊 {currentCourse.progress}% complete</span>
+                      <span className="px-2.5 py-1 bg-white/5 border border-white/8 rounded-lg text-gray-400 whitespace-nowrap">🎯 {currentCourse.scenarios?.length || 0} scenarios</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* 1. VIDEO TRAINING - First Section */}
-              <div id="video-section" className="relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-purple-500/50 p-4 sm:p-6 md:p-8 rounded-xl overflow-hidden scroll-mt-4">
-                
-                <div className="absolute top-0 left-0 text-6xl sm:text-9xl opacity-10">🎥</div>
-                
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/30 rounded-lg flex items-center justify-center text-xl sm:text-2xl">
-                      🎥
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-xl sm:text-2xl font-bold text-white">Step 1: Video Training</h2>
-                        <span className="px-2 py-0.5 bg-green-500/20 text-green-300 text-xs font-bold rounded sm:hidden">REQUIRED</span>
-                      </div>
-                      <p className="text-xs sm:text-sm text-purple-300">Watch this first before continuing</p>
-                    </div>
+              {/* 1. VIDEO TRAINING */}
+              <div id="video-section" className="p-5 sm:p-7 rounded-2xl border border-white/8 scroll-mt-4" style={{background:'#111111'}}>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-10 h-10 bg-green-500/15 border border-green-500/30 rounded-xl flex items-center justify-center text-lg">🎥</div>
+                  <div>
+                    <h2 className="text-base sm:text-lg font-bold text-white">Step 1: Video Training</h2>
+                    <p className="text-xs text-gray-500">Watch before continuing</p>
                   </div>
-                  
-                  <div className="bg-purple-900/20 p-4 rounded-lg mb-6 border-l-4 border-purple-500">
-                    <p className="text-gray-300">
-                      📺 Watch this comprehensive training video to understand the key concepts and real-world applications.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 p-3 sm:p-4 md:p-6 rounded-xl border-2 border-purple-600/30">
-                    <div className="aspect-video w-full min-h-[200px] sm:min-h-[300px] md:min-h-[400px] bg-black rounded-lg overflow-hidden shadow-2xl mb-4">
-                      <iframe
-                        className="w-full h-full"
-                        src={
-                          userProfile?.sector === 'police' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
-                          userProfile?.sector === 'civil' ? 'https://www.youtube.com/embed/3ilFN6NaHVk' :
-                          userProfile?.sector === 'immigration' ? 'https://www.youtube.com/embed/lwfijBPReoY' :
-                          userProfile?.sector === 'private' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
-                          'https://www.youtube.com/embed/eeM1Ga76bA4'
-                        }
-                        title={`${currentCourse.title} - Training Video`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      ></iframe>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs font-semibold rounded-full">
-                        🏅 Essential Knowledge
-                      </span>
-                    </div>
+                </div>
+                <div className="p-3 rounded-xl border border-white/5 mb-5" style={{background:'#1a1a1a'}}>
+                  <p className="text-gray-400 text-sm">📺 Watch this training video to understand the core concepts and real-world applications.</p>
+                </div>
+                <div className="rounded-xl border border-white/8 overflow-hidden" style={{background:'#0a0a0a'}}>
+                  <div className="aspect-video w-full min-h-[200px] sm:min-h-[300px] bg-black">
+                    <iframe
+                      className="w-full h-full"
+                      src={
+                        userProfile?.sector === 'police' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
+                        userProfile?.sector === 'civil' ? 'https://www.youtube.com/embed/3ilFN6NaHVk' :
+                        userProfile?.sector === 'immigration' ? 'https://www.youtube.com/embed/lwfijBPReoY' :
+                        userProfile?.sector === 'private' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
+                        'https://www.youtube.com/embed/eeM1Ga76bA4'
+                      }
+                      title={`${currentCourse.title} - Training Video`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
                   </div>
                 </div>
               </div>
 
-              {/* 2. INTERACTIVE SCENARIO SIMULATIONS - Second Section */}
+              {/* 2. INTERACTIVE SCENARIOS */}
               {currentCourse.scenarios && currentCourse.scenarios.length > 0 && (
-                <div className="relative bg-gradient-to-br from-orange-600/20 to-red-600/20 border-2 border-orange-500/50 p-4 sm:p-6 md:p-8 rounded-xl overflow-hidden">
-                  <div className="absolute top-0 right-0 text-6xl sm:text-9xl opacity-10">🎭</div>
-                  
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500/30 rounded-lg flex items-center justify-center text-xl sm:text-2xl">
-                        🎭
-                      </div>
-                      <div>
-                        <h2 className="text-lg sm:text-2xl font-bold text-white">Step 2: Interactive Scenarios</h2>
-                        <p className="text-xs sm:text-sm text-orange-300">Practice with real-world situations</p>
-                      </div>
+                <div className="p-5 sm:p-7 rounded-2xl border border-white/8" style={{background:'#111111'}}>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 bg-green-500/15 border border-green-500/30 rounded-xl flex items-center justify-center text-lg">🎭</div>
+                    <div>
+                      <h2 className="text-base sm:text-lg font-bold text-white">Step 2: Interactive Scenarios</h2>
+                      <p className="text-xs text-gray-500">Practice with real-world situations</p>
                     </div>
-                    
-                    <div className="bg-orange-900/20 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 border-l-4 border-orange-500">
-                      <p className="text-sm sm:text-base text-gray-300">
-                        🎯 Test your understanding with realistic ethical dilemma scenarios. Choose the best course of action based on what you've learned.
-                      </p>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      {currentCourse.scenarios.map((scenario, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => {
-                            setCurrentScenario(scenario);
-                            setScenarioAnswer('');
-                            setScenarioResult(null);
-                            setHasReadScenario(false);
-                            setCurrentStep('scenarios');
-                          }}
-                          className="w-full p-4 sm:p-5 md:p-6 min-h-[88px] bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 border-2 border-gray-600 hover:border-orange-500 rounded-xl text-left transition-smooth group relative overflow-hidden animate-fadeIn touch-manipulation"
-                          style={{ animationDelay: `${idx * 0.1}s` }}
-                          aria-label={`Practice scenario ${idx + 1}: ${scenario.title}`}
-                        >
-                          {/* Animated hover effect */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/10 to-orange-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                          
-                          <div className="relative flex items-center gap-3 sm:gap-4">
-                            <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center text-2xl sm:text-3xl group-hover:scale-110 transition-transform">
-                              {idx === 0 ? '🚦' : idx === 1 ? '🔍' : '📋'}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white group-hover:text-orange-400 transition-colors mb-1">
-                                Scenario {idx + 1}: {scenario.title}
-                              </h3>
-                              <p className="text-xs sm:text-sm text-gray-400">🎮 Click to begin interactive simulation</p>
-                            </div>
-                            <div className="flex-shrink-0 text-2xl sm:text-3xl group-hover:translate-x-2 transition-transform">
-                              ➡️
-                            </div>
+                  </div>
+                  <div className="p-3 rounded-xl border border-white/5 mb-5" style={{background:'#1a1a1a'}}>
+                    <p className="text-gray-400 text-sm">🎯 Work through realistic ethical scenarios. Choose the best course of action based on what you've learned.</p>
+                  </div>
+                  <div className="space-y-3">
+                    {currentCourse.scenarios.map((scenario, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setCurrentScenario(scenario);
+                          setScenarioAnswer('');
+                          setScenarioResult(null);
+                          setHasReadScenario(false);
+                          setCurrentStep('scenarios');
+                        }}
+                        className="w-full p-4 rounded-xl border border-white/8 hover:border-green-500/40 text-left transition-all touch-manipulation group"
+                        style={{background:'#1a1a1a'}}
+                        aria-label={`Practice scenario ${idx + 1}: ${scenario.title}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="flex-shrink-0 w-10 h-10 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center justify-center text-lg group-hover:border-green-500/50 transition-all">
+                            {idx === 0 ? '🚦' : idx === 1 ? '🔍' : '📋'}
                           </div>
-                        </button>
-                      ))}
-                    </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm font-semibold text-white group-hover:text-green-400 transition-colors">Scenario {idx + 1}: {scenario.title}</h3>
+                            <p className="text-xs text-gray-500 mt-0.5">Click to begin</p>
+                          </div>
+                          <span className="text-gray-600 group-hover:text-green-400 transition-colors text-sm">→</span>
+                        </div>
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
 
-              {/* 3. KEY LEARNING POINTS - Third Section (Shows after scenarios) */}
+              {/* 3. KEY LEARNING POINTS */}
               {currentCourse.content && showKeyLearning && (
-                <div ref={keyLearningRef} className="relative bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border-2 border-blue-700/50 overflow-hidden animate-fadeIn" id="main-content">
-                  <div className="absolute bottom-0 right-0 text-6xl sm:text-9xl opacity-10" aria-hidden="true">🎯</div>
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/30 rounded-lg flex items-center justify-center text-xl sm:text-2xl" aria-hidden="true">
-                        🎯
-                      </div>
-                      <div>
-                        <h2 className="text-lg sm:text-2xl font-bold text-white">Step 3: Key Learning Points</h2>
-                        <p className="text-xs sm:text-sm text-blue-300">Review essential takeaways</p>
-                      </div>
+                <div ref={keyLearningRef} className="p-5 sm:p-7 rounded-2xl border border-white/8 animate-fadeIn" id="main-content" style={{background:'#111111'}}>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 bg-green-500/15 border border-green-500/30 rounded-xl flex items-center justify-center text-lg">🎯</div>
+                    <div>
+                      <h2 className="text-base sm:text-lg font-bold text-white">Step 3: Key Learning Points</h2>
+                      <p className="text-xs text-gray-500">Review essential takeaways</p>
                     </div>
-                    <div className="bg-blue-900/20 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 border-l-4 border-blue-500" role="status" aria-live="polite">
-                      <p className="text-sm sm:text-base text-gray-300">
-                        📝 Click on each learning point to review before taking the assessment. ({clickedLearningPoints.length}/{currentCourse.content.keyPoints.length} reviewed)
-                      </p>
-                    </div>
-                    <div className="grid gap-4" role="list" aria-label="Key learning points">
-                      {currentCourse.content.keyPoints.map((point, idx) => {
-                        const isClicked = clickedLearningPoints.includes(idx);
-                        return (
+                  </div>
+                  <div className="p-3 rounded-xl border border-white/5 mb-5" style={{background:'#1a1a1a'}}>
+                    <p className="text-gray-400 text-sm" role="status" aria-live="polite">
+                      📝 Click each point to review. ({clickedLearningPoints.length}/{currentCourse.content.keyPoints.length} reviewed)
+                    </p>
+                  </div>
+                  <div className="grid gap-3" role="list" aria-label="Key learning points">
+                    {currentCourse.content.keyPoints.map((point, idx) => {
+                      const isClicked = clickedLearningPoints.includes(idx);
+                      return (
                           <button
                             key={idx}
                             onClick={() => {
@@ -2869,37 +2648,34 @@ function App() {
                                 }
                               }
                             }}
-                            className={`flex items-start gap-3 sm:gap-4 p-4 sm:p-5 min-h-[72px] rounded-lg border-2 transition-smooth text-left animate-fadeIn touch-manipulation ${
+                            className={`flex items-start gap-3 p-4 rounded-xl border transition-all text-left touch-manipulation ${
                               isClicked
-                                ? 'bg-green-600/20 border-green-500 cursor-default'
-                                : 'bg-gray-800/60 border-gray-700/50 hover:border-blue-500 active:border-blue-400 hover:bg-gray-800 active:bg-gray-700 cursor-pointer'
+                                ? 'border-green-500/40 cursor-default'
+                                : 'border-white/8 hover:border-green-500/30 cursor-pointer'
                             }`}
-                            style={{ animationDelay: `${idx * 0.05}s` }}
+                            style={{background: isClicked ? 'rgba(34,197,94,0.08)' : '#1a1a1a', animationDelay: `${idx * 0.05}s`}}
                             aria-label={`Learning point ${idx + 1}: ${point}`}
                             aria-pressed={isClicked}
                             role="listitem"
                           >
-                            <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base transition-all ${
-                              isClicked
-                                ? 'bg-green-500'
-                                : 'bg-gradient-to-br from-blue-500 to-purple-500'
+                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs transition-all ${
+                              isClicked ? 'bg-green-500' : 'bg-white/10 border border-white/15'
                             }`}>
                               {isClicked ? '✓' : idx + 1}
                             </div>
-                            <span className={`text-base sm:text-lg leading-relaxed ${
-                              isClicked ? 'text-green-300' : 'text-gray-300'
+                            <span className={`text-sm leading-relaxed ${
+                              isClicked ? 'text-green-400' : 'text-gray-300'
                             }`}>{point}</span>
                           </button>
                         );
                       })}
                     </div>
-                  </div>
                 </div>
               )}
 
-              {/* TAKE ASSESSMENT BUTTON - Shows after all key points clicked */}
+              {/* TAKE ASSESSMENT BUTTON */}
               {showKeyLearning && clickedLearningPoints.length === currentCourse.content.keyPoints.length && (
-                <div className="flex justify-center pt-6 animate-fadeIn">
+                <div className="flex justify-center pt-4 animate-fadeIn">
                   <button
                     onClick={() => {
                       setShowQuiz(true);
@@ -2907,7 +2683,7 @@ function App() {
                       setQuizResult(null);
                       setCurrentStep('assessment');
                     }}
-                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 min-h-[52px] bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 active:from-green-800 active:to-emerald-800 text-white rounded-xl font-semibold text-base sm:text-lg transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-100 animate-pulse touch-manipulation"
+                    className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 touch-manipulation transition-all"
                     aria-label="Start final assessment with 5 questions"
                   >
                     📝 Take Final Assessment (5 Questions)
@@ -2919,49 +2695,46 @@ function App() {
 
           {/* Quiz Assessment */}
           {currentCourse && showQuiz && !quizResult && (
-            <div className="space-y-4 sm:space-y-6">
-              <div className="relative bg-gradient-to-br from-green-600 to-emerald-600 p-4 sm:p-6 md:p-8 rounded-2xl text-white overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-white/10 rounded-full -mr-16 sm:-mr-24 -mt-16 sm:-mt-24"></div>
-                <div className="relative z-10 flex items-center gap-4 sm:gap-6">
-                  <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl backdrop-blur-sm border-2 border-white/30">
-                    📝
-                  </div>
+            <div className="space-y-4">
+              <div className="p-5 sm:p-7 rounded-2xl border border-white/8" style={{background:'#111111'}}>
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-green-500/15 border border-green-500/30 rounded-2xl flex items-center justify-center text-2xl">📝</div>
                   <div>
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">Step 5: Final Assessment</h1>
-                    <p className="text-sm sm:text-base md:text-lg text-green-100">Answer all 5 questions • Pass Mark: 80% (4/5 correct)</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-white">Step 5: Final Assessment</h1>
+                    <p className="text-xs text-gray-500">5 questions · Pass mark: 80% (4/5 correct)</p>
                   </div>
                 </div>
               </div>
 
               {currentCourse.quiz && currentCourse.quiz.map((question, qIdx) => (
-                <div key={question.id} className="bg-gray-800/80 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border-2 border-gray-700">
-                  <div className="flex items-start gap-3 sm:gap-4 mb-4">
-                    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg">
+                <div key={question.id} className="p-5 rounded-xl border border-white/8" style={{background:'#111111'}}>
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-500/15 border border-green-500/30 rounded-full flex items-center justify-center text-green-400 font-bold text-xs">
                       {qIdx + 1}
                     </div>
-                    <h3 className="text-base sm:text-lg font-semibold text-white leading-snug">{question.question}</h3>
+                    <h3 className="text-sm font-semibold text-white leading-snug">{question.question}</h3>
                   </div>
-                  
-                  <div className="space-y-2 sm:space-y-3 ml-0 sm:ml-14">
+                  <div className="space-y-2">
                     {question.options.map((option) => (
                       <button
                         key={option.id}
                         onClick={() => setQuizAnswers({...quizAnswers, [question.id]: option.id})}
-                        className={`w-full p-3 sm:p-4 min-h-[56px] text-left rounded-lg border-2 transition-all touch-manipulation ${
+                        className={`w-full p-3 min-h-[48px] text-left rounded-xl border transition-all touch-manipulation ${
                           quizAnswers[question.id] === option.id
-                            ? 'bg-green-600/20 border-green-500 shadow-lg'
-                            : 'bg-gray-700/50 border-gray-600 hover:border-gray-500 active:border-gray-400 hover:bg-gray-700 active:bg-gray-600'
+                            ? 'border-green-500/50 bg-green-500/10'
+                            : 'border-white/8 hover:border-white/20'
                         }`}
+                        style={quizAnswers[question.id] !== option.id ? {background:'#1a1a1a'} : {}}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                             quizAnswers[question.id] === option.id
                               ? 'border-green-500 bg-green-500'
-                              : 'border-gray-500'
+                              : 'border-white/20'
                           }`}>
-                            {quizAnswers[question.id] === option.id && <span className="text-white text-sm">✓</span>}
+                            {quizAnswers[question.id] === option.id && <span className="text-white text-xs">✓</span>}
                           </div>
-                          <span className="text-white text-sm sm:text-base leading-relaxed">{option.text}</span>
+                          <span className="text-gray-300 text-sm leading-relaxed">{option.text}</span>
                         </div>
                       </button>
                     ))}
@@ -2969,53 +2742,35 @@ function App() {
                 </div>
               ))}
 
-              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => {
                     setShowQuiz(false);
                     setQuizAnswers({});
                     setShowKeyLearning(true);
                     setCurrentStep('laws');
-                    // Scroll to Key Learning Points section
                     setTimeout(() => {
-                      keyLearningRef.current?.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start' 
-                      });
+                      keyLearningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
                   }}
-                  className="w-full sm:w-auto px-5 sm:px-6 py-3 min-h-[48px] bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white rounded-lg font-semibold transition-all touch-manipulation"
+                  className="px-5 py-3 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
                 >
                   ← Back to Course
                 </button>
                 <button
                   onClick={() => {
-                    // Calculate score
                     let correct = 0;
                     currentCourse.quiz.forEach(question => {
                       const selectedAnswer = quizAnswers[question.id];
                       const correctOption = question.options.find(opt => opt.correct);
-                      if (selectedAnswer === correctOption.id) {
-                        correct++;
-                      }
+                      if (selectedAnswer === correctOption.id) correct++;
                     });
                     const percentage = (correct / currentCourse.quiz.length) * 100;
                     const passed = percentage >= 80;
-                    
-                    setQuizResult({
-                      correct,
-                      total: currentCourse.quiz.length,
-                      percentage,
-                      passed
-                    });
-
-                    // If passed, update course progress and add to completed courses
+                    setQuizResult({ correct, total: currentCourse.quiz.length, percentage, passed });
                     if (passed && userProfile) {
-                      const updatedCourses = userProfile.courses.map(c => 
-                        c.id === currentCourse.id ? { ...c, progress: 100 } : c
-                      );
+                      const updatedCourses = userProfile.courses.map(c => c.id === currentCourse.id ? { ...c, progress: 100 } : c);
                       setUserProfile({ ...userProfile, courses: updatedCourses });
-                      
                       setCompletedCourses([...completedCourses, {
                         courseId: currentCourse.id,
                         courseName: currentCourse.title,
@@ -3026,7 +2781,7 @@ function App() {
                     }
                   }}
                   disabled={Object.keys(quizAnswers).length < (currentCourse.quiz?.length || 0)}
-                  className="w-full sm:w-auto px-6 sm:px-8 py-3 min-h-[48px] bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 active:from-green-800 active:to-emerald-800 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                  className="flex-1 py-3 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation"
                 >
                   Submit Assessment →
                 </button>
@@ -3036,41 +2791,34 @@ function App() {
 
           {/* Quiz Result */}
           {quizResult && (
-            <div className="space-y-6">
-              <div className={`relative p-8 rounded-2xl overflow-hidden ${
+            <div className="space-y-4">
+              <div className={`p-8 sm:p-10 rounded-2xl border text-center ${
                 quizResult.passed 
-                  ? 'bg-gradient-to-br from-green-600 to-emerald-600' 
-                  : 'bg-gradient-to-br from-red-600 to-orange-600'
-              }`}>
-                <div className="absolute top-0 right-0 text-9xl opacity-20">
-                  {quizResult.passed ? '🎉' : '📚'}
+                  ? 'border-green-500/30 bg-green-500/8' 
+                  : 'border-red-500/30 bg-red-500/8'
+              }`} style={{background: quizResult.passed ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)'}}>
+                <div className="text-5xl mb-4">{quizResult.passed ? '🎉' : '📚'}</div>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2">
+                  {quizResult.passed ? 'You Passed!' : 'Not Passed'}
+                </h1>
+                <div className={`text-5xl font-extrabold mb-3 ${quizResult.passed ? 'text-green-400' : 'text-red-400'}`}>
+                  {quizResult.percentage}%
                 </div>
-                
-                <div className="relative z-10 text-center text-white">
-                  <div className="text-7xl mb-4">{quizResult.passed ? '🎉' : '📚'}</div>
-                  <h1 className="text-4xl font-bold mb-4">
-                    {quizResult.passed ? 'Congratulations! You Passed!' : 'Assessment Not Passed'}
-                  </h1>
-                  <div className="text-6xl font-bold mb-4">{quizResult.percentage}%</div>
-                  <p className="text-2xl mb-6">
-                    You got {quizResult.correct} out of {quizResult.total} questions correct
-                  </p>
-                  
-                  {quizResult.passed ? (
-                    <div className="bg-white/20 p-4 rounded-lg backdrop-blur-sm">
-                      <p className="text-lg">✅ You have successfully completed this module!</p>
-                      <p className="text-sm mt-2">Certificate of completion added to your dashboard</p>
-                    </div>
-                  ) : (
-                    <div className="bg-white/20 p-4 rounded-lg backdrop-blur-sm">
-                      <p className="text-lg">Pass mark is 80% (4/5 correct)</p>
-                      <p className="text-sm mt-2">Please review the material and try again</p>
-                    </div>
-                  )}
+                <p className="text-gray-400 text-sm mb-5">
+                  {quizResult.correct} of {quizResult.total} questions correct
+                </p>
+                <div className={`p-3 rounded-xl border text-sm ${
+                  quizResult.passed 
+                    ? 'border-green-500/20 text-green-400' 
+                    : 'border-red-500/20 text-red-400'
+                }`}>
+                  {quizResult.passed 
+                    ? '✅ Module complete. Certificate added to your dashboard.' 
+                    : 'Pass mark is 80% (4/5 correct). Review the material and try again.'}
                 </div>
               </div>
 
-              <div className="flex justify-center gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 {!quizResult.passed && (
                   <button
                     onClick={() => {
@@ -3079,26 +2827,19 @@ function App() {
                       setQuizResult(null);
                       setShowKeyLearning(true);
                       setCurrentStep('keyPoints');
-                      // Scroll to Key Learning Points section
                       setTimeout(() => {
-                        keyLearningRef.current?.scrollIntoView({ 
-                          behavior: 'smooth', 
-                          block: 'start' 
-                        });
+                        keyLearningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                       }, 100);
                     }}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all"
+                    className="flex-1 py-3 border border-white/10 text-gray-300 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
                   >
-                    📖 Review Course Material
+                    📖 Review Material
                   </button>
                 )}
                 {!quizResult.passed && (
                   <button
-                    onClick={() => {
-                      setQuizAnswers({});
-                      setQuizResult(null);
-                    }}
-                    className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-semibold transition-all"
+                    onClick={() => { setQuizAnswers({}); setQuizResult(null); }}
+                    className="flex-1 py-3 border border-white/10 text-gray-300 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
                   >
                     🔄 Retake Assessment
                   </button>
@@ -3107,10 +2848,8 @@ function App() {
                   <>
                     <button
                       onClick={() => {
-                        // Find next incomplete module
                         const currentIndex = userProfile.courses.findIndex(c => c.id === currentCourse.id);
                         const nextModule = userProfile.courses.slice(currentIndex + 1).find(c => c.progress < 100);
-                        
                         if (nextModule) {
                           setCurrentCourse(nextModule);
                           setShowQuiz(false);
@@ -3118,7 +2857,6 @@ function App() {
                           setQuizResult(null);
                           setView('course');
                         } else {
-                          // No more modules, go to dashboard
                           setView('dashboard');
                           setCurrentCourse(null);
                           setShowQuiz(false);
@@ -3126,23 +2864,17 @@ function App() {
                           setQuizResult(null);
                         }
                       }}
-                      className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                      className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
                     >
-                      {userProfile.courses.slice(userProfile.courses.findIndex(c => c.id === currentCourse.id) + 1).find(c => c.progress < 100) 
-                        ? '→ Next Module' 
-                        : '✅ All Modules Complete - Return to Dashboard'}
+                      {userProfile.courses.slice(userProfile.courses.findIndex(c => c.id === currentCourse.id) + 1).find(c => c.progress < 100)
+                        ? '→ Next Module'
+                        : '✅ Back to Dashboard'}
                     </button>
                     <button
-                      onClick={() => {
-                        setView('dashboard');
-                        setCurrentCourse(null);
-                        setShowQuiz(false);
-                        setQuizAnswers({});
-                        setQuizResult(null);
-                      }}
-                      className="px-8 py-4 bg-white text-green-600 hover:bg-gray-100 rounded-xl font-semibold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                      onClick={() => { setView('dashboard'); setCurrentCourse(null); setShowQuiz(false); setQuizAnswers({}); setQuizResult(null); }}
+                      className="flex-1 py-3 border border-white/10 text-gray-300 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
                     >
-                      📊 Return to Dashboard
+                      📊 Dashboard
                     </button>
                   </>
                 )}
@@ -3150,39 +2882,30 @@ function App() {
             </div>
           )}
 
-          {/* Scenario Simulator with Visuals */}
+          {/* Scenario Simulator */}
           {currentScenario && (
-            <div className="space-y-4 sm:space-y-6">
-              <div className="relative bg-gradient-to-br from-orange-600 to-red-600 p-4 sm:p-6 md:p-8 rounded-2xl text-white overflow-hidden">
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-white/10 rounded-full -mr-16 sm:-mr-24 -mt-16 sm:-mt-24"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full -ml-12 sm:-ml-16 -mb-12 sm:-mb-16"></div>
-                
-                <div className="relative z-10 flex items-center gap-3 sm:gap-4 md:gap-6">
-                  {/* Scenario Icon */}
-                  <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl backdrop-blur-sm border-2 border-white/30 animate-pulse">
-                    🎭
-                  </div>
+            <div className="space-y-4">
+              <div className="p-5 sm:p-7 rounded-2xl border border-white/8" style={{background:'#111111'}}>
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-green-500/15 border border-green-500/30 rounded-2xl flex items-center justify-center text-2xl">🎭</div>
                   <div className="flex-1 min-w-0">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">{currentScenario.title}</h1>
-                    <p className="text-sm sm:text-base md:text-lg text-orange-100">🎮 Interactive Ethical Dilemma Simulation</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-white">{currentScenario.title}</h1>
+                    <p className="text-xs text-gray-500">Interactive ethical scenario</p>
                   </div>
                 </div>
               </div>
 
               {/* Scenario Video (if available) */}
               {currentScenario && currentScenario.videoUrl && (
-                <div className="relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-purple-500/50 p-3 sm:p-4 md:p-6 rounded-xl overflow-hidden">
-                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500/30 rounded-lg flex items-center justify-center text-lg sm:text-xl">
-                      🎥
-                    </div>
+                <div className="p-4 sm:p-5 rounded-2xl border border-white/8" style={{background:'#111111'}}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 bg-green-500/15 border border-green-500/30 rounded-lg flex items-center justify-center text-base">🎥</div>
                     <div>
-                      <h3 className="text-base sm:text-lg font-bold text-white">Scenario Context Video</h3>
-                      <p className="text-xs sm:text-sm text-purple-300">Watch for background context</p>
+                      <h3 className="text-sm font-bold text-white">Scenario Context Video</h3>
+                      <p className="text-xs text-gray-500">Watch for background context</p>
                     </div>
                   </div>
-                  <div className="aspect-video w-full min-h-[180px] sm:min-h-[250px] md:min-h-[350px] bg-black rounded-lg overflow-hidden shadow-xl">
+                  <div className="aspect-video w-full min-h-[180px] sm:min-h-[250px] bg-black rounded-xl overflow-hidden">
                     <iframe
                       className="w-full h-full"
                       src={currentScenario.videoUrl}
@@ -3195,152 +2918,46 @@ function App() {
                 </div>
               )}
 
-              {/* Cartoon Illustration Section */}
-              <div className="relative bg-gradient-to-br from-indigo-900/40 to-purple-900/40 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border-2 border-indigo-500/50 overflow-hidden">
-                <div className="flex flex-col md:flex-row gap-6 items-center">
-                  {/* Cartoon Visual Representation */}
-                  <div className="flex-shrink-0">
-                    <div className="relative w-48 h-48 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-2xl p-4 border-4 border-yellow-500/30">
-                      {/* Cartoon characters based on scenario */}
-                      <div className="text-center space-y-2">
-                        {currentScenario.id.includes('checkpoint') && (
-                          <>
-                            <div className="text-5xl animate-bounce">🚔</div>
-                            <div className="text-4xl">👮</div>
-                            <div className="flex justify-center gap-2">
-                              <span className="text-3xl">💰</span>
-                              <span className="text-2xl">→</span>
-                              <span className="text-3xl">👨</span>
-                            </div>
-                            <p className="text-xs text-yellow-300 font-bold">BRIBERY ATTEMPT</p>
-                          </>
-                        )}
-                        {currentScenario.id.includes('evidence') && (
-                          <>
-                            <div className="text-5xl animate-pulse">📁</div>
-                            <div className="flex justify-center gap-2">
-                              <span className="text-3xl">💵</span>
-                              <span className="text-2xl">❌</span>
-                              <span className="text-3xl">🔍</span>
-                            </div>
-                            <div className="text-4xl">🕵️</div>
-                            <p className="text-xs text-red-300 font-bold">EVIDENCE TAMPERING</p>
-                          </>
-                        )}
-                        {currentScenario.id.includes('gift') && (
-                          <>
-                            <div className="text-5xl animate-bounce">🎁</div>
-                            <div className="flex justify-center gap-2">
-                              <span className="text-3xl">👔</span>
-                              <span className="text-2xl">→</span>
-                              <span className="text-3xl">�</span>
-                            </div>
-                            <div className="text-3xl">🏠</div>
-                            <p className="text-xs text-orange-300 font-bold">CONFLICT OF INTEREST</p>
-                          </>
-                        )}
-                        {!currentScenario.id.includes('checkpoint') && 
-                         !currentScenario.id.includes('evidence') && 
-                         !currentScenario.id.includes('gift') && (
-                          <>
-                            <div className="text-5xl">⚖️</div>
-                            <div className="flex justify-center gap-2">
-                              <span className="text-3xl">👤</span>
-                              <span className="text-2xl">vs</span>
-                              <span className="text-3xl">📋</span>
-                            </div>
-                            <p className="text-xs text-blue-300 font-bold">ETHICAL DILEMMA</p>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Scenario Description with Comic Style */}
-                  <div className="flex-1">
-                    <div className="bg-white/10 backdrop-blur-sm p-3 sm:p-4 rounded-lg border-2 border-white/20 relative">
-                      <div className="absolute -top-3 left-4 bg-gradient-to-r from-yellow-400 to-orange-400 px-3 py-1 rounded-full text-xs font-bold text-gray-900">
-                        💭 SCENARIO STORY
-                      </div>
-                      <p className="text-xs sm:text-sm text-gray-400 mb-2 italic mt-2 sm:mt-0">You are in this situation...</p>
-                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 p-3 sm:p-4 md:p-5 rounded-lg border-l-4 border-orange-500">
-                        <p className="text-white text-base sm:text-lg leading-relaxed">
-                          {currentScenario.situation}
-                        </p>
-                      </div>
-                      
-                      {/* Narration Button */}
-                      <div className="mt-3 sm:mt-4 flex flex-col items-center gap-2">
-                        <button
-                          onClick={() => toggleNarration(currentScenario.situation)}
-                          className={`px-4 sm:px-6 py-2 sm:py-3 min-h-[48px] rounded-lg font-semibold text-white transition-smooth shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-100 flex items-center gap-2 text-sm sm:text-base touch-manipulation ${
-                            isNarrating 
-                              ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 animate-pulse' 
-                              : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'
-                          }`}
-                          aria-label={isNarrating ? 'Stop narration' : 'Listen to narration'}
-                          aria-pressed={isNarrating}
-                          title={isNarrating ? 'Stop narration' : 'Listen to scenario narration'}
-                        >
-                          {isNarrating ? (
-                            <>
-                              <span className="text-xl" aria-hidden="true">⏸️</span>
-                              <span>Stop Narration</span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="text-xl" aria-hidden="true">🎙️</span>
-                              <span>Listen to Scenario</span>
-                            </>
-                          )}
-                        </button>
-                        <p className="text-xs text-gray-400 italic">Click to hear the scenario read aloud</p>
-                        
-                        {/* Error Message */}
-                        {narrationError && (
-                          <div className="mt-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg max-w-md">
-                            <p className="text-red-300 text-sm flex items-center gap-2">
-                              <span className="text-xl">⚠️</span>
-                              <span>{narrationError}</span>
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Cartoon thought bubble */}
-                <div className="mt-4 flex items-center justify-center gap-2">
-                  <div className="bg-yellow-400/20 px-4 py-2 rounded-full border-2 border-yellow-400/40">
-                    <span className="text-sm text-yellow-200">💡 What's the RIGHT thing to do?</span>
-                  </div>
+              {/* Scenario Description */}
+              <div className="p-5 sm:p-7 rounded-2xl border border-white/8" style={{background:'#111111'}}>
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Situation</p>
+                <p className="text-white text-sm sm:text-base leading-relaxed mb-5">{currentScenario.situation}</p>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                  <button
+                    onClick={() => toggleNarration(currentScenario.situation)}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all touch-manipulation ${
+                      isNarrating
+                        ? 'border-red-500/40 text-red-400 bg-red-500/10'
+                        : 'border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+                    }`}
+                    aria-label={isNarrating ? 'Stop narration' : 'Listen to narration'}
+                  >
+                    <span>{isNarrating ? '⏸️' : '🎙️'}</span>
+                    <span>{isNarrating ? 'Stop' : 'Listen to scenario'}</span>
+                  </button>
+                  {narrationError && <p className="text-red-400 text-xs">{narrationError}</p>}
                 </div>
               </div>
 
-              {/* Continue Button - Shows before options */}
+              {/* Continue Button */}
               {!hasReadScenario && !scenarioResult && (
-                <div className="bg-gradient-to-br from-blue-900/40 to-indigo-900/40 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border-2 border-blue-500/50 text-center animate-fadeIn">
-                  <div className="mb-4 sm:mb-6">
-                    <p className="text-lg sm:text-xl text-white mb-2">📖 Take your time to read and understand the scenario above</p>
-                    <p className="text-sm sm:text-base text-gray-300">Think carefully about the ethical implications before making your choice</p>
-                  </div>
+                <div className="p-5 sm:p-6 rounded-2xl border border-white/8 text-center animate-fadeIn" style={{background:'#111111'}}>
+                  <p className="text-white font-semibold mb-1.5">Read the scenario carefully</p>
+                  <p className="text-gray-500 text-sm mb-5">Think about the ethical implications before making your choice</p>
                   <button
                     onClick={() => setHasReadScenario(true)}
-                    className="px-6 sm:px-8 py-3 sm:py-4 min-h-[56px] bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 active:from-green-800 active:to-emerald-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-100 transition-smooth flex items-center gap-2 sm:gap-3 mx-auto text-base sm:text-lg touch-manipulation"
+                    className="px-8 py-3.5 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white font-bold rounded-xl shadow-lg shadow-green-900/30 transition-all touch-manipulation text-sm"
                     aria-label="Continue to answer options"
                   >
-                    <span className="text-xl sm:text-2xl">✅</span>
-                    <span className="whitespace-nowrap sm:whitespace-normal">I've Read the Scenario - Show Options</span>
-                    <span className="text-xl sm:text-2xl">➡️</span>
+                    I've read it — Show options →
                   </button>
                 </div>
               )}
 
               {hasReadScenario && !scenarioResult ? (
-                <div className="bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border-2 border-gray-700 animate-fadeIn">
-                  <h2 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6">🤔 What would you do? Select your response:</h2>
-                  <div className="space-y-3 sm:space-y-4">
+                <div className="p-5 sm:p-7 rounded-2xl border border-white/8 animate-fadeIn" style={{background:'#111111'}}>
+                  <h2 className="text-sm font-bold text-white mb-4">What would you do?</h2>
+                  <div className="space-y-3">
                     {currentScenario.options.map((option, index) => (
                       <button
                         key={option.id}
@@ -3349,23 +2966,20 @@ function App() {
                           setScenarioResult(option);
                           setShowAnimation(true);
                         }}
-                        className={`w-full p-4 sm:p-5 md:p-6 min-h-[80px] text-left rounded-xl border-2 transition-smooth animate-fadeIn touch-manipulation ${
+                        className={`w-full p-4 text-left rounded-xl border transition-all touch-manipulation ${
                           scenarioAnswer === option.id
-                            ? 'bg-blue-600/20 border-blue-500 shadow-lg animate-pulse'
-                            : 'bg-gray-700/50 border-gray-600 hover:border-gray-500 active:border-gray-400 hover:bg-gray-700 active:bg-gray-600'
+                            ? 'border-green-500/50 bg-green-500/10'
+                            : 'border-white/8 hover:border-white/20'
                         }`}
-                        style={{ animationDelay: `${index * 0.1}s` }}
+                        style={scenarioAnswer !== option.id ? {background:'#1a1a1a'} : {}}
                         aria-label={`Option ${option.id.toUpperCase()}: ${option.text}`}
                         aria-pressed={scenarioAnswer === option.id}
                       >
-                        <div className="flex items-start gap-3 sm:gap-4">
-                          <div 
-                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold text-base sm:text-lg flex-shrink-0"
-                            aria-hidden="true"
-                          >
+                        <div className="flex items-start gap-3">
+                          <div className="w-7 h-7 rounded-full border border-white/15 flex items-center justify-center text-gray-400 font-bold text-xs flex-shrink-0">
                             {option.id.toUpperCase()}
                           </div>
-                          <p className="text-white text-base sm:text-lg leading-relaxed">{option.text}</p>
+                          <p className="text-gray-300 text-sm leading-relaxed">{option.text}</p>
                         </div>
                       </button>
                     ))}
@@ -3375,38 +2989,37 @@ function App() {
 
               {scenarioResult && (
                 <div 
-                  className={`p-8 rounded-xl border-2 animate-fadeIn ${
+                  className={`p-5 sm:p-7 rounded-2xl border animate-fadeIn ${
                     scenarioResult.correct 
-                      ? 'bg-green-600/20 border-green-500' 
-                      : 'bg-red-600/20 border-red-500'
+                      ? 'border-green-500/30' 
+                      : 'border-red-500/30'
                   }`}
+                  style={{background: scenarioResult.correct ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)'}}
                   role="alert"
                   aria-live="polite"
                   aria-atomic="true"
                 >
-                  <h2 className="text-2xl font-bold text-white mb-4">
-                    {scenarioResult.correct ? '✅ Correct Answer!' : '❌ Incorrect Answer'}
+                  <h2 className={`text-lg font-bold mb-3 ${scenarioResult.correct ? 'text-green-400' : 'text-red-400'}`}>
+                    {scenarioResult.correct ? '✅ Correct Answer' : '❌ Incorrect Answer'}
                   </h2>
                   
                   {/* Feedback Section */}
-                  <div className="bg-gray-900/50 p-6 rounded-lg mb-4">
-                    <p className="text-gray-100 text-lg leading-relaxed">{scenarioResult.feedback}</p>
+                  <div className="p-4 rounded-xl border border-white/8 mb-4" style={{background:'#1a1a1a'}}>
+                    <p className="text-gray-300 text-sm leading-relaxed">{scenarioResult.feedback}</p>
                   </div>
 
                   {/* Points and Consequence */}
                   {scenarioResult.points && (
-                    <div className={`p-4 rounded-lg mb-4 animate-scaleUp ${
-                      scenarioResult.points > 0 ? 'bg-green-700/30' : 'bg-red-700/30'
-                    }`}>
-                      <p className="text-white font-semibold">
+                    <div className={`p-3 rounded-xl border mb-3 ${scenarioResult.points > 0 ? 'border-green-500/20 bg-green-500/8' : 'border-red-500/20 bg-red-500/8'}`}>
+                      <p className={`text-sm font-semibold ${scenarioResult.points > 0 ? 'text-green-400' : 'text-red-400'}`}>
                         {scenarioResult.points > 0 ? '🎯' : '⚠️'} Points: {scenarioResult.points > 0 ? '+' : ''}{scenarioResult.points}
                       </p>
                     </div>
                   )}
 
                   {scenarioResult.consequence && (
-                    <div className="bg-yellow-900/30 border border-yellow-600 p-4 rounded-lg mb-4 animate-slideInRight">
-                      <p className="text-yellow-100">
+                    <div className="p-3 rounded-xl border border-yellow-500/20 mb-3" style={{background:'rgba(234,179,8,0.07)'}}>
+                      <p className="text-yellow-300 text-sm">
                         <strong>📋 Consequence:</strong> {scenarioResult.consequence}
                       </p>
                     </div>
@@ -3414,10 +3027,10 @@ function App() {
 
                   {/* Follow-up Question (Branching) */}
                   {scenarioResult.followUp && !scenarioBranch.includes(scenarioResult.id) && (
-                    <div className="mt-6 p-6 bg-gray-800/50 rounded-lg border border-blue-500 animate-slideInLeft">
-                      <h3 className="text-xl font-bold text-white mb-4">🔀 Follow-up Situation</h3>
-                      <p className="text-gray-200 mb-4">{scenarioResult.followUp.situation}</p>
-                      <div className="space-y-3">
+                    <div className="mt-4 p-4 rounded-xl border border-white/8 animate-fadeIn" style={{background:'#1a1a1a'}}>
+                      <h3 className="text-sm font-bold text-white mb-3">🔀 Follow-up Situation</h3>
+                      <p className="text-gray-400 text-sm mb-3">{scenarioResult.followUp.situation}</p>
+                      <div className="space-y-2">
                         {scenarioResult.followUp.options.map((followUpOption) => (
                           <button
                             key={followUpOption.id}
@@ -3431,7 +3044,8 @@ function App() {
                               }]);
                               alert(followUpOption.feedback);
                             }}
-                            className="w-full p-4 text-left rounded-lg bg-gray-700 hover:bg-gray-600 border border-gray-600 hover:border-blue-500 transition-smooth text-white"
+                            className="w-full p-3 text-left rounded-xl border border-white/8 hover:border-white/20 text-gray-300 text-sm transition-all touch-manipulation"
+                            style={{background:'#111111'}}
                             aria-label={`Follow-up option: ${followUpOption.text}`}
                           >
                             {followUpOption.text}
@@ -3443,13 +3057,13 @@ function App() {
 
                   {/* Feedback History */}
                   {feedbackHistory.length > 0 && (
-                    <div className="mt-6 p-4 bg-gray-800/30 rounded-lg">
-                      <h4 className="text-lg font-semibold text-white mb-3">📊 Your Decision Path</h4>
-                      <div className="branch-path">
+                    <div className="mt-4 p-4 rounded-xl border border-white/8" style={{background:'#1a1a1a'}}>
+                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Your Decision Path</h4>
+                      <div className="space-y-2">
                         {feedbackHistory.map((item, index) => (
-                          <div key={index} className="branch-node mb-3">
-                            <p className="text-sm text-gray-400">{item.scenario}</p>
-                            <p className={`text-white ${item.correct ? 'text-green-400' : 'text-red-400'}`}>
+                          <div key={index} className="text-sm">
+                            <p className="text-gray-500 text-xs">{item.scenario}</p>
+                            <p className={`${item.correct ? 'text-green-400' : 'text-red-400'}`}>
                               {item.correct ? '✓' : '✗'} {item.choice}
                             </p>
                           </div>
@@ -3458,7 +3072,7 @@ function App() {
                     </div>
                   )}
 
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
+                  <div className="flex flex-col sm:flex-row gap-3 mt-5">
                     <button
                       onClick={() => {
                         setCurrentScenario(null);
@@ -3468,15 +3082,11 @@ function App() {
                         setScenarioBranch([]);
                         setShowKeyLearning(true);
                         setCurrentStep('keyPoints');
-                        // Scroll to Key Learning Points section
                         setTimeout(() => {
-                          keyLearningRef.current?.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'start' 
-                          });
+                          keyLearningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }, 100);
                       }}
-                      className="w-full sm:w-auto px-5 sm:px-6 py-3 min-h-[48px] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg font-semibold transition-smooth touch-manipulation"
+                      className="flex-1 py-3 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
                       aria-label="Go back to course overview"
                     >
                       ← Back to Course
@@ -3494,7 +3104,7 @@ function App() {
                             setScenarioResult(null);
                             setHasReadScenario(false);
                           }}
-                          className="w-full sm:w-auto px-5 sm:px-6 py-3 min-h-[48px] bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white rounded-lg font-semibold transition-all touch-manipulation"
+                          className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
                         >
                           Next Scenario ({currentIndex + 2}/{currentCourse.scenarios.length}) →
                         </button>
@@ -3507,17 +3117,13 @@ function App() {
                             setShowKeyLearning(true);
                             setClickedLearningPoints([]);
                             setCurrentStep('keyPoints');
-                            // Scroll to Key Learning Points section after a brief delay
                             setTimeout(() => {
-                              keyLearningRef.current?.scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'start' 
-                              });
+                              keyLearningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                             }, 100);
                           }}
-                          className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-all"
+                          className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
                         >
-                          ✓ All Scenarios Complete - Review Key Learning Points →
+                          ✓ Review Key Learning Points →
                         </button>
                       );
                     })()}
@@ -3528,150 +3134,88 @@ function App() {
           )}
         </div>
       ) : view === 'profile' ? (
-        <div className="min-h-screen px-4 py-6 sm:p-8">
-          <div className="max-w-6xl mx-auto">
-            {/* Profile Header */}
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-2xl sm:text-3xl shadow-lg flex-shrink-0">
-                  👤
-                </div>
-                <h1 className="text-2xl sm:text-4xl font-bold text-white">My Profile</h1>
+        <div className="min-h-screen px-4 sm:px-6 py-6 sm:py-8" style={{background:'#0a0a0a'}}>
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center justify-between mb-8 pb-5 border-b border-white/8">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-green-500/20 border border-green-500/30 rounded-full flex items-center justify-center">👤</div>
+                <h1 className="text-white font-bold text-lg">My Profile</h1>
               </div>
-              <button 
-                onClick={() => setView('dashboard')}
-                className="w-full sm:w-auto px-5 sm:px-6 py-3 min-h-[44px] bg-gradient-to-r from-blue-600 to-purple-600 active:from-blue-700 active:to-purple-700 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all font-semibold shadow-lg touch-manipulation text-sm sm:text-base"
-              >
-                ← Back to Dashboard
-              </button>
+              <button onClick={() => setView('dashboard')} className="text-gray-500 hover:text-white text-sm transition-colors touch-manipulation">← Dashboard</button>
             </div>
 
-            {/* Profile Information Card */}
-            <div className="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border-2 border-purple-500/30 mb-6 sm:mb-8 shadow-xl">
-              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
-                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-3xl sm:text-5xl shadow-lg flex-shrink-0">
-                  👤
-                </div>
-                <div className="flex-1 w-full">
-                  <h2 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{userName || 'User'}</h2>
-                  <p className="text-blue-300 text-base sm:text-lg mb-3 sm:mb-4">{userEmail || 'No email provided'}</p>
-                  {userProfile ? (
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-2 sm:mt-4">
-                      <div className="bg-gray-800/50 p-3 rounded-xl">
-                        <p className="text-gray-400 text-xs">Sector</p>
-                        <p className="text-white font-semibold text-sm sm:text-base mt-0.5">
-                          {sectors.find(s => s.value === selectedSector)?.label || selectedSector}
-                        </p>
-                      </div>
-                      <div className="bg-gray-800/50 p-3 rounded-xl">
-                        <p className="text-gray-400 text-xs">Role</p>
-                        <p className="text-white font-semibold text-sm sm:text-base mt-0.5">{userProfile.role}</p>
-                      </div>
-                      <div className="bg-gray-800/50 p-3 rounded-xl">
-                        <p className="text-gray-400 text-xs">Department</p>
-                        <p className="text-white font-semibold text-sm sm:text-base mt-0.5">{userProfile.department}</p>
-                      </div>
-                      <div className="bg-gray-800/50 p-3 rounded-xl">
-                        <p className="text-gray-400 text-xs">Rank / Grade</p>
-                        <p className="text-white font-semibold text-sm sm:text-base mt-0.5">{userProfile.rank}</p>
-                      </div>
+            <div className="p-5 sm:p-7 rounded-2xl border border-white/8 mb-4" style={{background:'#111111'}}>
+              <h2 className="text-xl font-bold text-white mb-0.5">{userName || 'User'}</h2>
+              <p className="text-gray-500 text-sm mb-5">{userEmail || ''}</p>
+              {userProfile ? (
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { label: 'Sector', value: sectors.find(s => s.value === selectedSector)?.label || selectedSector },
+                    { label: 'Role', value: userProfile.role },
+                    { label: 'Department', value: userProfile.department },
+                    { label: 'Rank / Grade', value: userProfile.rank },
+                  ].map((item) => (
+                    <div key={item.label} className="p-3 rounded-xl border border-white/5" style={{background:'#1a1a1a'}}>
+                      <p className="text-gray-600 text-xs mb-0.5">{item.label}</p>
+                      <p className="text-white font-semibold text-sm">{item.value}</p>
                     </div>
-                  ) : (
-                    <p className="text-gray-400 text-sm mt-4">Loading profile information...</p>
-                  )}
+                  ))}
                 </div>
-              </div>
+              ) : <p className="text-gray-500 text-sm">Loading...</p>}
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
-              <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-green-500/30 text-center">
-                <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">🎓</div>
-                <p className="text-gray-400 text-xs sm:text-sm">Completed</p>
-                <p className="text-2xl sm:text-3xl font-bold text-white">{completedCourses.length}</p>
-              </div>
-              <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-blue-500/30 text-center">
-                <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">⭐</div>
-                <p className="text-gray-400 text-xs sm:text-sm">Level</p>
-                <p className="text-base sm:text-2xl font-bold text-white">
-                  {completedCourses.length === 0 ? 'Beginner' : 
-                   completedCourses.length < 3 ? 'Intermediate' : 
-                   completedCourses.length < 5 ? 'Advanced' : 'Expert'}
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-purple-500/30 text-center">
-                <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">🔥</div>
-                <p className="text-gray-400 text-xs sm:text-sm">Modules</p>
-                <p className="text-2xl sm:text-3xl font-bold text-white">{userProfile?.courses?.length || 0}</p>
-              </div>
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              {[
+                { icon: '🎓', label: 'Completed', value: completedCourses.length },
+                { icon: '⭐', label: 'Level', value: completedCourses.length === 0 ? 'Beginner' : completedCourses.length < 3 ? 'Inter.' : completedCourses.length < 5 ? 'Advanced' : 'Expert' },
+                { icon: '📚', label: 'Modules', value: userProfile?.courses?.length || 0 },
+              ].map((s) => (
+                <div key={s.label} className="p-4 rounded-xl border border-white/8 text-center" style={{background:'#111111'}}>
+                  <div className="text-xl mb-1">{s.icon}</div>
+                  <p className="text-white font-bold text-sm">{s.value}</p>
+                  <p className="text-gray-600 text-xs">{s.label}</p>
+                </div>
+              ))}
             </div>
 
-            {/* Completed Courses */}
             {completedCourses.length > 0 && (
-              <div className="bg-gray-800/50 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border-2 border-gray-700 mb-6 sm:mb-8">
-                <h3 className="text-lg sm:text-2xl font-bold text-white mb-4 sm:mb-6">📚 Completed Courses</h3>
-                <div className="space-y-3">
+              <div className="p-5 rounded-2xl border border-white/8 mb-4" style={{background:'#111111'}}>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Completed Courses</p>
+                <div className="space-y-2">
                   {completedCourses.map((course, index) => (
-                    <div key={index} className="bg-gray-700/50 p-3 sm:p-4 rounded-lg border border-gray-600">
-                      <div className="flex justify-between items-center gap-2">
-                        <div className="min-w-0 flex-1">
-                          <h4 className="text-sm sm:text-lg font-semibold text-white truncate">{course.title || course.courseName}</h4>
-                          <p className="text-gray-400 text-xs sm:text-sm">Completed on {course.completedDate}</p>
-                        </div>
-                        <div className="text-green-400 text-xl sm:text-2xl flex-shrink-0">✓</div>
+                    <div key={index} className="flex justify-between items-center p-3 rounded-xl border border-white/5" style={{background:'#1a1a1a'}}>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white text-sm font-semibold truncate">{course.title || course.courseName}</p>
+                        <p className="text-gray-500 text-xs">{course.completedDate}</p>
                       </div>
+                      <span className="text-green-400 text-sm ml-3">✓</span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Career Recommendations */}
             {userProfile && completedCourses.length > 0 && (() => {
               const recommendations = generateCareerRecommendations();
               return (
-                <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 backdrop-blur-sm p-5 sm:p-8 rounded-2xl border-2 border-purple-500/30">
-                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                    <span className="text-3xl sm:text-4xl">🌟</span>
-                    <h3 className="text-lg sm:text-2xl font-bold text-white">Career Recommendations</h3>
-                  </div>
+                <div className="p-5 rounded-2xl border border-white/8 mb-4" style={{background:'#111111'}}>
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Career Recommendations</p>
                   {recommendations.recommendations.length > 0 && (
-                    <div className="mb-4 sm:mb-6">
-                      <h4 className="text-base sm:text-lg font-semibold text-purple-300 mb-2 sm:mb-3">📈 Recommended Career Paths</h4>
-                      <ul className="space-y-2">
-                        {recommendations.recommendations.map((rec, index) => (
-                          <li key={index} className="flex items-start gap-2 text-gray-300 text-sm sm:text-base">
-                            <span className="text-purple-400 flex-shrink-0">●</span>
-                            <span>{rec}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="mb-4">
+                      <p className="text-green-400 text-xs font-semibold mb-2">Recommended Paths</p>
+                      <ul className="space-y-1">{recommendations.recommendations.map((rec, i) => (<li key={i} className="text-gray-400 text-sm flex gap-2"><span className="text-green-500">→</span>{rec}</li>))}</ul>
                     </div>
                   )}
                   {recommendations.strengths.length > 0 && (
-                    <div className="mb-4 sm:mb-6">
-                      <h4 className="text-base sm:text-lg font-semibold text-blue-300 mb-2 sm:mb-3">💪 Your Strengths</h4>
-                      <ul className="space-y-2">
-                        {recommendations.strengths.map((strength, index) => (
-                          <li key={index} className="flex items-start gap-2 text-gray-300 text-sm sm:text-base">
-                            <span className="text-blue-400 flex-shrink-0">✓</span>
-                            <span>{strength}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="mb-4">
+                      <p className="text-blue-400 text-xs font-semibold mb-2">Your Strengths</p>
+                      <ul className="space-y-1">{recommendations.strengths.map((s, i) => (<li key={i} className="text-gray-400 text-sm flex gap-2"><span className="text-blue-500">✓</span>{s}</li>))}</ul>
                     </div>
                   )}
                   {recommendations.suitability.length > 0 && (
                     <div>
-                      <h4 className="text-base sm:text-lg font-semibold text-green-300 mb-2 sm:mb-3">🎯 Well-Suited For</h4>
-                      <ul className="space-y-2">
-                        {recommendations.suitability.map((suit, index) => (
-                          <li key={index} className="flex items-start gap-2 text-gray-300 text-sm sm:text-base">
-                            <span className="text-green-400 flex-shrink-0">→</span>
-                            <span>{suit}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      <p className="text-purple-400 text-xs font-semibold mb-2">Well-Suited For</p>
+                      <ul className="space-y-1">{recommendations.suitability.map((s, i) => (<li key={i} className="text-gray-400 text-sm flex gap-2"><span className="text-purple-500">·</span>{s}</li>))}</ul>
                     </div>
                   )}
                 </div>
@@ -3679,16 +3223,11 @@ function App() {
             })()}
 
             {completedCourses.length === 0 && (
-              <div className="bg-gray-800/30 backdrop-blur-sm p-8 sm:p-12 rounded-2xl border-2 border-gray-700 text-center">
-                <div className="text-5xl sm:text-6xl mb-4">📚</div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">No Courses Completed Yet</h3>
-                <p className="text-gray-400 mb-6 text-sm sm:text-base">Start learning to unlock career recommendations and achievements!</p>
-                <button
-                  onClick={() => setView('dashboard')}
-                  className="w-full sm:w-auto px-8 py-3 min-h-[44px] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg font-semibold transition-all touch-manipulation"
-                >
-                  Go to Dashboard →
-                </button>
+              <div className="p-8 rounded-2xl border border-white/8 text-center" style={{background:'#111111'}}>
+                <div className="text-4xl mb-3">📚</div>
+                <p className="text-white font-bold mb-1">No courses completed yet</p>
+                <p className="text-gray-500 text-sm mb-5">Complete modules to unlock career recommendations.</p>
+                <button onClick={() => setView('dashboard')} className="px-6 py-2.5 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm touch-manipulation transition-all">Go to Dashboard →</button>
               </div>
             )}
           </div>
