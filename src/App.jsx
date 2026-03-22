@@ -2497,219 +2497,198 @@ function App() {
           </div>
         </div>
       ) : view === 'course' ? (
-        <div className="px-4 sm:px-6 py-5 max-w-4xl mx-auto" style={{minHeight:'100vh'}}>
+        <div className="min-h-screen" style={{background:'#0a0a0a'}}>
           <a href="#main-content" className="skip-link">Skip to main content</a>
 
-          {/* Progress Indicator */}
-          {currentCourse && !currentScenario && (
-            <div className="mb-5 p-3 rounded-xl border border-white/8" style={{background:'#111111'}}>
-              <div className="flex gap-1.5">
-                {['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].map((step, index) => (
-                  <div key={step} className={`flex-1 h-1 rounded-full transition-all duration-500 ${
-                    step === currentStep ? 'bg-green-500' : 
-                    ['video', 'scenarios', 'keyPoints', 'laws', 'assessment'].indexOf(currentStep) > index ? 'bg-green-500/40' : 'bg-white/8'
+          {/* Top nav bar */}
+          <div className="sticky top-0 z-10 border-b border-white/8 px-4 sm:px-6 py-3 flex items-center justify-between" style={{background:'#0a0a0a'}}>
+            <button
+              onClick={() => { setView('dashboard'); setCurrentCourse(null); setCurrentScenario(null); setScenarioResult(null); setCurrentStep('video'); }}
+              className="text-gray-500 hover:text-white text-sm transition-colors touch-manipulation flex items-center gap-1.5"
+            >
+              ← Back
+            </button>
+            {currentCourse && (
+              <p className="text-white text-sm font-semibold truncate max-w-[180px] sm:max-w-xs">{currentCourse.title}</p>
+            )}
+            {/* Step pills */}
+            {currentCourse && !currentScenario && (
+              <div className="flex items-center gap-1">
+                {['video', 'scenarios', 'keyPoints', 'assessment'].map((step, index) => (
+                  <div key={step} className={`w-5 h-1 rounded-full transition-all duration-500 ${
+                    step === currentStep ? 'bg-green-500' :
+                    ['video', 'scenarios', 'keyPoints', 'assessment'].indexOf(currentStep) > index ? 'bg-green-500/40' : 'bg-white/10'
                   }`} />
                 ))}
               </div>
-            </div>
-          )}
-
-          <div className="mb-5 flex items-center justify-between">
-            <button 
-              onClick={() => { setView('dashboard'); setCurrentCourse(null); setCurrentScenario(null); setScenarioResult(null); setCurrentStep('video'); }}
-              className="text-gray-500 hover:text-white text-sm transition-colors touch-manipulation"
-            >
-              ← Dashboard
-            </button>
+            )}
           </div>
 
-          {currentCourse && !currentScenario && (
-            <div className="space-y-4 sm:space-y-6">
-              {/* Course Header */}
-              <div className="p-5 sm:p-7 rounded-2xl border border-white/8 text-white" style={{background:'#111111'}}>
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-green-500/15 border border-green-500/30 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl">
-                    {currentCourse.id === 1 ? '🚫' : currentCourse.id === 2 ? '🛡️' : currentCourse.id === 3 ? '⚖️' : '🔍'}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h1 className="text-xl sm:text-2xl font-bold text-white mb-1">{currentCourse.title}</h1>
-                    <p className="text-sm text-gray-400 mb-3">{currentCourse.description}</p>
-                    <div className="flex flex-wrap gap-2 text-xs">
-                      <span className="px-2.5 py-1 bg-white/5 border border-white/8 rounded-lg text-gray-400 whitespace-nowrap">⏱️ {currentCourse.duration}</span>
-                      <span className="px-2.5 py-1 bg-white/5 border border-white/8 rounded-lg text-gray-400 whitespace-nowrap">📊 {currentCourse.progress}% complete</span>
-                      <span className="px-2.5 py-1 bg-white/5 border border-white/8 rounded-lg text-gray-400 whitespace-nowrap">🎯 {currentCourse.scenarios?.length || 0} scenarios</span>
-                    </div>
-                  </div>
+          <div className="px-4 sm:px-6 py-6 max-w-2xl mx-auto" id="main-content">
+
+          {/* ── STEP: VIDEO ── */}
+          {currentCourse && !currentScenario && currentStep === 'video' && (
+            <div className="space-y-5">
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Step 1 of 4</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-white leading-snug">{currentCourse.title}</h1>
+                <p className="text-sm text-gray-400 mt-1">{currentCourse.description}</p>
+              </div>
+
+              <div className="rounded-2xl overflow-hidden border border-white/8 bg-black">
+                <div className="aspect-video w-full">
+                  <iframe
+                    className="w-full h-full"
+                    src={
+                      userProfile?.sector === 'police' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
+                      userProfile?.sector === 'civil' ? 'https://www.youtube.com/embed/3ilFN6NaHVk' :
+                      userProfile?.sector === 'immigration' ? 'https://www.youtube.com/embed/lwfijBPReoY' :
+                      'https://www.youtube.com/embed/eeM1Ga76bA4'
+                    }
+                    title={`${currentCourse.title} - Training Video`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
                 </div>
               </div>
 
-              {/* 1. VIDEO TRAINING */}
-              <div id="video-section" className="p-5 sm:p-7 rounded-2xl border border-white/8 scroll-mt-4" style={{background:'#111111'}}>
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 bg-green-500/15 border border-green-500/30 rounded-xl flex items-center justify-center text-lg">🎥</div>
-                  <div>
-                    <h2 className="text-base sm:text-lg font-bold text-white">Step 1: Video Training</h2>
-                    <p className="text-xs text-gray-500">Watch before continuing</p>
-                  </div>
-                </div>
-                <div className="p-3 rounded-xl border border-white/5 mb-5" style={{background:'#1a1a1a'}}>
-                  <p className="text-gray-400 text-sm">📺 Watch this training video to understand the core concepts and real-world applications.</p>
-                </div>
-                <div className="rounded-xl border border-white/8 overflow-hidden" style={{background:'#0a0a0a'}}>
-                  <div className="aspect-video w-full min-h-[200px] sm:min-h-[300px] bg-black">
-                    <iframe
-                      className="w-full h-full"
-                      src={
-                        userProfile?.sector === 'police' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
-                        userProfile?.sector === 'civil' ? 'https://www.youtube.com/embed/3ilFN6NaHVk' :
-                        userProfile?.sector === 'immigration' ? 'https://www.youtube.com/embed/lwfijBPReoY' :
-                        userProfile?.sector === 'private' ? 'https://www.youtube.com/embed/eeM1Ga76bA4' :
-                        'https://www.youtube.com/embed/eeM1Ga76bA4'
-                      }
-                      title={`${currentCourse.title} - Training Video`}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </div>
+              <p className="text-gray-500 text-xs text-center">Watch the video, then continue to the scenarios below.</p>
+
+              <button
+                onClick={() => setCurrentStep('scenarios')}
+                className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 touch-manipulation transition-all"
+              >
+                Continue to Scenarios →
+              </button>
+            </div>
+          )}
+
+          {/* ── STEP: SCENARIOS LIST ── */}
+          {currentCourse && !currentScenario && currentStep === 'scenarios' && (
+            <div className="space-y-5">
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Step 2 of 4</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-white">Scenarios</h1>
+                <p className="text-sm text-gray-400 mt-1">Work through each situation and make a decision. Complete all to continue.</p>
               </div>
 
-              {/* 2. INTERACTIVE SCENARIOS */}
-              {currentCourse.scenarios && currentCourse.scenarios.length > 0 && (
-                <div className="p-5 sm:p-7 rounded-2xl border border-white/8" style={{background:'#111111'}}>
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-10 h-10 bg-green-500/15 border border-green-500/30 rounded-xl flex items-center justify-center text-lg">🎭</div>
-                    <div>
-                      <h2 className="text-base sm:text-lg font-bold text-white">Step 2: Interactive Scenarios</h2>
-                      <p className="text-xs text-gray-500">Practice with real-world situations</p>
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-xl border border-white/5 mb-5" style={{background:'#1a1a1a'}}>
-                    <p className="text-gray-400 text-sm">🎯 Work through realistic ethical scenarios. Choose the best course of action based on what you've learned.</p>
-                  </div>
-                  <div className="space-y-3">
-                    {currentCourse.scenarios.map((scenario, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => {
-                          setCurrentScenario(scenario);
-                          setScenarioAnswer('');
-                          setScenarioResult(null);
-                          setHasReadScenario(false);
-                          setCurrentStep('scenarios');
-                        }}
-                        className="w-full p-4 rounded-xl border border-white/8 hover:border-green-500/40 text-left transition-all touch-manipulation group"
-                        style={{background:'#1a1a1a'}}
-                        aria-label={`Practice scenario ${idx + 1}: ${scenario.title}`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="flex-shrink-0 w-10 h-10 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center justify-center text-lg group-hover:border-green-500/50 transition-all">
-                            {idx === 0 ? '🚦' : idx === 1 ? '🔍' : '📋'}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-semibold text-white group-hover:text-green-400 transition-colors">Scenario {idx + 1}: {scenario.title}</h3>
-                            <p className="text-xs text-gray-500 mt-0.5">Click to begin</p>
-                          </div>
-                          <span className="text-gray-600 group-hover:text-green-400 transition-colors text-sm">→</span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+              {/* Completion indicator */}
+              {currentCourse.scenarios && (
+                <div className="flex items-center gap-2">
+                  {currentCourse.scenarios.map((s, idx) => {
+                    const done = completedCourses.some(c => c.courseId === currentCourse.id) ||
+                      (currentCourse._completedScenarios || []).includes(s.id);
+                    return (
+                      <div key={idx} className={`flex-1 h-1 rounded-full ${done ? 'bg-green-500' : 'bg-white/10'}`} />
+                    );
+                  })}
                 </div>
               )}
 
-              {/* 3. KEY LEARNING POINTS */}
-              {currentCourse.content && showKeyLearning && (
-                <div ref={keyLearningRef} className="p-5 sm:p-7 rounded-2xl border border-white/8 animate-fadeIn" id="main-content" style={{background:'#111111'}}>
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-10 h-10 bg-green-500/15 border border-green-500/30 rounded-xl flex items-center justify-center text-lg">🎯</div>
-                    <div>
-                      <h2 className="text-base sm:text-lg font-bold text-white">Step 3: Key Learning Points</h2>
-                      <p className="text-xs text-gray-500">Review essential takeaways</p>
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-xl border border-white/5 mb-5" style={{background:'#1a1a1a'}}>
-                    <p className="text-gray-400 text-sm" role="status" aria-live="polite">
-                      📝 Click each point to review. ({clickedLearningPoints.length}/{currentCourse.content.keyPoints.length} reviewed)
-                    </p>
-                  </div>
-                  <div className="grid gap-3" role="list" aria-label="Key learning points">
-                    {currentCourse.content.keyPoints.map((point, idx) => {
-                      const isClicked = clickedLearningPoints.includes(idx);
-                      return (
-                          <button
-                            key={idx}
-                            onClick={() => {
-                              if (!isClicked) {
-                                setClickedLearningPoints([...clickedLearningPoints, idx]);
-                                if (clickedLearningPoints.length + 1 === currentCourse.content.keyPoints.length) {
-                                  setCurrentStep('laws');
-                                }
-                              }
-                            }}
-                            className={`flex items-start gap-3 p-4 rounded-xl border transition-all text-left touch-manipulation ${
-                              isClicked
-                                ? 'border-green-500/40 cursor-default'
-                                : 'border-white/8 hover:border-green-500/30 cursor-pointer'
-                            }`}
-                            style={{background: isClicked ? 'rgba(34,197,94,0.08)' : '#1a1a1a', animationDelay: `${idx * 0.05}s`}}
-                            aria-label={`Learning point ${idx + 1}: ${point}`}
-                            aria-pressed={isClicked}
-                            role="listitem"
-                          >
-                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs transition-all ${
-                              isClicked ? 'bg-green-500' : 'bg-white/10 border border-white/15'
-                            }`}>
-                              {isClicked ? '✓' : idx + 1}
-                            </div>
-                            <span className={`text-sm leading-relaxed ${
-                              isClicked ? 'text-green-400' : 'text-gray-300'
-                            }`}>{point}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                </div>
-              )}
-
-              {/* TAKE ASSESSMENT BUTTON */}
-              {showKeyLearning && clickedLearningPoints.length === currentCourse.content.keyPoints.length && (
-                <div className="flex justify-center pt-4 animate-fadeIn">
+              <div className="space-y-3">
+                {currentCourse.scenarios && currentCourse.scenarios.map((scenario, idx) => (
                   <button
+                    key={idx}
                     onClick={() => {
-                      setShowQuiz(true);
-                      setQuizAnswers({});
-                      setQuizResult(null);
-                      setCurrentStep('assessment');
+                      setCurrentScenario(scenario);
+                      setScenarioAnswer('');
+                      setScenarioResult(null);
+                      setHasReadScenario(false);
                     }}
-                    className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 touch-manipulation transition-all"
-                    aria-label="Start final assessment with 5 questions"
+                    className="w-full p-4 rounded-xl border border-white/8 hover:border-green-500/40 text-left transition-all touch-manipulation group"
+                    style={{background:'#111111'}}
                   >
-                    📝 Take Final Assessment (5 Questions)
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-xs font-bold text-gray-400 group-hover:border-green-500/40 group-hover:text-green-400 transition-all">
+                        {idx + 1}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-white group-hover:text-green-400 transition-colors truncate">{scenario.title}</p>
+                      </div>
+                      <span className="text-gray-600 group-hover:text-green-400 transition-colors text-sm flex-shrink-0">→</span>
+                    </div>
                   </button>
-                </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => { setShowKeyLearning(true); setClickedLearningPoints([]); setCurrentStep('keyPoints'); }}
+                className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-semibold text-sm touch-manipulation transition-all"
+              >
+                Skip to Key Points →
+              </button>
+            </div>
+          )}
+
+          {/* ── STEP: KEY LEARNING POINTS ── */}
+          {currentCourse && !currentScenario && currentStep === 'keyPoints' && currentCourse.content && (
+            <div ref={keyLearningRef} className="space-y-5">
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Step 3 of 4</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-white">Key Learning Points</h1>
+                <p className="text-sm text-gray-400 mt-1">
+                  Review each point before taking the assessment. ({clickedLearningPoints.length}/{currentCourse.content.keyPoints.length} reviewed)
+                </p>
+              </div>
+
+              <div className="space-y-2" role="list">
+                {currentCourse.content.keyPoints.map((point, idx) => {
+                  const isClicked = clickedLearningPoints.includes(idx);
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        if (!isClicked) {
+                          setClickedLearningPoints(prev => [...prev, idx]);
+                        }
+                      }}
+                      className={`w-full flex items-start gap-3 p-4 rounded-xl border transition-all text-left touch-manipulation ${
+                        isClicked ? 'border-green-500/30 cursor-default' : 'border-white/8 hover:border-white/20 cursor-pointer'
+                      }`}
+                      style={{background: isClicked ? 'rgba(34,197,94,0.07)' : '#111111'}}
+                      aria-pressed={isClicked}
+                      role="listitem"
+                    >
+                      <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all mt-0.5 ${
+                        isClicked ? 'bg-green-500 text-white' : 'border border-white/15 text-gray-500'
+                      }`}>
+                        {isClicked ? '✓' : idx + 1}
+                      </div>
+                      <span className={`text-sm leading-relaxed ${isClicked ? 'text-green-400' : 'text-gray-300'}`}>{point}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {clickedLearningPoints.length === currentCourse.content.keyPoints.length ? (
+                <button
+                  onClick={() => { setShowQuiz(true); setQuizAnswers({}); setQuizResult(null); setCurrentStep('assessment'); }}
+                  className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 touch-manipulation transition-all"
+                >
+                  Take the Assessment →
+                </button>
+              ) : (
+                <p className="text-center text-gray-600 text-xs">Review all {currentCourse.content.keyPoints.length} points to unlock the assessment</p>
               )}
             </div>
           )}
 
-          {/* Quiz Assessment */}
+          </div>
+
+          {/* ── STEP: ASSESSMENT ── */}
           {currentCourse && showQuiz && !quizResult && (
-            <div className="space-y-4">
-              <div className="p-5 sm:p-7 rounded-2xl border border-white/8" style={{background:'#111111'}}>
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-green-500/15 border border-green-500/30 rounded-2xl flex items-center justify-center text-2xl">📝</div>
-                  <div>
-                    <h1 className="text-lg sm:text-xl font-bold text-white">Step 5: Final Assessment</h1>
-                    <p className="text-xs text-gray-500">5 questions · Pass mark: 80% (4/5 correct)</p>
-                  </div>
-                </div>
+            <div className="px-4 sm:px-6 py-6 max-w-2xl mx-auto space-y-4">
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Step 4 of 4</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-white">Final Assessment</h1>
+                <p className="text-sm text-gray-400 mt-1">5 questions · Pass mark: 80%</p>
               </div>
 
               {currentCourse.quiz && currentCourse.quiz.map((question, qIdx) => (
                 <div key={question.id} className="p-5 rounded-xl border border-white/8" style={{background:'#111111'}}>
                   <div className="flex items-start gap-3 mb-4">
-                    <div className="flex-shrink-0 w-8 h-8 bg-green-500/15 border border-green-500/30 rounded-full flex items-center justify-center text-green-400 font-bold text-xs">
+                    <div className="flex-shrink-0 w-7 h-7 bg-white/8 border border-white/15 rounded-full flex items-center justify-center text-gray-400 font-bold text-xs">
                       {qIdx + 1}
                     </div>
                     <h3 className="text-sm font-semibold text-white leading-snug">{question.question}</h3>
@@ -2719,7 +2698,7 @@ function App() {
                       <button
                         key={option.id}
                         onClick={() => setQuizAnswers({...quizAnswers, [question.id]: option.id})}
-                        className={`w-full p-3 min-h-[48px] text-left rounded-xl border transition-all touch-manipulation ${
+                        className={`w-full p-3 text-left rounded-xl border transition-all touch-manipulation ${
                           quizAnswers[question.id] === option.id
                             ? 'border-green-500/50 bg-green-500/10'
                             : 'border-white/8 hover:border-white/20'
@@ -2728,9 +2707,7 @@ function App() {
                       >
                         <div className="flex items-center gap-3">
                           <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                            quizAnswers[question.id] === option.id
-                              ? 'border-green-500 bg-green-500'
-                              : 'border-white/20'
+                            quizAnswers[question.id] === option.id ? 'border-green-500 bg-green-500' : 'border-white/20'
                           }`}>
                             {quizAnswers[question.id] === option.id && <span className="text-white text-xs">✓</span>}
                           </div>
@@ -2744,18 +2721,10 @@ function App() {
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
-                  onClick={() => {
-                    setShowQuiz(false);
-                    setQuizAnswers({});
-                    setShowKeyLearning(true);
-                    setCurrentStep('laws');
-                    setTimeout(() => {
-                      keyLearningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
-                  }}
+                  onClick={() => { setShowQuiz(false); setQuizAnswers({}); setCurrentStep('keyPoints'); }}
                   className="px-5 py-3 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
                 >
-                  ← Back to Course
+                  ← Review Points
                 </button>
                 <button
                   onClick={() => {
@@ -2783,20 +2752,18 @@ function App() {
                   disabled={Object.keys(quizAnswers).length < (currentCourse.quiz?.length || 0)}
                   className="flex-1 py-3 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation"
                 >
-                  Submit Assessment →
+                  Submit →
                 </button>
               </div>
             </div>
           )}
 
-          {/* Quiz Result */}
-          {quizResult && (
-            <div className="space-y-4">
-              <div className={`p-8 sm:p-10 rounded-2xl border text-center ${
-                quizResult.passed 
-                  ? 'border-green-500/30 bg-green-500/8' 
-                  : 'border-red-500/30 bg-red-500/8'
-              }`} style={{background: quizResult.passed ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)'}}>
+          {/* ── QUIZ RESULT ── */}
+          {currentCourse && quizResult && (
+            <div className="px-4 sm:px-6 py-6 max-w-2xl mx-auto space-y-4">
+              <div className={`p-8 sm:p-10 rounded-2xl border text-center`}
+                style={{background: quizResult.passed ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)',
+                        borderColor: quizResult.passed ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}}>
                 <div className="text-5xl mb-4">{quizResult.passed ? '🎉' : '📚'}</div>
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2">
                   {quizResult.passed ? 'You Passed!' : 'Not Passed'}
@@ -2804,326 +2771,148 @@ function App() {
                 <div className={`text-5xl font-extrabold mb-3 ${quizResult.passed ? 'text-green-400' : 'text-red-400'}`}>
                   {quizResult.percentage}%
                 </div>
-                <p className="text-gray-400 text-sm mb-5">
-                  {quizResult.correct} of {quizResult.total} questions correct
+                <p className="text-gray-400 text-sm mb-5">{quizResult.correct} of {quizResult.total} correct</p>
+                <p className={`text-sm ${quizResult.passed ? 'text-green-400' : 'text-red-400'}`}>
+                  {quizResult.passed ? '✅ Module complete. Added to your dashboard.' : 'Pass mark is 80%. Review the material and try again.'}
                 </p>
-                <div className={`p-3 rounded-xl border text-sm ${
-                  quizResult.passed 
-                    ? 'border-green-500/20 text-green-400' 
-                    : 'border-red-500/20 text-red-400'
-                }`}>
-                  {quizResult.passed 
-                    ? '✅ Module complete. Certificate added to your dashboard.' 
-                    : 'Pass mark is 80% (4/5 correct). Review the material and try again.'}
-                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
                 {!quizResult.passed && (
-                  <button
-                    onClick={() => {
-                      setShowQuiz(false);
-                      setQuizAnswers({});
-                      setQuizResult(null);
-                      setShowKeyLearning(true);
-                      setCurrentStep('keyPoints');
-                      setTimeout(() => {
-                        keyLearningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }, 100);
-                    }}
-                    className="flex-1 py-3 border border-white/10 text-gray-300 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
-                  >
-                    📖 Review Material
+                  <button onClick={() => { setQuizAnswers({}); setQuizResult(null); }}
+                    className="flex-1 py-3 border border-white/10 text-gray-300 hover:text-white rounded-xl font-semibold text-sm transition-all touch-manipulation">
+                    🔄 Retake
                   </button>
                 )}
                 {!quizResult.passed && (
-                  <button
-                    onClick={() => { setQuizAnswers({}); setQuizResult(null); }}
-                    className="flex-1 py-3 border border-white/10 text-gray-300 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
-                  >
-                    🔄 Retake Assessment
+                  <button onClick={() => { setShowQuiz(false); setQuizAnswers({}); setQuizResult(null); setCurrentStep('keyPoints'); }}
+                    className="flex-1 py-3 border border-white/10 text-gray-300 hover:text-white rounded-xl font-semibold text-sm transition-all touch-manipulation">
+                    📖 Review Points
                   </button>
                 )}
                 {quizResult.passed && (
-                  <>
-                    <button
-                      onClick={() => {
-                        const currentIndex = userProfile.courses.findIndex(c => c.id === currentCourse.id);
-                        const nextModule = userProfile.courses.slice(currentIndex + 1).find(c => c.progress < 100);
-                        if (nextModule) {
-                          setCurrentCourse(nextModule);
-                          setShowQuiz(false);
-                          setQuizAnswers({});
-                          setQuizResult(null);
-                          setView('course');
-                        } else {
-                          setView('dashboard');
-                          setCurrentCourse(null);
-                          setShowQuiz(false);
-                          setQuizAnswers({});
-                          setQuizResult(null);
-                        }
-                      }}
-                      className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
-                    >
-                      {userProfile.courses.slice(userProfile.courses.findIndex(c => c.id === currentCourse.id) + 1).find(c => c.progress < 100)
-                        ? '→ Next Module'
-                        : '✅ Back to Dashboard'}
-                    </button>
-                    <button
-                      onClick={() => { setView('dashboard'); setCurrentCourse(null); setShowQuiz(false); setQuizAnswers({}); setQuizResult(null); }}
-                      className="flex-1 py-3 border border-white/10 text-gray-300 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
-                    >
-                      📊 Dashboard
-                    </button>
-                  </>
+                  <button
+                    onClick={() => {
+                      const currentIndex = userProfile.courses.findIndex(c => c.id === currentCourse.id);
+                      const nextModule = userProfile.courses.slice(currentIndex + 1).find(c => c.progress < 100);
+                      if (nextModule) {
+                        setCurrentCourse(nextModule); setShowQuiz(false); setQuizAnswers({}); setQuizResult(null); setCurrentStep('video');
+                      } else {
+                        setView('dashboard'); setCurrentCourse(null); setShowQuiz(false); setQuizAnswers({}); setQuizResult(null);
+                      }
+                    }}
+                    className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
+                  >
+                    {userProfile.courses.slice(userProfile.courses.findIndex(c => c.id === currentCourse.id) + 1).find(c => c.progress < 100)
+                      ? '→ Next Module' : '✅ Back to Dashboard'}
+                  </button>
                 )}
               </div>
             </div>
           )}
 
-          {/* Scenario Simulator */}
+          {/* ── SCENARIO SIMULATOR ── */}
           {currentScenario && (
-            <div className="space-y-4">
-              <div className="p-5 sm:p-7 rounded-2xl border border-white/8" style={{background:'#111111'}}>
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-green-500/15 border border-green-500/30 rounded-2xl flex items-center justify-center text-2xl">🎭</div>
-                  <div className="flex-1 min-w-0">
-                    <h1 className="text-lg sm:text-xl font-bold text-white">{currentScenario.title}</h1>
-                    <p className="text-xs text-gray-500">Interactive ethical scenario</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Scenario Video (if available) */}
-              {currentScenario && currentScenario.videoUrl && (
-                <div className="p-4 sm:p-5 rounded-2xl border border-white/8" style={{background:'#111111'}}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-9 h-9 bg-green-500/15 border border-green-500/30 rounded-lg flex items-center justify-center text-base">🎥</div>
-                    <div>
-                      <h3 className="text-sm font-bold text-white">Scenario Context Video</h3>
-                      <p className="text-xs text-gray-500">Watch for background context</p>
-                    </div>
-                  </div>
-                  <div className="aspect-video w-full min-h-[180px] sm:min-h-[250px] bg-black rounded-xl overflow-hidden">
-                    <iframe
-                      className="w-full h-full"
-                      src={currentScenario.videoUrl}
-                      title={`${currentScenario.title} - Context Video`}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </div>
-              )}
-
-              {/* Scenario Description */}
-              <div className="p-5 sm:p-7 rounded-2xl border border-white/8" style={{background:'#111111'}}>
-                <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Situation</p>
-                <p className="text-white text-sm sm:text-base leading-relaxed mb-5">{currentScenario.situation}</p>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                  <button
-                    onClick={() => toggleNarration(currentScenario.situation)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all touch-manipulation ${
-                      isNarrating
-                        ? 'border-red-500/40 text-red-400 bg-red-500/10'
-                        : 'border-white/10 text-gray-400 hover:text-white hover:border-white/20'
-                    }`}
-                    aria-label={isNarrating ? 'Stop narration' : 'Listen to narration'}
-                  >
-                    <span>{isNarrating ? '⏸️' : '🎙️'}</span>
-                    <span>{isNarrating ? 'Stop' : 'Listen to scenario'}</span>
-                  </button>
-                  {narrationError && <p className="text-red-400 text-xs">{narrationError}</p>}
-                </div>
-              </div>
-
-              {/* Continue Button */}
-              {!hasReadScenario && !scenarioResult && (
-                <div className="p-5 sm:p-6 rounded-2xl border border-white/8 text-center animate-fadeIn" style={{background:'#111111'}}>
-                  <p className="text-white font-semibold mb-1.5">Read the scenario carefully</p>
-                  <p className="text-gray-500 text-sm mb-5">Think about the ethical implications before making your choice</p>
-                  <button
-                    onClick={() => setHasReadScenario(true)}
-                    className="px-8 py-3.5 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white font-bold rounded-xl shadow-lg shadow-green-900/30 transition-all touch-manipulation text-sm"
-                    aria-label="Continue to answer options"
-                  >
-                    I've read it — Show options →
-                  </button>
-                </div>
-              )}
-
-              {hasReadScenario && !scenarioResult ? (
-                <div className="p-5 sm:p-7 rounded-2xl border border-white/8 animate-fadeIn" style={{background:'#111111'}}>
-                  <h2 className="text-sm font-bold text-white mb-4">What would you do?</h2>
-                  <div className="space-y-3">
-                    {currentScenario.options.map((option, index) => (
-                      <button
-                        key={option.id}
-                        onClick={() => {
-                          setScenarioAnswer(option.id);
-                          setScenarioResult(option);
-                          setShowAnimation(true);
-                        }}
-                        className={`w-full p-4 text-left rounded-xl border transition-all touch-manipulation ${
-                          scenarioAnswer === option.id
-                            ? 'border-green-500/50 bg-green-500/10'
-                            : 'border-white/8 hover:border-white/20'
-                        }`}
-                        style={scenarioAnswer !== option.id ? {background:'#1a1a1a'} : {}}
-                        aria-label={`Option ${option.id.toUpperCase()}: ${option.text}`}
-                        aria-pressed={scenarioAnswer === option.id}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="w-7 h-7 rounded-full border border-white/15 flex items-center justify-center text-gray-400 font-bold text-xs flex-shrink-0">
-                            {option.id.toUpperCase()}
-                          </div>
-                          <p className="text-gray-300 text-sm leading-relaxed">{option.text}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              {scenarioResult && (
-                <div 
-                  className={`p-5 sm:p-7 rounded-2xl border animate-fadeIn ${
-                    scenarioResult.correct 
-                      ? 'border-green-500/30' 
-                      : 'border-red-500/30'
-                  }`}
-                  style={{background: scenarioResult.correct ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)'}}
-                  role="alert"
-                  aria-live="polite"
-                  aria-atomic="true"
+            <div className="px-4 sm:px-6 py-6 max-w-2xl mx-auto space-y-4">
+              {/* Back + title */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => { setCurrentScenario(null); setScenarioAnswer(''); setScenarioResult(null); setHasReadScenario(false); setScenarioBranch([]); }}
+                  className="text-gray-500 hover:text-white text-sm transition-colors touch-manipulation"
                 >
-                  <h2 className={`text-lg font-bold mb-3 ${scenarioResult.correct ? 'text-green-400' : 'text-red-400'}`}>
-                    {scenarioResult.correct ? '✅ Correct Answer' : '❌ Incorrect Answer'}
-                  </h2>
-                  
-                  {/* Feedback Section */}
-                  <div className="p-4 rounded-xl border border-white/8 mb-4" style={{background:'#1a1a1a'}}>
+                  ← Scenarios
+                </button>
+                <span className="text-gray-600 text-xs">·</span>
+                <p className="text-gray-400 text-xs truncate">{currentScenario.title}</p>
+              </div>
+
+              {/* Situation */}
+              <div className="p-5 rounded-2xl border border-white/8" style={{background:'#111111'}}>
+                <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Situation</p>
+                <p className="text-white text-sm leading-relaxed">{currentScenario.situation}</p>
+                <button
+                  onClick={() => toggleNarration(currentScenario.situation)}
+                  className={`mt-4 flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-semibold transition-all touch-manipulation ${
+                    isNarrating ? 'border-red-500/40 text-red-400' : 'border-white/10 text-gray-500 hover:text-white'
+                  }`}
+                >
+                  <span>{isNarrating ? '⏸️' : '🎙️'}</span>
+                  <span>{isNarrating ? 'Stop' : 'Listen'}</span>
+                </button>
+                {narrationError && <p className="text-red-400 text-xs mt-2">{narrationError}</p>}
+              </div>
+
+              {/* Read confirmation */}
+              {!hasReadScenario && !scenarioResult && (
+                <button
+                  onClick={() => setHasReadScenario(true)}
+                  className="w-full py-4 bg-green-500 hover:bg-green-400 text-white font-bold rounded-xl text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
+                >
+                  I've read it — Show options →
+                </button>
+              )}
+
+              {/* Answer options */}
+              {hasReadScenario && !scenarioResult && (
+                <div className="space-y-3">
+                  <p className="text-xs text-gray-500 uppercase tracking-widest">What would you do?</p>
+                  {currentScenario.options.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => { setScenarioAnswer(option.id); setScenarioResult(option); }}
+                      className="w-full p-4 text-left rounded-xl border border-white/8 hover:border-white/20 transition-all touch-manipulation"
+                      style={{background:'#111111'}}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full border border-white/15 flex items-center justify-center text-gray-500 font-bold text-xs flex-shrink-0 mt-0.5">
+                          {option.id.toUpperCase()}
+                        </div>
+                        <p className="text-gray-300 text-sm leading-relaxed">{option.text}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Result */}
+              {scenarioResult && (
+                <div>
+                  <div
+                    className={`p-5 rounded-2xl border mb-4 ${scenarioResult.correct ? 'border-green-500/30' : 'border-red-500/30'}`}
+                    style={{background: scenarioResult.correct ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)'}}
+                  >
+                    <p className={`text-sm font-bold mb-3 ${scenarioResult.correct ? 'text-green-400' : 'text-red-400'}`}>
+                      {scenarioResult.correct ? '✅ Correct' : '❌ Incorrect'}
+                    </p>
                     <p className="text-gray-300 text-sm leading-relaxed">{scenarioResult.feedback}</p>
+                    {scenarioResult.consequence && (
+                      <p className="text-yellow-400 text-xs mt-3">📋 {scenarioResult.consequence}</p>
+                    )}
                   </div>
 
-                  {/* Points and Consequence */}
-                  {scenarioResult.points && (
-                    <div className={`p-3 rounded-xl border mb-3 ${scenarioResult.points > 0 ? 'border-green-500/20 bg-green-500/8' : 'border-red-500/20 bg-red-500/8'}`}>
-                      <p className={`text-sm font-semibold ${scenarioResult.points > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        {scenarioResult.points > 0 ? '🎯' : '⚠️'} Points: {scenarioResult.points > 0 ? '+' : ''}{scenarioResult.points}
-                      </p>
-                    </div>
-                  )}
-
-                  {scenarioResult.consequence && (
-                    <div className="p-3 rounded-xl border border-yellow-500/20 mb-3" style={{background:'rgba(234,179,8,0.07)'}}>
-                      <p className="text-yellow-300 text-sm">
-                        <strong>📋 Consequence:</strong> {scenarioResult.consequence}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Follow-up Question (Branching) */}
-                  {scenarioResult.followUp && !scenarioBranch.includes(scenarioResult.id) && (
-                    <div className="mt-4 p-4 rounded-xl border border-white/8 animate-fadeIn" style={{background:'#1a1a1a'}}>
-                      <h3 className="text-sm font-bold text-white mb-3">🔀 Follow-up Situation</h3>
-                      <p className="text-gray-400 text-sm mb-3">{scenarioResult.followUp.situation}</p>
-                      <div className="space-y-2">
-                        {scenarioResult.followUp.options.map((followUpOption) => (
-                          <button
-                            key={followUpOption.id}
-                            onClick={() => {
-                              setScenarioBranch([...scenarioBranch, scenarioResult.id]);
-                              setFeedbackHistory([...feedbackHistory, {
-                                scenario: currentScenario.title,
-                                choice: followUpOption.text,
-                                feedback: followUpOption.feedback,
-                                correct: followUpOption.correct
-                              }]);
-                              alert(followUpOption.feedback);
-                            }}
-                            className="w-full p-3 text-left rounded-xl border border-white/8 hover:border-white/20 text-gray-300 text-sm transition-all touch-manipulation"
-                            style={{background:'#111111'}}
-                            aria-label={`Follow-up option: ${followUpOption.text}`}
-                          >
-                            {followUpOption.text}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Feedback History */}
-                  {feedbackHistory.length > 0 && (
-                    <div className="mt-4 p-4 rounded-xl border border-white/8" style={{background:'#1a1a1a'}}>
-                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Your Decision Path</h4>
-                      <div className="space-y-2">
-                        {feedbackHistory.map((item, index) => (
-                          <div key={index} className="text-sm">
-                            <p className="text-gray-500 text-xs">{item.scenario}</p>
-                            <p className={`${item.correct ? 'text-green-400' : 'text-red-400'}`}>
-                              {item.correct ? '✓' : '✗'} {item.choice}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex flex-col sm:flex-row gap-3 mt-5">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <button
-                      onClick={() => {
-                        setCurrentScenario(null);
-                        setScenarioAnswer('');
-                        setScenarioResult(null);
-                        setHasReadScenario(false);
-                        setScenarioBranch([]);
-                        setShowKeyLearning(true);
-                        setCurrentStep('keyPoints');
-                        setTimeout(() => {
-                          keyLearningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }, 100);
-                      }}
-                      className="flex-1 py-3 border border-white/10 text-gray-400 hover:text-white hover:border-white/20 rounded-xl font-semibold text-sm transition-all touch-manipulation"
-                      aria-label="Go back to course overview"
+                      onClick={() => { setCurrentScenario(null); setScenarioAnswer(''); setScenarioResult(null); setHasReadScenario(false); setScenarioBranch([]); }}
+                      className="flex-1 py-3 border border-white/10 text-gray-400 hover:text-white rounded-xl font-semibold text-sm transition-all touch-manipulation"
                     >
-                      ← Back to Course
+                      ← All Scenarios
                     </button>
-                    {currentCourse.scenarios && currentCourse.scenarios.length > 1 && (() => {
+                    {(() => {
                       const currentIndex = currentCourse.scenarios.findIndex(s => s.id === currentScenario.id);
-                      const hasNextScenario = currentIndex < currentCourse.scenarios.length - 1;
-                      
-                      return hasNextScenario ? (
+                      const hasNext = currentIndex < currentCourse.scenarios.length - 1;
+                      return hasNext ? (
                         <button
-                          onClick={() => {
-                            const nextIndex = currentIndex + 1;
-                            setCurrentScenario(currentCourse.scenarios[nextIndex]);
-                            setScenarioAnswer('');
-                            setScenarioResult(null);
-                            setHasReadScenario(false);
-                          }}
+                          onClick={() => { setCurrentScenario(currentCourse.scenarios[currentIndex + 1]); setScenarioAnswer(''); setScenarioResult(null); setHasReadScenario(false); }}
                           className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
                         >
                           Next Scenario ({currentIndex + 2}/{currentCourse.scenarios.length}) →
                         </button>
                       ) : (
                         <button
-                          onClick={() => {
-                            setCurrentScenario(null);
-                            setScenarioAnswer('');
-                            setScenarioResult(null);
-                            setShowKeyLearning(true);
-                            setClickedLearningPoints([]);
-                            setCurrentStep('keyPoints');
-                            setTimeout(() => {
-                              keyLearningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            }, 100);
-                          }}
+                          onClick={() => { setCurrentScenario(null); setScenarioAnswer(''); setScenarioResult(null); setShowKeyLearning(true); setClickedLearningPoints([]); setCurrentStep('keyPoints'); }}
                           className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
                         >
-                          ✓ Review Key Learning Points →
+                          ✓ Key Learning Points →
                         </button>
                       );
                     })()}
@@ -3132,6 +2921,7 @@ function App() {
               )}
             </div>
           )}
+
         </div>
       ) : view === 'profile' ? (
         <div className="min-h-screen px-4 sm:px-6 py-6 sm:py-8" style={{background:'#0a0a0a'}}>
