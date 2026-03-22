@@ -2040,17 +2040,16 @@ function App() {
           <section className="flex flex-col items-center justify-center text-center px-6 pt-20 pb-20 sm:pt-28 sm:pb-28">
             <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-              <span className="text-gray-400 text-xs font-medium tracking-wide uppercase">Professional Development Platform</span>
+              <span className="text-gray-400 text-xs font-medium tracking-wide uppercase">Compliance & Character Development Platform</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight max-w-3xl">
-              Build the person <br className="hidden sm:block" />
-              <span className="text-green-400">your role demands.</span>
+              Build Character. Test Integrity. <br className="hidden sm:block" />
+              <span className="text-green-400">Enforce Accountability.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-gray-400 max-w-xl mb-10 leading-relaxed">
-              Real scenario-based training to develop discipline, integrity, and the 
-              moral clarity to resist corruption — in every professional setting.
+              Train with real scenarios, pass compliance tests, and build a track record of integrity that actually matters.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -2070,7 +2069,7 @@ function App() {
               )}
             </div>
 
-            <p className="text-gray-600 text-xs mt-5">No credit card needed · Start in under 2 minutes</p>
+            <p className="text-gray-600 text-xs mt-5">Not just training — tested and proven.</p>
           </section>
 
           {/* ── WHAT WE DO ── */}
