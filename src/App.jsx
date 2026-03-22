@@ -2004,185 +2004,72 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
       {view === 'landing' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-10 sm:p-8">
-          <div className="text-center max-w-4xl w-full">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6">
-              🎯 DragNet
-            </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-blue-300 mb-4 sm:mb-8">
-              Compliance Training Platform
-            </p>
-            <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-10 max-w-2xl mx-auto px-2">
-              Master compliance and ethical practices in your workplace and daily life
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-10 sm:mb-16 px-4 sm:px-0">
-              <button 
-                onClick={() => setView('auth')}
-                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 active:from-blue-700 active:to-purple-700 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 shadow-lg touch-manipulation"
+        <div className="min-h-screen flex flex-col items-center justify-center overflow-x-hidden px-5 py-12 sm:py-20">
+
+          {/* Nigerian flag accent */}
+          <div className="flex gap-0 mb-6 rounded-full overflow-hidden shadow-lg">
+            <div className="w-8 h-1.5 bg-green-600" />
+            <div className="w-8 h-1.5 bg-white" />
+            <div className="w-8 h-1.5 bg-green-600" />
+          </div>
+
+          {/* Brand */}
+          <div className="text-5xl sm:text-6xl mb-3">🇳🇬</div>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-2 tracking-tight">
+            DragNet
+          </h1>
+          <p className="text-sm sm:text-base font-bold text-green-400 uppercase tracking-widest mb-6">
+            Training · Discipline · Character
+          </p>
+
+          {/* Core message */}
+          <p className="text-sm sm:text-base text-gray-300 max-w-lg text-center leading-relaxed mb-8">
+            A training and development platform built for Nigerian professionals — police, civil servants, 
+            immigration, and private sector. We train against corruption and indiscipline, and develop 
+            the character needed to build a better Nigeria.
+          </p>
+
+          {/* Three pillars — compact horizontal chips */}
+          <div className="flex flex-wrap justify-center gap-2 mb-10 max-w-md">
+            <span className="flex items-center gap-1.5 bg-red-900/30 border border-red-500/30 text-red-300 text-xs font-semibold px-3 py-1.5 rounded-full">
+              🚫 Anti-Corruption
+            </span>
+            <span className="flex items-center gap-1.5 bg-blue-900/30 border border-blue-500/30 text-blue-300 text-xs font-semibold px-3 py-1.5 rounded-full">
+              ⚖️ Professional Discipline
+            </span>
+            <span className="flex items-center gap-1.5 bg-green-900/30 border border-green-500/30 text-green-300 text-xs font-semibold px-3 py-1.5 rounded-full">
+              🌱 Character Development
+            </span>
+            <span className="flex items-center gap-1.5 bg-purple-900/30 border border-purple-500/30 text-purple-300 text-xs font-semibold px-3 py-1.5 rounded-full">
+              🏛️ Public Service Orientation
+            </span>
+          </div>
+
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
+            <button
+              onClick={() => setView('auth')}
+              className="flex-1 py-4 bg-green-600 hover:bg-green-700 active:bg-green-800 text-white rounded-xl font-bold text-base shadow-xl touch-manipulation transition-all"
+            >
+              Begin Your Training →
+            </button>
+            {isAuthenticated && (
+              <button
+                onClick={() => setView('dashboard')}
+                className="flex-1 py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-semibold text-base touch-manipulation transition-all"
               >
-                Get Started →
+                My Dashboard
               </button>
-              {isAuthenticated && (
-                <button 
-                  onClick={() => setView('dashboard')}
-                  className="w-full sm:w-auto px-8 py-4 bg-gray-700 active:bg-gray-600 hover:bg-gray-600 text-white rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 shadow-lg touch-manipulation"
-                >
-                  View Dashboard
-                </button>
-              )}
-            </div>
+            )}
           </div>
 
-          {/* Main Feature Cards */}
-          <div className="w-full max-w-7xl mx-auto mb-10 sm:mb-16 px-4 sm:px-0">
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-300">
-                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">📚</div>
-                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Nigerian Laws & Regulations</h4>
-                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
-                  ICPC Act, Criminal Code, and sector-specific regulations explained clearly
-                </p>
-              </div>
-              
-              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300">
-                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">🎭</div>
-                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">50+ Real Scenarios</h4>
-                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
-                  Practice with actual ethical dilemmas from Nigerian workplaces
-                </p>
-              </div>
-              
-              <div className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-pink-500/30 hover:border-pink-400/60 transition-all duration-300">
-                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">🎥</div>
-                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Video Training</h4>
-                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
-                  Sector-specific video lessons tailored to your role
-                </p>
-              </div>
-              
-              <div className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-300">
-                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">🔊</div>
-                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Audio Narration</h4>
-                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
-                  Listen to lessons while multitasking with text-to-speech
-                </p>
-              </div>
-              
-              <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-indigo-500/30 hover:border-indigo-400/60 transition-all duration-300">
-                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">🏆</div>
-                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Career Recommendations</h4>
-                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
-                  Get personalized career path suggestions based on your training
-                </p>
-              </div>
-              
-              <div className="bg-gradient-to-br from-teal-900/40 to-teal-800/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-teal-500/30 hover:border-teal-400/60 transition-all duration-300">
-                <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">📊</div>
-                <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-3">Progress Tracking</h4>
-                <p className="text-gray-300 text-xs sm:text-sm hidden sm:block">
-                  Track completed courses, achievements, and learning milestones
-                </p>
-              </div>
-            </div>
-          </div>
+          <p className="text-gray-500 text-xs mt-4">Free · For every Nigerian professional</p>
 
-          {/* How It Works Section */}
-          <div className="w-full max-w-7xl mx-auto mb-10 sm:mb-16 px-4 sm:px-0">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-8 sm:mb-12">
-              How DragNet Works
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-              <div className="text-center">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
-                  <span className="text-xl sm:text-3xl text-white font-bold">1</span>
-                </div>
-                <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">📝</div>
-                <h3 className="text-base sm:text-xl font-bold text-white mb-1 sm:mb-2">Sign Up</h3>
-                <p className="text-gray-400 text-xs sm:text-base hidden sm:block">
-                  Create your account and tell us about your sector and role
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="bg-gradient-to-br from-purple-500 to-purple-700 w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
-                  <span className="text-xl sm:text-3xl text-white font-bold">2</span>
-                </div>
-                <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">🎯</div>
-                <h3 className="text-base sm:text-xl font-bold text-white mb-1 sm:mb-2">Get Your Plan</h3>
-                <p className="text-gray-400 text-xs sm:text-base hidden sm:block">
-                  We analyze your profile and create personalized training
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="bg-gradient-to-br from-pink-500 to-pink-700 w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
-                  <span className="text-xl sm:text-3xl text-white font-bold">3</span>
-                </div>
-                <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">🎮</div>
-                <h3 className="text-base sm:text-xl font-bold text-white mb-1 sm:mb-2">Learn by Doing</h3>
-                <p className="text-gray-400 text-xs sm:text-base hidden sm:block">
-                  Practice with interactive scenarios and real case studies
-                </p>
-              </div>
+          {/* Mission footnote */}
+          <p className="text-gray-600 text-xs text-center max-w-xs mt-8 leading-relaxed italic">
+            "A better Nigeria starts with better Nigerians — trained, disciplined, and committed to integrity."
+          </p>
 
-              <div className="text-center">
-                <div className="bg-gradient-to-br from-green-500 to-green-700 w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
-                  <span className="text-xl sm:text-3xl text-white font-bold">4</span>
-                </div>
-                <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">🏆</div>
-                <h3 className="text-base sm:text-xl font-bold text-white mb-1 sm:mb-2">Track & Grow</h3>
-                <p className="text-gray-400 text-xs sm:text-base hidden sm:block">
-                  Earn achievements and get career recommendations
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Statistics Section */}
-          <div className="w-full max-w-7xl mx-auto mb-10 sm:mb-16 px-4 sm:px-0">
-            <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 backdrop-blur-sm p-6 sm:p-10 rounded-2xl border-2 border-purple-500/30">
-              <div className="grid grid-cols-3 gap-4 sm:gap-8 text-center">
-                <div>
-                  <div className="text-3xl sm:text-5xl font-bold text-blue-400 mb-1 sm:mb-2">10+</div>
-                  <p className="text-sm sm:text-xl text-gray-300">Courses</p>
-                  <p className="text-xs text-gray-400 mt-1 hidden sm:block">Covering all major sectors</p>
-                </div>
-                <div>
-                  <div className="text-3xl sm:text-5xl font-bold text-purple-400 mb-1 sm:mb-2">50+</div>
-                  <p className="text-sm sm:text-xl text-gray-300">Scenarios</p>
-                  <p className="text-xs text-gray-400 mt-1 hidden sm:block">Practice ethical decision-making</p>
-                </div>
-                <div>
-                  <div className="text-3xl sm:text-5xl font-bold text-pink-400 mb-1 sm:mb-2">100%</div>
-                  <p className="text-sm sm:text-xl text-gray-300">Personalised</p>
-                  <p className="text-xs text-gray-400 mt-1 hidden sm:block">Customized training plans</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* CTA Section */}
-          <div className="w-full max-w-7xl mx-auto mb-10 sm:mb-16 px-4 sm:px-0">
-            <div className="text-center">
-              <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm p-8 sm:p-12 rounded-3xl border-2 border-blue-500/30">
-                <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🚀</div>
-                <h2 className="text-2xl sm:text-4xl font-bold text-white mb-4 sm:mb-6">
-                  Ready to Build Your Compliance Knowledge?
-                </h2>
-                <p className="text-base sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
-                  Join thousands of Nigerian professionals strengthening their ethical decision-making skills
-                </p>
-                <button 
-                  onClick={() => setView('auth')}
-                  className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-purple-600 active:from-blue-700 active:to-purple-700 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-bold text-base sm:text-xl transition-all duration-200 shadow-2xl touch-manipulation"
-                >
-                  Start Learning Today →
-                </button>
-                <p className="text-gray-400 mt-4 sm:mt-6 text-sm">
-                  No credit card required • Get started in 2 minutes
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       ) : view === 'auth' ? (
         <div className="flex flex-col items-center justify-center min-h-screen px-4 py-10 sm:p-8">
