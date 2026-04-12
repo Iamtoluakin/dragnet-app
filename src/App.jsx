@@ -94,6 +94,7 @@ function App() {
     { value: 'police', label: 'Police', icon: '🚔', color: 'from-blue-600 to-blue-800' },
     { value: 'civil', label: 'Civil Service', icon: '🏛️', color: 'from-purple-600 to-purple-800' },
     { value: 'immigration', label: 'Customs & Immigration', icon: '🛂', color: 'from-green-600 to-green-800' },
+    { value: 'students', label: 'Students', icon: '🎒', color: 'from-yellow-600 to-yellow-800' },
     { value: 'private', label: 'Private Sector', icon: '💼', color: 'from-orange-600 to-orange-800' }
   ];
 
