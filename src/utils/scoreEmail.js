@@ -2,10 +2,11 @@ import emailjs from '@emailjs/browser';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-// ─── EmailJS credentials (stored in .env, never hardcoded) ──────────────────
-const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+// ─── EmailJS credentials ─────────────────────────────────────────────────────
+const EMAILJS_SERVICE_ID        = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_SCORE_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_WELCOME_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_WELCOME_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY        = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 /**
  * Save a user's sign-up email to Firestore.
@@ -21,6 +22,23 @@ export async function saveUserEmail(name, email, sector) {
     });
   } catch (err) {
     console.error('Failed to save user email:', err);
+  }
+
+  // Send welcome email
+  try {
+    await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_WELCOME_TEMPLATE_ID,
+      {
+        to_name:  name,
+        to_email: email,
+        sector:   sector,
+      },
+      EMAILJS_PUBLIC_KEY
+    );
+    console.log('Welcome email sent to', email);
+  } catch (err) {
+    console.error('Failed to send welcome email:', err);
   }
 }
 
@@ -72,7 +90,7 @@ export async function saveAndEmailScore(name, email, courseTitle, score, total) 
   try {
     await emailjs.send(
       EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
+      EMAILJS_SCORE_TEMPLATE_ID,
       {
         to_name:      name,
         to_email:     email,
