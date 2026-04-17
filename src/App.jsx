@@ -2180,6 +2180,8 @@ function App() {
       }
     ]
   };
+
+  const handleSectorSelect = (sector) => {
     setSelectedSector(sector);
     setSelectedRole('');
     setSelectedDepartment('');
