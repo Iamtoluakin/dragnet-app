@@ -94,29 +94,42 @@ function App() {
     { value: 'police', label: 'Police', icon: '🚔', color: 'from-blue-600 to-blue-800' },
     { value: 'civil', label: 'Civil Service', icon: '🏛️', color: 'from-purple-600 to-purple-800' },
     { value: 'immigration', label: 'Customs & Immigration', icon: '🛂', color: 'from-green-600 to-green-800' },
-    { value: 'students', label: 'Students', icon: '🎒', color: 'from-yellow-600 to-yellow-800' },
-    { value: 'private', label: 'Private Sector', icon: '💼', color: 'from-orange-600 to-orange-800' }
+    { value: 'private', label: 'Private Sector', icon: '💼', color: 'from-orange-600 to-orange-800' },
+    { value: 'students', label: 'Students', icon: '🎒', color: 'from-yellow-600 to-yellow-800' }
   ];
 
   const rolesBySection = {
     police: ['Traffic Officer', 'Sergeant', 'Inspector', 'Detective', 'Corporal', 'Constable'],
     civil: ['Procurement Officer', 'Finance Officer', 'Admin Officer', 'IT Officer', 'HR Officer', 'Legal Officer'],
     immigration: ['Immigration Officer', 'Customs Officer', 'Border Control Agent', 'Passport Control Officer', 'Senior Immigration Officer', 'Chief Customs Officer'],
-    private: ['Bank Teller', 'Customer Service Rep', 'Manager', 'Accountant', 'Sales Rep', 'IT Staff']
+    private: ['Bank Teller', 'Customer Service Rep', 'Manager', 'Accountant', 'Sales Rep', 'IT Staff'],
+    students: [
+      'Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6',
+      'JSS 1', 'JSS 2', 'JSS 3',
+      'SS 1', 'SS 2', 'SS 3',
+      '100 Level', '200 Level', '300 Level', '400 Level', '500 Level'
+    ]
   };
 
   const departmentsBySection = {
     police: ['Operations', 'Traffic', 'Criminal Investigation', 'Intelligence', 'Administration'],
     civil: ['Finance', 'Procurement', 'IT', 'HR', 'Legal', 'Administration'],
     immigration: ['Passport Control', 'Border Operations', 'Visa Processing', 'Customs Enforcement', 'Investigation & Compliance', 'Airport Operations'],
-    private: ['Finance', 'IT', 'Healthcare', 'Customer Service', 'Operations', 'Sales']
+    private: ['Finance', 'IT', 'Healthcare', 'Customer Service', 'Operations', 'Sales'],
+    students: ['Primary School', 'Junior Secondary School', 'Senior Secondary School', 'University']
   };
 
   const ranksBySection = {
     police: ['Constable', 'Corporal', 'Sergeant', 'Inspector', 'Chief Inspector', 'Superintendent'],
     civil: ['GL06', 'GL07', 'GL08', 'GL09', 'GL10', 'GL12', 'GL14', 'GL15'],
     immigration: ['Assistant Immigration Officer I', 'Assistant Immigration Officer II', 'Immigration Officer I', 'Immigration Officer II', 'Chief Immigration Officer', 'Deputy Comptroller'],
-    private: ['Intern', 'Junior Officer', 'Officer', 'Senior Officer', 'Manager', 'Senior Manager']
+    private: ['Intern', 'Junior Officer', 'Officer', 'Senior Officer', 'Manager', 'Senior Manager'],
+    students: [
+      'Primary (P1–P6)',
+      'Junior Secondary (JS1–JS3)',
+      'Senior Secondary (SS1–SS3)',
+      'University (100L–500L)'
+    ]
   };
 
   const analysisSteps = [
@@ -1924,10 +1937,249 @@ function App() {
           }
         ]
       }
-    ]
+    ],
+    students: [] // student courses are assigned by level — see studentCoursesByLevel below
   };
 
-  const handleSectorSelect = (sector) => {
+  const studentCoursesByLevel = {
+    'Primary (P1–P6)': [
+      {
+        id: 101, title: 'Honesty Is Strength', progress: 0, duration: '15 mins',
+        description: 'Learn why telling the truth — even when it is hard — makes you strong, trusted, and respected.',
+        scenarios: [
+          { id: 'primary-honesty-1', title: 'The Missing Pencil',
+            situation: "Your friend's pencil is missing and your teacher thinks you took it. You did not take it — but you saw your best friend take it. What do you do?",
+            options: [
+              { id: 'a', text: 'Stay quiet to protect your friend.', correct: false, feedback: 'Staying quiet lets an innocent person be blamed. That is not protecting a friend — it is letting a wrong happen.' },
+              { id: 'b', text: 'Tell the teacher the truth about what you saw.', correct: true, feedback: 'Telling the truth is always the right thing, even when it feels hard. A real friend respects honesty.' },
+              { id: 'c', text: 'Blame someone else to move attention away.', correct: false, feedback: 'Blaming an innocent person makes things worse and harms someone who did nothing wrong.' },
+              { id: 'd', text: 'Pretend you did not see anything.', correct: false, feedback: 'Pretending makes you part of the problem. Honesty means speaking up even when it is uncomfortable.' }
+            ]
+          },
+          { id: 'primary-honesty-2', title: 'The Wrong Change',
+            situation: 'You bought something at the school canteen and the seller gave you too much change by mistake. Nobody is watching. What do you do?',
+            options: [
+              { id: 'a', text: "Keep the extra money — it's their mistake.", correct: false, feedback: 'Keeping money that is not yours is dishonest, even if the mistake was not yours.' },
+              { id: 'b', text: 'Return the extra money and tell the seller.', correct: true, feedback: 'Returning money that is not yours shows strong character. Integrity means doing the right thing even when no one is watching.' },
+              { id: 'c', text: 'Share it with your friends.', correct: false, feedback: 'Sharing money that does not belong to you still means you are keeping what is not yours.' },
+              { id: 'd', text: 'Walk away quickly before they notice.', correct: false, feedback: 'Walking away is still dishonest. The right thing is always to return what does not belong to you.' }
+            ]
+          }
+        ],
+        content: { keyPoints: ['Honesty builds trust — when people know you tell the truth, they trust you', 'Lying creates bigger problems — one lie leads to more lies', 'Courage to be honest — doing the right thing when it is hard is good character', 'Integrity means doing right even when no one is watching'] },
+        quiz: [
+          { id: 'q1', question: 'What does it mean to be honest?', options: [{ id: 'a', text: 'Saying whatever makes people happy', correct: false }, { id: 'b', text: 'Always telling the truth even when it is hard', correct: true }, { id: 'c', text: 'Keeping secrets from everyone', correct: false }, { id: 'd', text: 'Only telling the truth to your parents', correct: false }] },
+          { id: 'q2', question: 'If you receive too much change by mistake, what should you do?', options: [{ id: 'a', text: 'Keep it', correct: false }, { id: 'b', text: 'Share it with friends', correct: false }, { id: 'c', text: 'Return it to the seller', correct: true }, { id: 'd', text: 'Hide it', correct: false }] },
+          { id: 'q3', question: 'What is integrity?', options: [{ id: 'a', text: 'Being popular in school', correct: false }, { id: 'b', text: 'Doing the right thing only when people are watching', correct: false }, { id: 'c', text: 'Doing the right thing even when no one is watching', correct: true }, { id: 'd', text: 'Getting good grades', correct: false }] },
+          { id: 'q4', question: 'Why is lying harmful?', options: [{ id: 'a', text: 'It makes you popular', correct: false }, { id: 'b', text: 'It destroys trust and creates bigger problems', correct: true }, { id: 'c', text: 'It helps you avoid trouble', correct: false }, { id: 'd', text: 'It has no real effect', correct: false }] },
+          { id: 'q5', question: 'A friend asks you to lie for them. What should you do?', options: [{ id: 'a', text: 'Lie because they are your friend', correct: false }, { id: 'b', text: 'Agree without thinking', correct: false }, { id: 'c', text: 'Refuse and explain why honesty matters', correct: true }, { id: 'd', text: 'Ignore the situation', correct: false }] }
+        ]
+      },
+      {
+        id: 102, title: 'Rules Protect Everyone', progress: 0, duration: '15 mins',
+        description: 'Understand why rules exist, why following them matters, and what happens when people ignore them.',
+        scenarios: [
+          { id: 'primary-rules-1', title: 'Cutting the Queue',
+            situation: 'You are standing in a long food queue at school. A bigger student threatens you to let them go ahead. What do you do?',
+            options: [
+              { id: 'a', text: 'Let them go ahead — you are scared.', correct: false, feedback: 'Giving in to threats rewards bad behaviour and encourages the bully to keep doing it.' },
+              { id: 'b', text: 'Stand your ground politely and report them to a teacher.', correct: true, feedback: 'Queuing rules exist to be fair to everyone. Reporting bullying is brave and right — not weak.' },
+              { id: 'c', text: 'Start a fight with them.', correct: false, feedback: 'Fighting creates more problems and puts you in danger. Always seek help from an adult.' },
+              { id: 'd', text: 'Leave the queue entirely.', correct: false, feedback: 'Leaving lets the bully win. You have a right to be in the queue — use the right channels to protect that right.' }
+            ]
+          }
+        ],
+        content: { keyPoints: ['Rules exist for fairness — without them only the strongest wins', 'Following rules shows respect for others and your community', 'Breaking rules has consequences — someone always pays the price', 'Speak up against rule-breaking — telling a trusted adult is courage, not weakness'] },
+        quiz: [
+          { id: 'q1', question: 'Why do schools have rules?', options: [{ id: 'a', text: 'To make students unhappy', correct: false }, { id: 'b', text: 'To protect everyone and keep things fair', correct: true }, { id: 'c', text: 'To give teachers power', correct: false }, { id: 'd', text: 'Rules are not important', correct: false }] },
+          { id: 'q2', question: 'Someone is cutting the queue. What should you do?', options: [{ id: 'a', text: 'Ignore it', correct: false }, { id: 'b', text: 'Fight them', correct: false }, { id: 'c', text: 'Politely object and report to a teacher if needed', correct: true }, { id: 'd', text: 'Join them', correct: false }] },
+          { id: 'q3', question: 'What happens when people break rules?', options: [{ id: 'a', text: 'Nothing happens', correct: false }, { id: 'b', text: 'Everyone benefits', correct: false }, { id: 'c', text: 'Others get hurt and things become unfair', correct: true }, { id: 'd', text: 'Rules disappear', correct: false }] },
+          { id: 'q4', question: 'Following rules is a sign of:', options: [{ id: 'a', text: 'Weakness', correct: false }, { id: 'b', text: 'Respect and good character', correct: true }, { id: 'c', text: 'Being afraid', correct: false }, { id: 'd', text: 'Trying to impress teachers', correct: false }] },
+          { id: 'q5', question: 'If you see a classmate breaking a rule that hurts others, you should:', options: [{ id: 'a', text: 'Laugh and watch', correct: false }, { id: 'b', text: 'Join in', correct: false }, { id: 'c', text: 'Tell a trusted adult', correct: true }, { id: 'd', text: 'Pretend you did not see', correct: false }] }
+        ]
+      }
+    ],
+    'Junior Secondary (JS1–JS3)': [
+      {
+        id: 201, title: 'Peer Pressure & Standing Firm', progress: 0, duration: '20 mins',
+        description: 'Understand how peer pressure works, why it is dangerous, and how to say no with confidence.',
+        scenarios: [
+          { id: 'jss-peer-1', title: 'The Exam Answers',
+            situation: "Your friends have gotten hold of exam questions before the test and are pressuring you to use them. They say everyone is doing it and you will fail without them. What do you do?",
+            options: [
+              { id: 'a', text: "Use the answers — you don't want to fail or be left out.", correct: false, feedback: 'Exam malpractice is cheating. It harms you, your classmates, and your future. There are no shortcuts to real knowledge.' },
+              { id: 'b', text: 'Refuse, study on your own, and report it to a teacher.', correct: true, feedback: 'Refusing takes courage. Reporting it protects everyone — including classmates who did not want to cheat but felt pressured.' },
+              { id: 'c', text: "Take the answers but don't use them.", correct: false, feedback: 'Even taking them puts you in the wrong. If found with leaked questions, you share the consequences.' },
+              { id: 'd', text: 'Stay quiet and hope the problem goes away.', correct: false, feedback: 'Silence allows the cheating to continue and harms everyone who studied honestly.' }
+            ]
+          },
+          { id: 'jss-peer-2', title: 'The Stolen Money',
+            situation: "Your friend stole money from a classmate's bag and is offering to share it with you. They say the classmate is rich and won't notice. What do you do?",
+            options: [
+              { id: 'a', text: 'Accept your share — the classmate is rich anyway.', correct: false, feedback: 'Wealth does not make theft acceptable. Accepting stolen money makes you part of the crime.' },
+              { id: 'b', text: 'Refuse and tell your friend to return it.', correct: false, feedback: 'Better than accepting, but if your friend refuses, you must report it to protect the victim.' },
+              { id: 'c', text: 'Refuse and report it to a teacher.', correct: true, feedback: 'Theft is wrong regardless of how wealthy the victim is. Reporting it is the right and brave thing to do.' },
+              { id: 'd', text: 'Ignore the whole thing.', correct: false, feedback: 'Ignoring theft means the victim loses their money and nothing is done. Silence makes you complicit.' }
+            ]
+          }
+        ],
+        content: { keyPoints: ['Peer pressure is powerful — but going along with wrong never ends well', "Real friends don't pressure you to cheat, steal, or lie", 'Say no with confidence — you owe no one an explanation for doing the right thing', 'Reporting wrongdoing is courage, not snitching'] },
+        quiz: [
+          { id: 'q1', question: 'What is peer pressure?', options: [{ id: 'a', text: 'When a teacher forces you to study', correct: false }, { id: 'b', text: 'When people your age push you to act in a certain way', correct: true }, { id: 'c', text: 'When your parents give you advice', correct: false }, { id: 'd', text: 'When you choose your own friends', correct: false }] },
+          { id: 'q2', question: 'Your friends want you to cheat in an exam. You should:', options: [{ id: 'a', text: 'Join them to avoid being left out', correct: false }, { id: 'b', text: 'Refuse and study on your own', correct: true }, { id: 'c', text: 'Take the answers just in case', correct: false }, { id: 'd', text: 'Pretend you did not hear them', correct: false }] },
+          { id: 'q3', question: 'Accepting stolen money makes you:', options: [{ id: 'a', text: 'Lucky', correct: false }, { id: 'b', text: 'Part of the crime', correct: true }, { id: 'c', text: 'Innocent', correct: false }, { id: 'd', text: 'Popular', correct: false }] },
+          { id: 'q4', question: 'A real friend will:', options: [{ id: 'a', text: 'Push you to break rules', correct: false }, { id: 'b', text: 'Pressure you to cheat', correct: false }, { id: 'c', text: 'Respect your decision to do the right thing', correct: true }, { id: 'd', text: 'Threaten you if you disagree', correct: false }] },
+          { id: 'q5', question: 'Reporting wrongdoing to an adult is:', options: [{ id: 'a', text: 'Snitching', correct: false }, { id: 'b', text: 'Weak', correct: false }, { id: 'c', text: 'An act of courage that protects everyone', correct: true }, { id: 'd', text: 'Always a bad idea', correct: false }] }
+        ]
+      },
+      {
+        id: 202, title: 'What Is Corruption?', progress: 0, duration: '20 mins',
+        description: 'Understand what corruption is, how it starts small, and why it destroys communities and futures.',
+        scenarios: [
+          { id: 'jss-corruption-1', title: 'The Class Captain Election',
+            situation: 'You are running for class captain. A classmate says they will only vote for you if you give them money or share your lunch every day. What do you do?',
+            options: [
+              { id: 'a', text: 'Agree — you really want to win.', correct: false, feedback: 'Buying votes is corruption — even in a school election. A leader who buys support leads without real respect.' },
+              { id: 'b', text: 'Refuse and earn votes through your merits.', correct: true, feedback: 'True leaders earn their position. Winning honestly means your leadership is built on trust, not transactions.' },
+              { id: 'c', text: 'Give a little to see if it works.', correct: false, feedback: 'Even a small compromise sets a dangerous pattern. Corruption always starts with "just a little."' },
+              { id: 'd', text: 'Withdraw from the election.', correct: false, feedback: 'You should not have to withdraw — the solution is to refuse the corrupt demand and compete honestly.' }
+            ]
+          }
+        ],
+        content: { keyPoints: ['Corruption starts small — with a small lie, a small favour, a small cheat', 'Corruption destroys trust — systems stop working when people are corrupt', 'Everyone pays the price — roads, schools, hospitals all suffer', 'You have the power to break the cycle — it starts with your choices today'] },
+        quiz: [
+          { id: 'q1', question: 'Corruption most often starts with:', options: [{ id: 'a', text: 'A major crime', correct: false }, { id: 'b', text: 'Small compromises and dishonest acts', correct: true }, { id: 'c', text: 'A court order', correct: false }, { id: 'd', text: 'Rich people only', correct: false }] },
+          { id: 'q2', question: 'Buying votes in a school election is:', options: [{ id: 'a', text: 'A smart strategy', correct: false }, { id: 'b', text: 'Acceptable if everyone does it', correct: false }, { id: 'c', text: 'A form of corruption', correct: true }, { id: 'd', text: 'Normal and harmless', correct: false }] },
+          { id: 'q3', question: 'What does corruption destroy first?', options: [{ id: 'a', text: 'Buildings', correct: false }, { id: 'b', text: 'Trust', correct: true }, { id: 'c', text: 'Weather', correct: false }, { id: 'd', text: 'Technology', correct: false }] },
+          { id: 'q4', question: 'Who pays the price for corruption?', options: [{ id: 'a', text: 'Only corrupt people', correct: false }, { id: 'b', text: 'Only the government', correct: false }, { id: 'c', text: 'Everyone in society', correct: true }, { id: 'd', text: 'Nobody', correct: false }] },
+          { id: 'q5', question: 'You have the power to fight corruption by:', options: [{ id: 'a', text: 'Waiting for adults to fix it', correct: false }, { id: 'b', text: 'Making honest choices starting today', correct: true }, { id: 'c', text: 'Ignoring it', correct: false }, { id: 'd', text: 'Accepting that it is normal', correct: false }] }
+        ]
+      }
+    ],
+    'Senior Secondary (SS1–SS3)': [
+      {
+        id: 301, title: 'Integrity Under Pressure', progress: 0, duration: '25 mins',
+        description: 'How to maintain your values when the system around you is broken and pressure to compromise is real.',
+        scenarios: [
+          { id: 'ss-integrity-1', title: "The Teacher's Offer",
+            situation: 'Your teacher hints that students who "appreciate" them with money will get better marks in the internal assessment. Your parents are pressuring you to get good grades. What do you do?',
+            options: [
+              { id: 'a', text: 'Pay — your grades and future are more important.', correct: false, feedback: 'Paying makes you part of a corrupt system. The grade means nothing if it was bought, and the habit will follow you.' },
+              { id: 'b', text: 'Refuse, work hard, and report the teacher to the principal.', correct: true, feedback: 'A teacher demanding money for grades is abuse of power. Refusing and reporting protects every student in that class.' },
+              { id: 'c', text: 'Pay but feel guilty about it.', correct: false, feedback: 'Guilt without action changes nothing. The right response is refusal and reporting, not payment with regret.' },
+              { id: 'd', text: 'Drop the subject to avoid the situation.', correct: false, feedback: 'Dropping the subject rewards the corrupt teacher. The right path is to refuse and report.' }
+            ]
+          },
+          { id: 'ss-integrity-2', title: 'The WAEC Leak',
+            situation: "Days before your WAEC exams, a classmate shares what they claim are the real exam questions. Most of your classmates are using them. You've worked hard all year. What do you do?",
+            options: [
+              { id: 'a', text: 'Use them — everyone else is.', correct: false, feedback: "Using leaked questions is fraud. It devalues your certificate and everyone else's. 'Everyone is doing it' is never a moral justification." },
+              { id: 'b', text: 'Ignore the leaked questions and trust your preparation.', correct: true, feedback: 'The person who earns their result honestly will always stand on firmer ground. Your preparation is real — use it.' },
+              { id: 'c', text: 'Use a few but not all.', correct: false, feedback: 'Partial use is still fraud. There is no ethical middle ground with exam malpractice.' },
+              { id: 'd', text: 'Share them with more people.', correct: false, feedback: 'Sharing them makes you actively part of the fraud and harms every honest student sitting that exam.' }
+            ]
+          }
+        ],
+        content: { keyPoints: ['Integrity is tested most when stakes are high — exams, grades, social pressure', 'Corrupt shortcuts have long-term costs — you build on a false foundation', "Systemic corruption is everyone's responsibility — refusing breaks the cycle", 'Your certificate is your character — what you earn honestly cannot be taken from you'] },
+        quiz: [
+          { id: 'q1', question: 'A teacher demands money for better grades. This is:', options: [{ id: 'a', text: 'Normal in many schools', correct: false }, { id: 'b', text: 'Acceptable if you can afford it', correct: false }, { id: 'c', text: 'Corruption and abuse of power', correct: true }, { id: 'd', text: "The student's fault for not paying", correct: false }] },
+          { id: 'q2', question: 'Using leaked exam questions is:', options: [{ id: 'a', text: 'Smart preparation', correct: false }, { id: 'b', text: 'Only wrong if you get caught', correct: false }, { id: 'c', text: 'Fraud that devalues your certificate', correct: true }, { id: 'd', text: 'Acceptable if others are doing it', correct: false }] },
+          { id: 'q3', question: 'Why do corrupt shortcuts have long-term costs?', options: [{ id: 'a', text: "They don't — shortcuts always work", correct: false }, { id: 'b', text: 'You build on a false foundation that eventually collapses', correct: true }, { id: 'c', text: 'Only if you are caught', correct: false }, { id: 'd', text: 'They cost money', correct: false }] },
+          { id: 'q4', question: 'When is integrity tested most?', options: [{ id: 'a', text: 'When nothing is at stake', correct: false }, { id: 'b', text: 'When you are alone', correct: false }, { id: 'c', text: 'Under pressure when the stakes are high', correct: true }, { id: 'd', text: 'Only in exams', correct: false }] },
+          { id: 'q5', question: 'Reporting a corrupt teacher protects:', options: [{ id: 'a', text: 'Only yourself', correct: false }, { id: 'b', text: 'The teacher', correct: false }, { id: 'c', text: 'Every student in the class and future students', correct: true }, { id: 'd', text: 'Nobody', correct: false }] }
+        ]
+      },
+      {
+        id: 302, title: 'Leadership & Accountability', progress: 0, duration: '25 mins',
+        description: 'What real leadership looks like — and how accountability is the foundation of any position of trust.',
+        scenarios: [
+          { id: 'ss-leadership-1', title: 'The Student Union Funds',
+            situation: "You are the Student Union treasurer. A senior student pressures you to approve funds for an event that never happened. They say everyone does it and you'll be protected. What do you do?",
+            options: [
+              { id: 'a', text: "Approve it — they are senior and you don't want trouble.", correct: false, feedback: "Seniority does not override ethics. Approving false funds is fraud regardless of who asked." },
+              { id: 'b', text: 'Refuse and escalate to the school authority.', correct: true, feedback: 'As treasurer you are accountable for every naira. Refusing and escalating is exactly what your position demands.' },
+              { id: 'c', text: 'Approve a smaller amount as a compromise.', correct: false, feedback: 'There is no ethical compromise with fraud. Any approval of false expenditure is still fraud.' },
+              { id: 'd', text: 'Resign from your position to avoid it.', correct: false, feedback: 'Resignation lets the corrupt system continue. The answer is to refuse and report, not to walk away.' }
+            ]
+          }
+        ],
+        content: { keyPoints: ['Leadership is service, not status — titles give responsibility, not privilege', 'Accountability means owning every decision, especially financial ones', 'Pressure to compromise is a test of character — how you respond defines your legacy', 'Small positions, big principles — how you handle a student fund today is how you will handle a government budget tomorrow'] },
+        quiz: [
+          { id: 'q1', question: 'Real leadership is about:', options: [{ id: 'a', text: 'Status and privilege', correct: false }, { id: 'b', text: 'Service and responsibility', correct: true }, { id: 'c', text: 'Being popular', correct: false }, { id: 'd', text: 'Having authority over others', correct: false }] },
+          { id: 'q2', question: 'As a treasurer, approving funds for a fake event is:', options: [{ id: 'a', text: 'A small favour', correct: false }, { id: 'b', text: 'Acceptable under pressure', correct: false }, { id: 'c', text: 'Fraud and a breach of trust', correct: true }, { id: 'd', text: 'Normal in student unions', correct: false }] },
+          { id: 'q3', question: 'Accountability means:', options: [{ id: 'a', text: 'Blaming others when things go wrong', correct: false }, { id: 'b', text: 'Owning your decisions and being answerable for them', correct: true }, { id: 'c', text: 'Following orders without question', correct: false }, { id: 'd', text: 'Avoiding difficult situations', correct: false }] },
+          { id: 'q4', question: 'How you handle a student union fund today reflects:', options: [{ id: 'a', text: 'Nothing about your future', correct: false }, { id: 'b', text: 'How you will handle responsibility in future positions', correct: true }, { id: 'c', text: 'Only your school performance', correct: false }, { id: 'd', text: 'Your social skills', correct: false }] },
+          { id: 'q5', question: 'Pressure to compromise your integrity is:', options: [{ id: 'a', text: 'A sign you should give in', correct: false }, { id: 'b', text: 'Rare and unlikely', correct: false }, { id: 'c', text: 'A test of character that defines your legacy', correct: true }, { id: 'd', text: 'Only faced by adults', correct: false }] }
+        ]
+      }
+    ],
+    'University (100L–500L)': [
+      {
+        id: 401, title: 'Academic Integrity & Exam Malpractice', progress: 0, duration: '30 mins',
+        description: 'The full cost of academic fraud — to your career, your institution, and society.',
+        scenarios: [
+          { id: 'uni-academic-1', title: "The Lecturer's Condition",
+            situation: 'A lecturer makes it clear that students who pay will receive exam questions in advance and guaranteed A grades. Most of your coursemates are paying. Your CGPA is under pressure. What do you do?',
+            options: [
+              { id: 'a', text: 'Pay — your CGPA and future job depend on it.', correct: false, feedback: 'Paying sustains the system. Every student who pays makes it worse for every honest student. A CGPA built on fraud is a liability, not an asset.' },
+              { id: 'b', text: 'Refuse and report the lecturer to the Dean or anti-corruption body.', correct: true, feedback: 'Reporting is both your right and your responsibility. Every student who refuses and reports breaks the cycle.' },
+              { id: 'c', text: 'Pay but plan to stop after this semester.', correct: false, feedback: "There is no 'just this once' with corruption. It normalises and escalates. Refuse now." },
+              { id: 'd', text: 'Transfer departments to avoid the lecturer.', correct: false, feedback: 'Transferring lets the corrupt lecturer continue harming other students. Report and refuse.' }
+            ]
+          },
+          { id: 'uni-academic-2', title: 'The Thesis Ghost-Writer',
+            situation: 'Final year. You are behind on your thesis. A senior offers to write it for you for a fee. Your supervisor barely checks submissions. What do you do?',
+            options: [
+              { id: 'a', text: 'Pay for it — you just need to graduate.', correct: false, feedback: "A degree earned dishonestly is a liability. You'll enter your career without the knowledge the degree claims you have." },
+              { id: 'b', text: 'Decline and ask your supervisor for an extension.', correct: true, feedback: 'An honest extension request is legitimate. The work you do yourself is the only work that actually belongs to you.' },
+              { id: 'c', text: 'Use parts of it and rewrite the rest.', correct: false, feedback: 'Partial plagiarism is still plagiarism. If discovered, the consequences apply to the whole submission.' },
+              { id: 'd', text: "Submit it — your supervisor won't know.", correct: false, feedback: "Whether or not you're caught, you know. And you'll carry that into every professional situation that tests the knowledge your degree claims you have." }
+            ]
+          }
+        ],
+        content: { keyPoints: ['Your degree is a public document — fraud in academia harms everyone who relies on your competence', 'The system breaks when everyone pays — the institution loses credibility and honest graduates are tainted too', 'Reporting mechanisms exist — use them', 'The honest graduate is the valuable one — their track record withstands scrutiny'] },
+        quiz: [
+          { id: 'q1', question: 'A lecturer selling exam questions is committing:', options: [{ id: 'a', text: 'A personal favour', correct: false }, { id: 'b', text: 'Academic fraud and corruption', correct: true }, { id: 'c', text: 'Extra tutoring', correct: false }, { id: 'd', text: 'A minor infraction', correct: false }] },
+          { id: 'q2', question: 'Submitting a ghost-written thesis is:', options: [{ id: 'a', text: 'Acceptable under pressure', correct: false }, { id: 'b', text: 'Plagiarism and academic fraud', correct: true }, { id: 'c', text: 'Smart time management', correct: false }, { id: 'd', text: 'Only wrong if discovered', correct: false }] },
+          { id: 'q3', question: 'When students collectively pay for grades:', options: [{ id: 'a', text: 'Only those students are affected', correct: false }, { id: 'b', text: 'The institution gains more funding', correct: false }, { id: 'c', text: "The entire institution's credibility is damaged", correct: true }, { id: 'd', text: 'Nothing changes', correct: false }] },
+          { id: 'q4', question: 'Reporting a corrupt lecturer through official channels is:', options: [{ id: 'a', text: 'Dangerous and pointless', correct: false }, { id: 'b', text: 'Your right and responsibility', correct: true }, { id: 'c', text: 'Only for brave students', correct: false }, { id: 'd', text: 'Always ignored', correct: false }] },
+          { id: 'q5', question: 'Why is the honest graduate more valuable long-term?', options: [{ id: 'a', text: 'They are not', correct: false }, { id: 'b', text: 'Their track record can withstand scrutiny', correct: true }, { id: 'c', text: 'Employers never check', correct: false }, { id: 'd', text: 'Dishonest graduates earn more', correct: false }] }
+        ]
+      },
+      {
+        id: 402, title: 'Civic Responsibility & Fighting Corruption', progress: 0, duration: '30 mins',
+        description: 'Your role as a citizen and future professional in dismantling corruption.',
+        scenarios: [
+          { id: 'uni-civic-1', title: 'The NYSC Posting Bribe',
+            situation: 'You are about to be posted for NYSC. An official offers to get you a preferred state for a fee. Most of your friends are paying. What do you do?',
+            options: [
+              { id: 'a', text: 'Pay — everyone does it and the posting matters.', correct: false, feedback: 'Every person who pays funds the corruption that makes NYSC postings unfair for everyone. Refusing is the only way to stop feeding it.' },
+              { id: 'b', text: 'Refuse and accept your official posting.', correct: true, feedback: 'Refusing bribery at every level is how systems change. Your refusal matters even when it feels small.' },
+              { id: 'c', text: 'Negotiate a lower fee.', correct: false, feedback: 'Negotiating a lower bribe is still paying a bribe. It still funds the corrupt system.' },
+              { id: 'd', text: 'Pay and report it anonymously later.', correct: false, feedback: 'Paying then reporting anonymously still funds the corruption in the moment. The right sequence is refuse first, then report.' }
+            ]
+          },
+          { id: 'uni-civic-2', title: 'The Election Observer',
+            situation: 'You are a student volunteer election observer. You witness ballot stuffing. The party operative offers you money to look away. What do you do?',
+            options: [
+              { id: 'a', text: "Take the money and stay quiet — it's not your fight.", correct: false, feedback: 'Election fraud affects every citizen for years. Taking the money makes you complicit in stealing the democratic rights of millions.' },
+              { id: 'b', text: 'Refuse the money and document and report what you witnessed.', correct: true, feedback: 'As an observer your role is to protect the integrity of the process. Documenting and reporting is exactly what you are there to do.' },
+              { id: 'c', text: 'Take the money but report anyway.', correct: false, feedback: 'Taking the money and reporting creates serious legal and ethical problems for you. Refuse the money, then report cleanly.' },
+              { id: 'd', text: 'Leave the scene immediately without reporting.', correct: false, feedback: 'Leaving without reporting means the fraud goes undocumented. Your presence as an observer carries a duty to report.' }
+            ]
+          }
+        ],
+        content: { keyPoints: ['Civic responsibility is not optional — silence and apathy are votes for corruption', 'You are the generation that can change this — the values you build now are the ones you carry into office', 'Practical tools exist — ICPC, EFCC, whistleblower portals, civil society organisations', 'Collective action changes systems — a generation that refuses corruption collectively changes everything'] },
+        quiz: [
+          { id: 'q1', question: 'Paying for a preferred NYSC posting is:', options: [{ id: 'a', text: 'A smart use of resources', correct: false }, { id: 'b', text: 'Bribery that funds systemic corruption', correct: true }, { id: 'c', text: 'Acceptable since everyone does it', correct: false }, { id: 'd', text: 'A personal decision with no wider impact', correct: false }] },
+          { id: 'q2', question: 'As an election observer who witnesses fraud, you should:', options: [{ id: 'a', text: 'Stay quiet to stay safe', correct: false }, { id: 'b', text: 'Accept payment and leave', correct: false }, { id: 'c', text: 'Document and report through official channels', correct: true }, { id: 'd', text: 'Leave the scene', correct: false }] },
+          { id: 'q3', question: 'Civic responsibility means:', options: [{ id: 'a', text: 'Voting once every four years', correct: false }, { id: 'b', text: 'Actively protecting institutions and speaking up against wrongdoing', correct: true }, { id: 'c', text: 'Paying your taxes', correct: false }, { id: 'd', text: 'Obeying the law only', correct: false }] },
+          { id: 'q4', question: 'Which body handles corruption reports in Nigeria?', options: [{ id: 'a', text: 'NAFDAC', correct: false }, { id: 'b', text: 'FRSC', correct: false }, { id: 'c', text: 'ICPC and EFCC', correct: true }, { id: 'd', text: 'CBN', correct: false }] },
+          { id: 'q5', question: 'Collective refusal of corruption by a generation:', options: [{ id: 'a', text: 'Has no impact', correct: false }, { id: 'b', text: 'Is idealistic and unrealistic', correct: false }, { id: 'c', text: 'Can fundamentally change systems over time', correct: true }, { id: 'd', text: 'Only works in developed countries', correct: false }] }
+        ]
+      }
+    ]
+  };
     setSelectedSector(sector);
     setSelectedRole('');
     setSelectedDepartment('');
@@ -1990,7 +2242,9 @@ function App() {
           department: selectedDepartment,
           rank: selectedRank,
           riskLevel: selectedSector === 'police' || selectedSector === 'civil' ? 'high' : 'medium',
-          courses: coursesBySector[selectedSector] || []
+          courses: selectedSector === 'students'
+            ? (studentCoursesByLevel[selectedRank] || [])
+            : (coursesBySector[selectedSector] || [])
         };
         console.log('Setting user profile:', profile);
         setUserProfile(profile);
@@ -2293,7 +2547,7 @@ function App() {
               <div className="mb-7">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">1. Your Sector</p>
                 <div className="grid grid-cols-2 gap-3">
-                  {sectors.map((sector) => (
+                  {sectors.filter(s => s.value !== 'students').map((sector) => (
                     <button
                       key={sector.value}
                       onClick={() => handleSectorSelect(sector.value)}
@@ -2308,6 +2562,23 @@ function App() {
                       <div className="text-sm font-semibold text-white">{sector.label}</div>
                     </button>
                   ))}
+                  {/* Students — full width rectangle */}
+                  <button
+                    onClick={() => handleSectorSelect('students')}
+                    className={`col-span-2 p-5 rounded-xl border-2 text-left transition-all flex items-center gap-4 touch-manipulation ${
+                      selectedSector === 'students'
+                        ? 'border-yellow-500 bg-yellow-500/10'
+                        : 'border-white/8 hover:border-yellow-500/40 hover:bg-yellow-500/5'
+                    }`}
+                    style={selectedSector !== 'students' ? {background:'#1a1a1a'} : {}}
+                  >
+                    <div className="text-3xl">🎒</div>
+                    <div className="flex-1">
+                      <div className="font-semibold text-white text-sm">Students</div>
+                      <div className="text-white/40 text-xs mt-1">Primary · Junior Secondary · Senior Secondary · University</div>
+                    </div>
+                    <div className="text-white/30 text-xs">All levels →</div>
+                  </button>
                 </div>
               </div>
 
