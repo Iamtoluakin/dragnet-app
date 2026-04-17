@@ -2,12 +2,10 @@ import emailjs from '@emailjs/browser';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-// ─── EmailJS credentials ────────────────────────────────────────────────────
-// Sign up at https://www.emailjs.com (free: 200 emails/month)
-// Then create a Service, Template, and copy your Public Key here (or use env vars)
-const EMAILJS_SERVICE_ID  = 'service_qbis9qi';
-const EMAILJS_TEMPLATE_ID = 'template_tdnksr9';
-const EMAILJS_PUBLIC_KEY  = 'G8LHTQ2ig_bPm7HsD';
+// ─── EmailJS credentials (stored in .env, never hardcoded) ──────────────────
+const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 /**
  * Save a user's sign-up email to Firestore.
@@ -23,6 +21,22 @@ export async function saveUserEmail(name, email, sector) {
     });
   } catch (err) {
     console.error('Failed to save user email:', err);
+  }
+}
+
+/**
+ * Record a sign-in event to Firestore.
+ * Called every time an existing user signs in.
+ */
+export async function recordSignIn(name, email) {
+  try {
+    await addDoc(collection(db, 'signIns'), {
+      name,
+      email,
+      signedInAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.error('Failed to record sign-in:', err);
   }
 }
 

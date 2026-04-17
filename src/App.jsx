@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import { narrate, stopAudio, isAudioPlaying } from './utils/pollyNarration';
-import { saveUserEmail, saveAndEmailScore } from './utils/scoreEmail';
+import { saveUserEmail, recordSignIn, saveAndEmailScore } from './utils/scoreEmail';
 
 function App() {
   const [view, setView] = useState('landing');
@@ -2217,6 +2217,8 @@ function App() {
     // Save email to Firestore
     if (authMode === 'signup') {
       saveUserEmail(name, formData.email, selectedSector || 'unknown');
+    } else {
+      recordSignIn(name, formData.email);
     }
   };
 
