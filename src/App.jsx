@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import { narrate, stopAudio, isAudioPlaying } from './utils/pollyNarration';
+import { saveUserEmail, saveAndEmailScore } from './utils/scoreEmail';
 
 function App() {
   const [view, setView] = useState('landing');
@@ -2208,10 +2209,15 @@ function App() {
     }
     
     // Simulate authentication (in production, this would call an API)
-    setUserName(formData.name || formData.email.split('@')[0]);
+    const name = formData.name || formData.email.split('@')[0];
+    setUserName(name);
     setUserEmail(formData.email);
     setIsAuthenticated(true);
     setView('onboarding');
+    // Save email to Firestore
+    if (authMode === 'signup') {
+      saveUserEmail(name, formData.email, selectedSector || 'unknown');
+    }
   };
 
   const handleLogout = () => {
@@ -3020,6 +3026,14 @@ function App() {
                         passed: true,
                         completedDate: new Date().toLocaleDateString()
                       }]);
+                      // Save score to Firestore + send email
+                      saveAndEmailScore(
+                        userProfile.name,
+                        userProfile.email,
+                        currentCourse.title,
+                        correct,
+                        currentCourse.quiz.length
+                      );
                     }
                   }}
                   disabled={Object.keys(quizAnswers).length < (currentCourse.quiz?.length || 0)}
