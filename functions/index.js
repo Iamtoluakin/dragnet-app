@@ -13,12 +13,23 @@ const pollyClient = new PollyClient({
   },
 });
 
+const assertAuthenticated = (context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      'unauthenticated',
+      'You must be signed in to use this function.'
+    );
+  }
+};
+
 /**
  * Cloud Function to convert text to speech using AWS Polly
  * POST request with body: { text: string, voiceId?: string, languageCode?: string }
  */
 exports.textToSpeech = functions.https.onCall(async (data, context) => {
   try {
+    assertAuthenticated(context);
+
     // Validate input
     if (!data.text || typeof data.text !== 'string') {
       throw new functions.https.HttpsError(
@@ -80,6 +91,8 @@ exports.textToSpeech = functions.https.onCall(async (data, context) => {
  */
 exports.textToSpeechUrl = functions.https.onCall(async (data, context) => {
   try {
+    assertAuthenticated(context);
+
     if (!data.text || typeof data.text !== 'string') {
       throw new functions.https.HttpsError(
         'invalid-argument',

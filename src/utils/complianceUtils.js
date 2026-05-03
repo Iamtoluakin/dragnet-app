@@ -13,7 +13,6 @@ export const generateSessionId = () => {
  */
 export const generateCertificateNumber = (userId) => {
   const year = new Date().getFullYear();
-  const timestamp = Date.now();
   const random = Math.random().toString(36).substr(2, 6).toUpperCase();
   return `CERT-${year}-${random}-${userId.substr(0, 6).toUpperCase()}`;
 };

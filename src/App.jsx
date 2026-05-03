@@ -1,12 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
-import { narrate, stopAudio, isAudioPlaying } from './utils/pollyNarration';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { auth, db } from './firebase';
+import { narrate, stopAudio } from './utils/pollyNarration';
 import { saveUserEmail, recordSignIn, saveAndEmailScore } from './utils/scoreEmail';
+import { generateCareerRecommendations } from './utils/aiRecommendations';
 
 function App() {
   const [view, setView] = useState('landing');
   const keyLearningRef = useRef(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState('');
   const [authMode, setAuthMode] = useState('signin'); // 'signin' or 'signup'
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
@@ -18,7 +23,7 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [currentCourse, setCurrentCourse] = useState(null);
   const [currentScenario, setCurrentScenario] = useState(null);
-  const [scenarioAnswer, setScenarioAnswer] = useState('');
+  const [, setScenarioAnswer] = useState('');
   const [scenarioResult, setScenarioResult] = useState(null);
   const [hasReadScenario, setHasReadScenario] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
@@ -26,12 +31,9 @@ function App() {
   const [quizResult, setQuizResult] = useState(null);
   const [completedCourses, setCompletedCourses] = useState([]);
   const [clickedLearningPoints, setClickedLearningPoints] = useState([]);
-  const [showKeyLearning, setShowKeyLearning] = useState(false);
+  const [, setShowKeyLearning] = useState(false);
   const [isNarrating, setIsNarrating] = useState(false);
   const [narrationError, setNarrationError] = useState(null);
-  const [scenarioBranch, setScenarioBranch] = useState([]);
-  const [feedbackHistory, setFeedbackHistory] = useState([]);
-  const [showAnimation, setShowAnimation] = useState(false);
   const [currentStep, setCurrentStep] = useState('video'); // 'video', 'scenarios', 'keyPoints', 'laws', 'assessment'
   
   // Form states for auth
@@ -43,6 +45,69 @@ function App() {
   });
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
+
+  const loadUserTraining = async (uid) => {
+    const profileRef = doc(db, 'userProfiles', uid);
+    const profileSnap = await getDoc(profileRef);
+
+    if (!profileSnap.exists()) {
+      setUserProfile(null);
+      setCompletedCourses([]);
+      return false;
+    }
+
+    const data = profileSnap.data();
+    const profile = data.profile || null;
+    setUserProfile(profile);
+    setCompletedCourses(data.completedCourses || []);
+
+    if (profile) {
+      setSelectedSector(profile.sector || '');
+      setSelectedRole(profile.role || '');
+      setSelectedDepartment(profile.department || '');
+      setSelectedRank(profile.rank || '');
+      setUserName(profile.name || '');
+      setUserEmail(profile.email || '');
+    }
+
+    return Boolean(profile);
+  };
+
+  const saveUserTraining = async (uid, data) => {
+    if (!uid) return;
+
+    await setDoc(doc(db, 'userProfiles', uid), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setUserId('');
+        setIsAuthenticated(false);
+        return;
+      }
+
+      setUserId(user.uid);
+      setIsAuthenticated(true);
+      setUserName(user.displayName || user.email?.split('@')[0] || '');
+      setUserEmail(user.email || '');
+
+      try {
+        const hasProfile = await loadUserTraining(user.uid);
+        setView((currentView) => {
+          if (currentView !== 'landing' && currentView !== 'auth') return currentView;
+          return hasProfile ? 'dashboard' : 'onboarding';
+        });
+      } catch (error) {
+        console.error('Failed to load saved training profile:', error);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   // Stop narration when scenario changes or component unmounts
   useEffect(() => {
@@ -89,6 +154,13 @@ function App() {
     } else {
       narrateText(text);
     }
+  };
+
+  const cleanScenarioFeedback = (feedback = '') => {
+    return feedback
+      .replace(/^(?:✅|❌|⚠️|⚠)\s*/u, '')
+      .replace(/^(?:CORRECT|INCORRECT|PARTIALLY\s+CORRECT|PARTIALLY\s+INCORRECT):\s*/i, '')
+      .trim();
   };
 
   const sectors = [
@@ -2189,44 +2261,78 @@ function App() {
     setSelectedRank('');
   };
 
-  const handleAuth = (e) => {
+  const getFriendlyAuthError = (error) => {
+    const messages = {
+      'auth/email-already-in-use': 'An account already exists for this email.',
+      'auth/invalid-email': 'Enter a valid email address.',
+      'auth/invalid-credential': 'Email or password is incorrect.',
+      'auth/weak-password': 'Use a password with at least 6 characters.',
+      'auth/user-not-found': 'No account exists for this email.',
+      'auth/wrong-password': 'Email or password is incorrect.',
+    };
+
+    return messages[error.code] || 'Authentication failed. Please try again.';
+  };
+
+  const handleAuth = async (e) => {
     e.preventDefault();
+    setAuthError(null);
     
     if (authMode === 'signup') {
       if (formData.password !== formData.confirmPassword) {
-        alert('Passwords do not match!');
+        setAuthError('Passwords do not match.');
         return;
       }
       if (!formData.name || !formData.email || !formData.password) {
-        alert('Please fill in all fields!');
+        setAuthError('Please fill in all fields.');
         return;
       }
     } else {
       if (!formData.email || !formData.password) {
-        alert('Please fill in all fields!');
+        setAuthError('Please fill in all fields.');
         return;
       }
     }
     
-    // Simulate authentication (in production, this would call an API)
-    const name = formData.name || formData.email.split('@')[0];
-    setUserName(name);
-    setUserEmail(formData.email);
-    setIsAuthenticated(true);
-    setView('onboarding');
-    // Save email to Firestore
-    if (authMode === 'signup') {
-      saveUserEmail(name, formData.email, selectedSector || 'unknown');
-    } else {
-      recordSignIn(name, formData.email);
+    setAuthLoading(true);
+    try {
+      const name = formData.name || formData.email.split('@')[0];
+      const credential = authMode === 'signup'
+        ? await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+        : await signInWithEmailAndPassword(auth, formData.email, formData.password);
+
+      if (authMode === 'signup') {
+        await updateProfile(credential.user, { displayName: name });
+      }
+
+      setUserId(credential.user.uid);
+      setUserName(name);
+      setUserEmail(credential.user.email || formData.email);
+      setIsAuthenticated(true);
+
+      if (authMode === 'signup') {
+        await saveUserEmail(name, formData.email, selectedSector || 'unknown');
+        setView('onboarding');
+      } else {
+        await recordSignIn(name, formData.email);
+        const hasProfile = await loadUserTraining(credential.user.uid);
+        setView(hasProfile ? 'dashboard' : 'onboarding');
+      }
+    } catch (error) {
+      setAuthError(getFriendlyAuthError(error));
+    } finally {
+      setAuthLoading(false);
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOut(auth);
     setIsAuthenticated(false);
+    setUserId('');
     setUserName('');
     setUserEmail('');
     setUserProfile(null);
+    setCompletedCourses([]);
     setView('landing');
     setFormData({ name: '', email: '', password: '', confirmPassword: '' });
   };
@@ -2245,6 +2351,7 @@ function App() {
         clearInterval(interval);
         // Create user profile
         const profile = {
+          userId,
           name: userName,
           email: userEmail,
           sector: selectedSector,
@@ -2258,6 +2365,11 @@ function App() {
         };
         console.log('Setting user profile:', profile);
         setUserProfile(profile);
+        saveUserTraining(userId, {
+          profile,
+          completedCourses,
+          createdAt: serverTimestamp(),
+        }).catch((error) => console.error('Failed to save training profile:', error));
         setTimeout(() => {
           console.log('Navigating to dashboard with profile:', profile);
           setView('dashboard');
@@ -3020,14 +3132,25 @@ function App() {
                     setQuizResult({ correct, total: currentCourse.quiz.length, percentage, passed });
                     if (passed && userProfile) {
                       const updatedCourses = userProfile.courses.map(c => c.id === currentCourse.id ? { ...c, progress: 100 } : c);
-                      setUserProfile({ ...userProfile, courses: updatedCourses });
-                      setCompletedCourses([...completedCourses, {
+                      const updatedProfile = { ...userProfile, courses: updatedCourses };
+                      const completedCourse = {
                         courseId: currentCourse.id,
                         courseName: currentCourse.title,
+                        risk: currentCourse.risk,
                         score: percentage,
                         passed: true,
                         completedDate: new Date().toLocaleDateString()
-                      }]);
+                      };
+                      const updatedCompletedCourses = completedCourses.some(course => course.courseId === currentCourse.id)
+                        ? completedCourses.map(course => course.courseId === currentCourse.id ? completedCourse : course)
+                        : [...completedCourses, completedCourse];
+
+                      setUserProfile(updatedProfile);
+                      setCompletedCourses(updatedCompletedCourses);
+                      saveUserTraining(userId, {
+                        profile: updatedProfile,
+                        completedCourses: updatedCompletedCourses,
+                      }).catch((error) => console.error('Failed to save course completion:', error));
                       // Save score to Firestore + send email
                       saveAndEmailScore(
                         userProfile.name,
@@ -3106,7 +3229,7 @@ function App() {
               {/* Back + title */}
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => { setCurrentScenario(null); setScenarioAnswer(''); setScenarioResult(null); setHasReadScenario(false); setScenarioBranch([]); }}
+                  onClick={() => { setCurrentScenario(null); setScenarioAnswer(''); setScenarioResult(null); setHasReadScenario(false); }}
                   className="text-gray-500 hover:text-white text-sm transition-colors touch-manipulation"
                 >
                   ← Scenarios
@@ -3173,7 +3296,7 @@ function App() {
                     <p className={`text-sm font-bold mb-3 ${scenarioResult.correct ? 'text-green-400' : 'text-red-400'}`}>
                       {scenarioResult.correct ? '✅ Correct' : '❌ Incorrect'}
                     </p>
-                    <p className="text-gray-300 text-sm leading-relaxed">{scenarioResult.feedback}</p>
+                    <p className="text-gray-300 text-sm leading-relaxed">{cleanScenarioFeedback(scenarioResult.feedback)}</p>
                     {scenarioResult.consequence && (
                       <p className="text-yellow-400 text-xs mt-3">📋 {scenarioResult.consequence}</p>
                     )}
@@ -3181,7 +3304,7 @@ function App() {
 
                   <div className="flex flex-col sm:flex-row gap-3">
                     <button
-                      onClick={() => { setCurrentScenario(null); setScenarioAnswer(''); setScenarioResult(null); setHasReadScenario(false); setScenarioBranch([]); }}
+                      onClick={() => { setCurrentScenario(null); setScenarioAnswer(''); setScenarioResult(null); setHasReadScenario(false); }}
                       className="flex-1 py-3 border border-white/10 text-gray-400 hover:text-white rounded-xl font-semibold text-sm transition-all touch-manipulation"
                     >
                       ← All Scenarios
@@ -3275,14 +3398,14 @@ function App() {
             )}
 
             {userProfile && completedCourses.length > 0 && (() => {
-              const recommendations = generateCareerRecommendations();
+              const recommendations = generateCareerRecommendations(completedCourses, userProfile);
               return (
                 <div className="p-5 rounded-2xl border border-white/8 mb-4" style={{background:'#111111'}}>
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Career Recommendations</p>
-                  {recommendations.recommendations.length > 0 && (
+                  {recommendations.nextCourses.length > 0 && (
                     <div className="mb-4">
                       <p className="text-green-400 text-xs font-semibold mb-2">Recommended Paths</p>
-                      <ul className="space-y-1">{recommendations.recommendations.map((rec, i) => (<li key={i} className="text-gray-400 text-sm flex gap-2"><span className="text-green-500">→</span>{rec}</li>))}</ul>
+                      <ul className="space-y-1">{recommendations.nextCourses.map((rec, i) => (<li key={i} className="text-gray-400 text-sm flex gap-2"><span className="text-green-500">→</span>{rec}</li>))}</ul>
                     </div>
                   )}
                   {recommendations.strengths.length > 0 && (

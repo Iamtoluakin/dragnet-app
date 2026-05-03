@@ -19,7 +19,7 @@ export const generateCareerRecommendations = (completedCourses, userProfile) => 
     return recommendations;
   }
 
-  const { sector, role, rank } = userProfile || {};
+  const { sector, rank } = userProfile || {};
   
   // Analyze course performance
   const highRiskCompleted = completedCourses.some(c => c.risk === 'high');

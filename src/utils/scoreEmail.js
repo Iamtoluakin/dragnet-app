@@ -8,6 +8,10 @@ const EMAILJS_SCORE_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_WELCOME_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_WELCOME_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY        = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+const hasEmailJsConfig = () => {
+  return Boolean(EMAILJS_SERVICE_ID && EMAILJS_SCORE_TEMPLATE_ID && EMAILJS_WELCOME_TEMPLATE_ID && EMAILJS_PUBLIC_KEY);
+};
+
 /**
  * Save a user's sign-up email to Firestore.
  * Called once after successful sign-up / sign-in.
@@ -26,6 +30,8 @@ export async function saveUserEmail(name, email, sector) {
 
   // Send welcome email
   try {
+    if (!hasEmailJsConfig()) return;
+
     await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_WELCOME_TEMPLATE_ID,
@@ -68,7 +74,7 @@ export async function recordSignIn(name, email) {
  */
 export async function saveAndEmailScore(name, email, courseTitle, score, total) {
   const percentage = Math.round((score / total) * 100);
-  const passed = percentage >= 70;
+  const passed = percentage >= 80;
 
   // 1. Save to Firestore
   try {
@@ -88,6 +94,8 @@ export async function saveAndEmailScore(name, email, courseTitle, score, total) 
 
   // 2. Send email via EmailJS
   try {
+    if (!hasEmailJsConfig()) return;
+
     await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_SCORE_TEMPLATE_ID,
@@ -100,7 +108,7 @@ export async function saveAndEmailScore(name, email, courseTitle, score, total) 
         result:       passed ? '✅ PASSED' : '❌ Not Yet Passed',
         message:      passed
           ? `Well done! You passed the "${courseTitle}" module with ${percentage}%. Keep it up!`
-          : `You scored ${percentage}% on "${courseTitle}". A passing score is 70%. Review the material and try again — you can do it!`,
+          : `You scored ${percentage}% on "${courseTitle}". A passing score is 80%. Review the material and try again — you can do it!`,
       },
       EMAILJS_PUBLIC_KEY
     );
