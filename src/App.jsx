@@ -2269,6 +2269,8 @@ function App() {
       'auth/weak-password': 'Use a password with at least 6 characters.',
       'auth/user-not-found': 'No account exists for this email.',
       'auth/wrong-password': 'Email or password is incorrect.',
+      'auth/network-request-failed': 'Could not reach the sign-in service. Check your connection and try again.',
+      'auth/operation-timeout': 'The sign-in service did not respond. Check your connection and try again.',
     };
 
     return messages[error.code] || 'Authentication failed. Please try again.';
@@ -2297,9 +2299,20 @@ function App() {
     setAuthLoading(true);
     try {
       const name = formData.name || formData.email.split('@')[0];
-      const credential = authMode === 'signup'
-        ? await createUserWithEmailAndPassword(auth, formData.email, formData.password)
-        : await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const authRequest = authMode === 'signup'
+        ? createUserWithEmailAndPassword(auth, formData.email, formData.password)
+        : signInWithEmailAndPassword(auth, formData.email, formData.password);
+      let timeoutId;
+      const credential = await Promise.race([
+        authRequest,
+        new Promise((_, reject) => {
+          timeoutId = setTimeout(() => {
+            const error = new Error('Sign-in request timed out');
+            error.code = 'auth/operation-timeout';
+            reject(error);
+          }, 20000);
+        }),
+      ]).finally(() => clearTimeout(timeoutId));
 
       if (authMode === 'signup') {
         await updateProfile(credential.user, { displayName: name });
@@ -2309,14 +2322,17 @@ function App() {
       setUserName(name);
       setUserEmail(credential.user.email || formData.email);
       setIsAuthenticated(true);
+      setAuthLoading(false);
 
       if (authMode === 'signup') {
-        await saveUserEmail(name, formData.email, selectedSector || 'unknown');
         setView('onboarding');
+        void saveUserEmail(name, formData.email, selectedSector || 'unknown');
       } else {
-        await recordSignIn(name, formData.email);
-        const hasProfile = await loadUserTraining(credential.user.uid);
-        setView(hasProfile ? 'dashboard' : 'onboarding');
+        setView('onboarding');
+        void recordSignIn(name, formData.email);
+        loadUserTraining(credential.user.uid)
+          .then((hasProfile) => setView(hasProfile ? 'dashboard' : 'onboarding'))
+          .catch((error) => console.error('Failed to load saved training profile:', error));
       }
     } catch (error) {
       setAuthError(getFriendlyAuthError(error));
