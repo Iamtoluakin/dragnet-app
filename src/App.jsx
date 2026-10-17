@@ -2463,6 +2463,12 @@ function App() {
             </div>
 
             <p className="text-gray-600 text-xs mt-5">Not just training — tested and proven.</p>
+            <div className="mt-8 max-w-2xl rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
+              <p className="text-green-400 text-xs font-bold uppercase tracking-[0.2em] mb-2">Building a Culture of Integrity</p>
+              <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
+                <span className="text-white font-semibold">D</span>iscipline · <span className="text-white font-semibold">R</span>esponsibility · <span className="text-white font-semibold">A</span>ccountability · <span className="text-white font-semibold">G</span>overnance · <span className="text-white font-semibold">N</span>ational <span className="text-white font-semibold">E</span>thics · <span className="text-white font-semibold">T</span>raining
+              </p>
+            </div>
           </section>
 
           {/* ── WHAT WE DO ── */}
@@ -2552,7 +2558,8 @@ function App() {
 
           {/* ── FOOTER ── */}
           <footer className="border-t border-white/5 px-6 py-6 text-center">
-            <p className="text-gray-600 text-xs">© 2026 DragNet. Building better institutions, one person at a time.</p>
+            <p className="text-gray-500 text-xs font-medium">Building a Culture of Integrity</p>
+            <p className="text-gray-600 text-xs mt-1">© 2026 DragNet. Building better institutions, one person at a time.</p>
           </footer>
 
         </div>
