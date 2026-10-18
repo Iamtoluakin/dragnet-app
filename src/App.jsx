@@ -2483,7 +2483,7 @@ function App() {
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 leading-snug">
               Everyday choices shape the way we work together.
             </h2>
-            <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
+            <p className="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
               Dragnet helps learners practice fair, responsible decisions through role-based lessons, scenarios, and assessments. Keep assigned modules and progress together in one place.
             </p>
           </section>
