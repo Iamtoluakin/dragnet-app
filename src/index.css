@@ -26,6 +26,18 @@
 }
 
 :root {
+  --dn-bg: #0a0d18;
+  --dn-surface: #111626;
+  --dn-surface-raised: #171d2e;
+  --dn-primary: #3b82f6;
+  --dn-primary-hover: #2563eb;
+  --dn-secondary: #8b5cf6;
+  --dn-text: #f8fafc;
+  --dn-muted: #9aa5b7;
+  --dn-border: rgba(148, 163, 184, .16);
+  --dn-success: #34d399;
+  --dn-warning: #fbbf24;
+  --dn-error: #f87171;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -53,6 +65,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--dn-bg);
+  color: var(--dn-text);
 }
 
 h1 {

@@ -391,3 +391,93 @@ html {
 }
 
 /* ============================================ */
+
+/* Cinematic blue and violet treatment for the public landing page. */
+.landing-shell {
+  --dn-bg: #080b18;
+  --dn-surface: #101426;
+  --dn-primary: #3b82f6;
+  --dn-secondary: #8b5cf6;
+  --dn-border: rgba(148, 163, 184, .16);
+  color: #f8fafc;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(46, 80, 190, .22), transparent 42%),
+    radial-gradient(ellipse at 82% 24%, rgba(111, 54, 190, .14), transparent 32%);
+}
+.brand-logo {
+  display: block;
+  width: 176px;
+  height: auto;
+  padding: 5px 9px;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+.brand-logo-auth { width: 192px; margin: 0 auto; }
+.landing-hero {
+  position: relative;
+  isolation: isolate;
+}
+.landing-hero::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: min(72vw, 760px);
+  aspect-ratio: 1;
+  top: -8rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(46, 96, 230, .14), rgba(125, 69, 220, .08) 42%, transparent 70%);
+  filter: blur(14px);
+  pointer-events: none;
+}
+.landing-gradient-text {
+  color: #a5b4fc;
+  background: linear-gradient(100deg, #93c5fd 5%, #a5b4fc 48%, #d8b4fe 95%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.landing-pillar:hover { transform: translateY(-3px); }
+.landing-cta {
+  background-image: radial-gradient(ellipse at 100% 0%, rgba(109, 69, 200, .15), transparent 55%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-pillar { transition: none; }
+}
+
+.product-page {
+  background-color: #0a0d18 !important;
+  color: #f8fafc;
+}
+.product-page input,
+.product-page select,
+.product-page textarea {
+  min-height: 46px;
+  border-color: rgba(148, 163, 184, .2);
+  border-radius: 10px;
+  color: #f8fafc;
+  background-color: #171d2e !important;
+}
+.product-page input::placeholder,
+.product-page textarea::placeholder { color: #778297; }
+.product-page input:focus,
+.product-page select:focus,
+.product-page textarea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, .15);
+}
+.product-page button:focus-visible,
+.landing-shell button:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 3px;
+}
+.dashboard-page nav,
+.product-page > div > nav { border-color: rgba(148, 163, 184, .16); }
+
+@media (max-width: 520px) {
+  .brand-logo { width: 150px; }
+  .brand-logo-auth { width: 176px; }
+  .landing-hero { padding-top: 4.5rem; padding-bottom: 4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-shell *, .product-page * { scroll-behavior: auto !important; }
+}

@@ -2397,11 +2397,11 @@ function App() {
   return (
     <div className="min-h-screen" style={{background:'#0a0a0a'}}>
       {view === 'landing' ? (
-        <div className="min-h-screen flex flex-col overflow-x-hidden" style={{background: '#0a0a0a'}}>
+        <div className="min-h-screen flex flex-col overflow-x-hidden landing-shell" style={{background: '#080b18'}}>
 
           {/* ── NAV ── */}
           <nav className="flex items-center justify-between px-6 sm:px-10 py-5 border-b border-white/5">
-            <span className="text-white font-extrabold text-xl tracking-tight">DragNet</span>
+            <img src="/logo-dragnet.svg" alt="Dragnet — compliance training" className="brand-logo" />
             <div className="flex items-center gap-3">
               {isAuthenticated ? (
                 <button
@@ -2420,7 +2420,7 @@ function App() {
                   </button>
                   <button
                     onClick={() => { setAuthMode('signup'); setView('auth'); }}
-                    className="px-5 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg font-semibold text-sm touch-manipulation transition-all"
+                  className="px-5 py-2 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white rounded-lg font-semibold text-sm touch-manipulation transition-all"
                   >
                     Get started
                   </button>
@@ -2430,27 +2430,27 @@ function App() {
           </nav>
 
           {/* ── HERO ── */}
-          <section className="flex flex-col items-center justify-center text-center px-6 pt-20 pb-20 sm:pt-28 sm:pb-28">
-            <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-              <span className="text-gray-400 text-xs font-medium tracking-wide uppercase">Compliance & Character Development Platform</span>
+          <section className="landing-hero flex flex-col items-center justify-center text-center px-6 pt-20 pb-20 sm:pt-28 sm:pb-28">
+            <div className="inline-flex items-center gap-2 bg-blue-400/5 border border-blue-300/15 rounded-full px-4 py-1.5 mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-violet-300 animate-pulse"></span>
+              <span className="text-blue-100/70 text-xs font-medium tracking-wide uppercase">Compliance & Character Development</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight max-w-3xl">
-              Build Character. Test Integrity. <br className="hidden sm:block" />
-              <span className="text-green-400">Enforce Accountability.</span>
+              Compliance training <br className="hidden sm:block" />
+              <span className="landing-gradient-text">built for real decisions.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-gray-400 max-w-xl mb-10 leading-relaxed">
-              Train with real scenarios, pass compliance tests, and build a track record of integrity that actually matters.
+              Practice the choices your role demands. Dragnet gives public service, law enforcement, immigration, student, and private-sector learners focused training in ethics and compliance.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3">
               <button
                 onClick={() => { setAuthMode('signup'); setView('auth'); }}
-                className="px-8 py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-base shadow-lg shadow-green-900/40 touch-manipulation transition-all"
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 active:from-blue-700 active:to-violet-700 text-white rounded-xl font-bold text-base shadow-lg shadow-blue-950/50 touch-manipulation transition-all"
               >
-                Start Training — It's Free
+                Create your account
               </button>
               {isAuthenticated && (
                 <button
@@ -2462,9 +2462,9 @@ function App() {
               )}
             </div>
 
-            <p className="text-gray-600 text-xs mt-5">Not just training — tested and proven.</p>
+            <p className="text-gray-500 text-xs mt-5">Practical learning. Clear progress. Stronger judgment.</p>
             <div className="mt-8 max-w-2xl rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
-              <p className="text-green-400 text-xs font-bold uppercase tracking-[0.2em] mb-2">Building a Culture of Integrity</p>
+              <p className="text-blue-300 text-xs font-bold uppercase tracking-[0.2em] mb-2">Building a Culture of Integrity</p>
               <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
                 <span className="text-white font-semibold">D</span>iscipline · <span className="text-white font-semibold">R</span>esponsibility · <span className="text-white font-semibold">A</span>ccountability · <span className="text-white font-semibold">G</span>overnance · <span className="text-white font-semibold">N</span>ational <span className="text-white font-semibold">E</span>thics · <span className="text-white font-semibold">T</span>raining
               </p>
@@ -2473,14 +2473,12 @@ function App() {
 
           {/* ── WHAT WE DO ── */}
           <section className="px-6 pb-20 sm:pb-24 max-w-3xl mx-auto w-full text-center">
-            <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest mb-4">What DragNet does</p>
+            <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest mb-4">What Dragnet does</p>
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 leading-snug">
               Training that changes how you think, decide, and act.
             </h2>
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
-              We put you through real-world situations drawn from public service, law enforcement, 
-              immigration, and the private sector. You face the pressure, make a decision, and learn 
-              from the outcome — building character through practice, not theory.
+              Choose your sector and role, then work through focused lessons, scenarios, and assessments. Your dashboard keeps your assigned modules and course progress in one place.
             </p>
           </section>
 
@@ -2490,23 +2488,23 @@ function App() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 {
-                  icon: '🚫',
+                  icon: '01',
                   title: 'Anti-Corruption',
                   desc: 'Recognise bribery and abuse of power. Learn to say no — and why it matters.',
                 },
                 {
-                  icon: '⚖️',
+                  icon: '02',
                   title: 'Discipline & Integrity',
                   desc: 'Develop the professional habits and ethics that define someone people trust.',
                 },
                 {
-                  icon: '🌱',
+                  icon: '03',
                   title: 'Character & Leadership',
                   desc: 'Go beyond rules. Become the kind of person who makes things better.',
                 },
               ].map((p) => (
-                <div key={p.title} className="border border-white/8 rounded-2xl p-6 hover:border-green-500/30 transition-all" style={{background: '#111111'}}>
-                  <div className="text-3xl mb-4">{p.icon}</div>
+                <div key={p.title} className="landing-pillar border border-white/8 rounded-2xl p-6 hover:border-blue-400/30 transition-all" style={{background: '#101426'}}>
+                  <div className="text-sm mb-4 font-bold tracking-[0.18em] text-violet-300">{p.icon}</div>
                   <h3 className="text-white font-bold text-base mb-2">{p.title}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">{p.desc}</p>
                 </div>
@@ -2538,21 +2536,20 @@ function App() {
 
           {/* ── FINAL CTA ── */}
           <section className="px-6 pb-24 sm:pb-32 max-w-xl mx-auto w-full text-center">
-            <div className="border border-white/8 rounded-2xl p-8 sm:p-12" style={{background: '#111111'}}>
+            <div className="landing-cta border border-white/8 rounded-2xl p-8 sm:p-12" style={{background: '#101426'}}>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 leading-snug">
                 The change starts with you.
               </h2>
               <p className="text-gray-400 text-sm mb-8 leading-relaxed">
-                Join professionals who are choosing to be the difference — through training, 
-                reflection, and daily discipline.
+                Set up your profile to see training selected for your sector, role, department, and rank.
               </p>
               <button
                 onClick={() => { setAuthMode('signup'); setView('auth'); }}
-                className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-base shadow-lg shadow-green-900/30 touch-manipulation transition-all"
+                className="w-full py-4 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 active:from-blue-700 active:to-violet-700 text-white rounded-xl font-bold text-base shadow-lg shadow-blue-950/30 touch-manipulation transition-all"
               >
-                Join the Movement →
+                Create your account →
               </button>
-              <p className="text-gray-600 text-xs mt-4">Free · No card required</p>
+              <p className="text-gray-600 text-xs mt-4">Role-based compliance training</p>
             </div>
           </section>
 
@@ -2564,7 +2561,7 @@ function App() {
 
         </div>
       ) : view === 'auth' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen px-5 py-10">
+        <div className="product-page flex flex-col items-center justify-center min-h-screen px-5 py-10">
           <div className="max-w-md w-full">
             <button 
               onClick={() => setView('landing')}
@@ -2574,7 +2571,7 @@ function App() {
             </button>
 
             <div className="text-center mb-8">
-              <span className="text-white font-extrabold text-2xl tracking-tight">DragNet</span>
+              <img src="/logo-dragnet.svg" alt="Dragnet — compliance training" className="brand-logo brand-logo-auth" />
               <p className="text-gray-600 text-xs mt-1 uppercase tracking-widest">Training · Discipline · Character</p>
             </div>
             
@@ -2599,7 +2596,7 @@ function App() {
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                       placeholder="Enter your full name"
-                      className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-green-500 focus:ring-1 focus:ring-green-500/50 outline-none transition-all text-sm"
+                      className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400/40 outline-none transition-all text-sm"
                       style={{background:'#1a1a1a'}}
                       required
                     />
@@ -2613,7 +2610,7 @@ function App() {
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     placeholder="your@email.com"
-                    className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-green-500 focus:ring-1 focus:ring-green-500/50 outline-none transition-all text-sm"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400/40 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
                     required
                   />
@@ -2626,7 +2623,7 @@ function App() {
                     value={formData.password}
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-green-500 focus:ring-1 focus:ring-green-500/50 outline-none transition-all text-sm"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400/40 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
                     required
                   />
@@ -2640,7 +2637,7 @@ function App() {
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-green-500 focus:ring-1 focus:ring-green-500/50 outline-none transition-all text-sm"
+                      className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400/40 outline-none transition-all text-sm"
                       style={{background:'#1a1a1a'}}
                       required
                     />
@@ -2650,7 +2647,7 @@ function App() {
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full py-3.5 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                  className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                 >
                   {authLoading ? 'Please wait...' : (authMode === 'signin' ? 'Sign In' : 'Create Account')}
                 </button>
@@ -2676,7 +2673,7 @@ function App() {
           </div>
         </div>
       ) : view === 'onboarding' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen px-5 py-10">
+        <div className="product-page flex flex-col items-center justify-center min-h-screen px-5 py-10">
           <div className="max-w-2xl w-full">
             <button 
               onClick={() => setView('landing')}
@@ -2685,7 +2682,7 @@ function App() {
               ← Back
             </button>
             
-            <div className="p-6 sm:p-8 rounded-2xl border border-white/8" style={{background:'#111111'}}>
+            <div className="product-surface p-6 sm:p-8 rounded-2xl border border-white/8" style={{background:'#111111'}}>
               <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">Set up your profile</h2>
               <p className="text-gray-500 text-sm mb-7">Tell us your role and we'll assign the right training modules.</p>
 
@@ -2698,8 +2695,8 @@ function App() {
                       onClick={() => handleSectorSelect(sector.value)}
                       className={`p-4 sm:p-5 rounded-xl border transition-all duration-200 touch-manipulation text-left ${
                         selectedSector === sector.value
-                          ? 'border-green-500 bg-green-500/10'
-                          : 'border-white/8 hover:border-white/20'
+                          ? 'border-blue-400 bg-blue-500/10'
+                          : 'border-white/8 hover:border-blue-300/25'
                       }`}
                       style={selectedSector !== sector.value ? {background:'#1a1a1a'} : {}}
                     >
@@ -2733,7 +2730,7 @@ function App() {
                   <select
                     value={selectedRole}
                     onChange={(e) => setSelectedRole(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-green-500 outline-none transition-all text-sm"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-blue-400 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
                   >
                     <option value="">Select your job title...</option>
@@ -2750,7 +2747,7 @@ function App() {
                   <select
                     value={selectedDepartment}
                     onChange={(e) => setSelectedDepartment(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-green-500 outline-none transition-all text-sm"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-blue-400 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
                   >
                     <option value="">Select your department...</option>
@@ -2767,7 +2764,7 @@ function App() {
                   <select
                     value={selectedRank}
                     onChange={(e) => setSelectedRank(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-green-500 outline-none transition-all text-sm"
+                    className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-blue-400 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
                   >
                     <option value="">Select your rank/grade...</option>
@@ -2782,7 +2779,7 @@ function App() {
                 <div className="animate-fadeIn">
                   <button
                     onClick={handleCompleteOnboarding}
-                    className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 touch-manipulation transition-all"
+                    className="w-full py-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 touch-manipulation transition-all"
                   >
                     Get My Training Plan →
                   </button>
@@ -2793,7 +2790,7 @@ function App() {
         </div>
 
       ) : view === 'analysis' ? (
-        <div className="flex flex-col items-center justify-center min-h-screen px-5 py-10">
+        <div className="product-page flex flex-col items-center justify-center min-h-screen px-5 py-10">
           <div className="max-w-lg w-full">
             <div className="p-8 sm:p-12 rounded-2xl border border-white/8 text-center" style={{background:'#111111'}}>
               <div className="text-4xl mb-5 animate-pulse">⚙️</div>
@@ -2832,10 +2829,10 @@ function App() {
           </div>
         </div>
       ) : view === 'dashboard' ? (
-        <div className="min-h-screen px-4 sm:px-6 py-6 sm:py-8" style={{background:'#0a0a0a'}}>
+        <div className="product-page dashboard-page min-h-screen px-4 sm:px-6 py-6 sm:py-8" style={{background:'#0a0a0a'}}>
           <nav className="flex items-center justify-between mb-8 pb-5 border-b border-white/8 max-w-5xl mx-auto">
             <div className="flex items-center gap-3">
-              <button onClick={() => setView('profile')} className="w-9 h-9 bg-green-500/20 border border-green-500/30 rounded-full flex items-center justify-center text-base touch-manipulation hover:bg-green-500/30 transition-all">👤</button>
+              <button onClick={() => setView('profile')} className="w-9 h-9 bg-blue-500/15 border border-blue-400/25 rounded-full flex items-center justify-center text-base touch-manipulation hover:bg-blue-500/25 transition-all">👤</button>
               <div>
                 <p className="text-white font-bold text-sm leading-tight">{userProfile?.name || userName}</p>
                 {userProfile && <p className="text-gray-500 text-xs truncate max-w-[160px]">{userProfile.role}</p>}
@@ -2897,7 +2894,7 @@ function App() {
                           className={`px-4 py-2 rounded-lg text-xs font-bold touch-manipulation transition-all ${
                             course.progress === 100 
                               ? 'bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30' 
-                              : 'bg-green-500 hover:bg-green-400 text-white'
+                              : 'bg-blue-600 hover:bg-blue-500 text-white'
                           }`}
                         >
                           {course.progress === 100 ? 'Review' : 'Start →'}
@@ -2913,7 +2910,7 @@ function App() {
           </div>
         </div>
       ) : view === 'course' ? (
-        <div className="min-h-screen" style={{background:'#0a0a0a'}}>
+        <div className="product-page min-h-screen" style={{background:'#0a0a0a'}}>
           <a href="#main-content" className="skip-link">Skip to main content</a>
 
           {/* Top nav bar */}
@@ -2973,7 +2970,7 @@ function App() {
 
               <button
                 onClick={() => setCurrentStep('scenarios')}
-                className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 touch-manipulation transition-all"
+                className="w-full py-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 touch-manipulation transition-all"
               >
                 Continue to Scenarios →
               </button>
@@ -3080,7 +3077,7 @@ function App() {
               {clickedLearningPoints.length === currentCourse.content.keyPoints.length ? (
                 <button
                   onClick={() => { setShowQuiz(true); setQuizAnswers({}); setQuizResult(null); setCurrentStep('assessment'); }}
-                  className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 touch-manipulation transition-all"
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 touch-manipulation transition-all"
                 >
                   Take the Assessment →
                 </button>
@@ -3185,7 +3182,7 @@ function App() {
                     }
                   }}
                   disabled={Object.keys(quizAnswers).length < (currentCourse.quiz?.length || 0)}
-                  className="flex-1 py-3 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation"
+                  className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation"
                 >
                   Submit →
                 </button>
@@ -3236,7 +3233,7 @@ function App() {
                         setView('dashboard'); setCurrentCourse(null); setShowQuiz(false); setQuizAnswers({}); setQuizResult(null);
                       }
                     }}
-                    className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
+                    className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 transition-all touch-manipulation"
                   >
                     {userProfile.courses.slice(userProfile.courses.findIndex(c => c.id === currentCourse.id) + 1).find(c => c.progress < 100)
                       ? '→ Next Module' : '✅ Back to Dashboard'}
@@ -3281,7 +3278,7 @@ function App() {
               {!hasReadScenario && !scenarioResult && (
                 <button
                   onClick={() => setHasReadScenario(true)}
-                  className="w-full py-4 bg-green-500 hover:bg-green-400 text-white font-bold rounded-xl text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-sm shadow-sm shadow-blue-950/30 transition-all touch-manipulation"
                 >
                   I've read it — Show options →
                 </button>
@@ -3338,14 +3335,14 @@ function App() {
                       return hasNext ? (
                         <button
                           onClick={() => { setCurrentScenario(currentCourse.scenarios[currentIndex + 1]); setScenarioAnswer(''); setScenarioResult(null); setHasReadScenario(false); }}
-                          className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
+                          className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 transition-all touch-manipulation"
                         >
                           Next Scenario ({currentIndex + 2}/{currentCourse.scenarios.length}) →
                         </button>
                       ) : (
                         <button
                           onClick={() => { setCurrentScenario(null); setScenarioAnswer(''); setScenarioResult(null); setShowKeyLearning(true); setClickedLearningPoints([]); setCurrentStep('keyPoints'); }}
-                          className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-900/30 transition-all touch-manipulation"
+                          className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 transition-all touch-manipulation"
                         >
                           ✓ Key Learning Points →
                         </button>
@@ -3359,7 +3356,7 @@ function App() {
 
         </div>
       ) : view === 'profile' ? (
-        <div className="min-h-screen px-4 sm:px-6 py-6 sm:py-8" style={{background:'#0a0a0a'}}>
+        <div className="product-page min-h-screen px-4 sm:px-6 py-6 sm:py-8" style={{background:'#0a0a0a'}}>
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center justify-between mb-8 pb-5 border-b border-white/8">
               <div className="flex items-center gap-3">
@@ -3452,7 +3449,7 @@ function App() {
                 <div className="text-4xl mb-3">📚</div>
                 <p className="text-white font-bold mb-1">No courses completed yet</p>
                 <p className="text-gray-500 text-sm mb-5">Complete modules to unlock career recommendations.</p>
-                <button onClick={() => setView('dashboard')} className="px-6 py-2.5 bg-green-500 hover:bg-green-400 text-white rounded-xl font-bold text-sm touch-manipulation transition-all">Go to Dashboard →</button>
+                <button onClick={() => setView('dashboard')} className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-sm touch-manipulation transition-all">Go to Dashboard →</button>
               </div>
             )}
           </div>
