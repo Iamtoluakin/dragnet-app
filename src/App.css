@@ -430,19 +430,16 @@ html {
 .landing-cta {
   background-image: radial-gradient(ellipse at 100% 0%, rgba(109, 69, 200, .15), transparent 55%);
 }
-.landing-training-figure {
-  margin-left: auto;
-  margin-right: auto;
-}
-.landing-training-photo {
+.landing-illustration { margin-left: auto; margin-right: auto; }
+.landing-illustration-image {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 8;
+  height: auto;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
-  object-position: center 42%;
-  border: 1px solid rgba(255, 255, 255, .14);
-  border-radius: 18px;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, .3);
+  border: 1px solid rgba(147, 166, 255, .28);
+  border-radius: 22px;
+  box-shadow: 0 26px 80px rgba(20, 37, 145, .28);
 }
 @media (prefers-reduced-motion: reduce) {
   .landing-pillar { transition: none; }
@@ -479,7 +476,7 @@ html {
 
 @media (max-width: 520px) {
   .landing-hero { padding-top: 4.5rem; padding-bottom: 4rem; }
-  .landing-training-photo { aspect-ratio: auto; border-radius: 14px; }
+  .landing-illustration-image { border-radius: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

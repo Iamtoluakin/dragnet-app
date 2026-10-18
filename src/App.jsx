@@ -2462,11 +2462,11 @@ function App() {
             </div>
 
             <p className="text-gray-500 text-xs mt-5">Practical learning. Clear progress. Stronger judgment.</p>
-            <figure className="landing-training-figure mt-10 w-full max-w-4xl">
+            <figure className="landing-illustration mt-12 w-full max-w-6xl">
               <img
-                src="/dragnet-everyday-people.svg"
-                alt="Cartoon showing a police officer, teacher, banker, engineer, civil servant, nurse, and student"
-                className="landing-training-photo"
+                src="/dragnet-everyday-people.png"
+                alt="Cartoon of a police officer, teacher, banker, engineer, civil servant, nurse, chef, and students, including a person who uses a wheelchair, against a blue-purple city background"
+                className="landing-illustration-image"
                 loading="eager"
                 fetchPriority="high"
               />
