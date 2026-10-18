@@ -2441,7 +2441,7 @@ function App() {
             </h1>
 
             <p className="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mb-10">
-              Dragnet helps learners practice fair, responsible decisions through role-based lessons, scenarios, and assessments. Keep assigned modules and progress together in one place.
+              For police officers, teachers, bankers, engineers, civil servants, nurses, students, and more. Dragnet helps people practice fair, responsible decisions through role-based lessons, scenarios, and assessments.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3">

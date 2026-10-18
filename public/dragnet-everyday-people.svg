@@ -4,55 +4,35 @@
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#111a35"/>
-      <stop offset=".55" stop-color="#11142a"/>
+      <stop offset=".55" stop-color="#0b1020"/>
       <stop offset="1" stop-color="#211742"/>
     </linearGradient>
-    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#3989ff" stop-opacity=".38"/>
-      <stop offset="1" stop-color="#a45bff" stop-opacity=".26"/>
-    </linearGradient>
-    <linearGradient id="floor" x1="0" y1="0" x2="1" y2="0">
-      <stop stop-color="#3578e5" stop-opacity=".28"/>
-      <stop offset=".5" stop-color="#fff" stop-opacity=".04"/>
-      <stop offset="1" stop-color="#9a5cff" stop-opacity=".28"/>
-    </linearGradient>
-    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="34"/>
-    </filter>
     <style>
-      .character { filter: drop-shadow(0 2px 7px rgba(90, 126, 255, .15)); }
       .character path, .character ellipse, .character rect, .character circle {
         fill: none !important;
-        stroke: currentColor;
+        stroke: #171717;
         stroke-width: 3.5;
         stroke-linecap: round;
         stroke-linejoin: round;
       }
-      .police { color: #9bc5ff; }
-      .teacher { color: #d3afff; }
-      .banker { color: #aebeff; }
-      .engineer { color: #8fdbd1; }
-      .civil-servant { color: #c0c5ff; }
-      .nurse { color: #9cdeed; }
-      .student { color: #ffd38e; }
+      .character .cloth { fill: #4fa5c6 !important; }
+      .character .hair { fill: #171717 !important; stroke: #171717; }
+      .character .face { fill: #f5d3b6 !important; }
+      .character .detail { stroke-width: 2.5; }
     </style>
   </defs>
 
   <rect width="1200" height="620" rx="28" fill="url(#bg)"/>
-  <ellipse cx="245" cy="140" rx="220" ry="150" fill="#347cff" opacity=".2" filter="url(#soft)"/>
-  <ellipse cx="940" cy="145" rx="240" ry="150" fill="#9553ef" opacity=".2" filter="url(#soft)"/>
-  <path d="M0 463 Q210 420 390 460 T790 450 T1200 455 V620 H0Z" fill="url(#floor)"/>
-  <path d="M0 500 Q250 465 480 500 T920 490 T1200 495" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
 
   <!-- Police officer -->
   <g class="character police" transform="translate(28 0)">
-    <path d="M34 620v-104q5-56 66-63h43q60 8 65 63v104Z" fill="#254c88"/>
+    <path class="cloth" d="M34 620v-104q5-56 66-63h43q60 8 65 63v104Z" fill="#254c88"/>
     <path d="m85 476 36 25 36-25 18 20-28 32h-52l-28-32Z" fill="#f1f5fb"/>
     <path d="m105 503 16 15 16-15-8 49h-16Z" fill="#4f80db"/>
     <rect x="44" y="539" width="35" height="8" rx="4" fill="#8eb9ff" opacity=".7"/>
     <path d="M54 419q0-65 46-83 52 8 57 83v19H54Z" fill="#7c4936"/>
-    <ellipse cx="121" cy="414" rx="55" ry="65" fill="#a86f51"/>
-    <path d="M66 398q4-65 58-72 51 12 52 76-22-34-63-34-26 0-47 30Z" fill="#30251f"/>
+    <ellipse class="face" cx="121" cy="414" rx="55" ry="65" fill="#a86f51"/>
+    <path class="hair" d="M66 398q4-65 58-72 51 12 52 76-22-34-63-34-26 0-47 30Z" fill="#30251f"/>
     <path d="M56 356q3-33 65-36 61 3 66 36l-11 13H67Z" fill="#17365f"/>
     <path d="M49 366q72-20 146 0l-12 14H60Z" fill="#2863a6"/>
     <path d="m119 350 12 10-11 12-12-12Z" fill="#f7c95d"/>
@@ -63,12 +43,12 @@
 
   <!-- Teacher -->
   <g class="character teacher" transform="translate(191 0)">
-    <path d="M30 620v-107q8-54 65-62h45q58 8 66 62v107Z" fill="#8051ad"/>
+    <path class="cloth" d="M30 620v-107q8-54 65-62h45q58 8 66 62v107Z" fill="#8051ad"/>
     <path d="m83 475 34 24 33-24 16 22-27 32H94l-27-32Z" fill="#fff"/>
     <path d="m117 499 14 12-14 14-14-14Z" fill="#eda85c"/>
     <path d="M52 409q-8-68 63-77 71 7 66 84l-6 42H58Z" fill="#392b2d"/>
-    <ellipse cx="116" cy="415" rx="53" ry="63" fill="#e4ae87"/>
-    <path d="M65 403q-2-63 51-70 50 3 55 53-24-19-48-19-30 0-58 36Z" fill="#382b2b"/>
+    <ellipse class="face" cx="116" cy="415" rx="53" ry="63" fill="#e4ae87"/>
+    <path class="hair" d="M65 403q-2-63 51-70 50 3 55 53-24-19-48-19-30 0-58 36Z" fill="#382b2b"/>
     <path d="M72 430q-20 33-5 56l17-17m75-39q18 33 4 56l-17-17" fill="#382b2b"/>
     <path d="M88 414h24m14 0h24" stroke="#60483e" stroke-width="3"/>
     <circle cx="101" cy="418" r="13" fill="none" stroke="#4a5364" stroke-width="4"/><circle cx="136" cy="418" r="13" fill="none" stroke="#4a5364" stroke-width="4"/>
@@ -80,12 +60,12 @@
 
   <!-- Banker -->
   <g class="character banker" transform="translate(356 0)">
-    <path d="M28 620v-102q7-58 69-65h44q61 7 68 65v102Z" fill="#376a9a"/>
+    <path class="cloth" d="M28 620v-102q7-58 69-65h44q61 7 68 65v102Z" fill="#376a9a"/>
     <path d="m84 476 35 24 35-24 17 22-29 34H96l-29-34Z" fill="#f9fafb"/>
     <path d="m119 500 14 13-14 17-14-17Z" fill="#be536c"/>
     <path d="M62 409q0-67 57-78 58 8 59 79l-11 46H69Z" fill="#302525"/>
-    <ellipse cx="119" cy="415" rx="53" ry="63" fill="#d99d73"/>
-    <path d="M67 401q6-66 58-70 48 3 53 59-20-26-55-26-30 0-56 37Z" fill="#302525"/>
+    <ellipse class="face" cx="119" cy="415" rx="53" ry="63" fill="#d99d73"/>
+    <path class="hair" d="M67 401q6-66 58-70 48 3 53 59-20-26-55-26-30 0-56 37Z" fill="#302525"/>
     <circle cx="99" cy="418" r="3.5" fill="#292321"/><circle cx="138" cy="418" r="3.5" fill="#292321"/>
     <path d="M107 446q12 9 24 0" fill="none" stroke="#9b574e" stroke-width="4" stroke-linecap="round"/>
     <rect x="171" y="538" width="55" height="60" rx="8" fill="#6d492e"/>
@@ -95,12 +75,12 @@
 
   <!-- Engineer -->
   <g class="character engineer" transform="translate(521 0)">
-    <path d="M26 620v-105q8-58 69-64h46q61 7 69 64v105Z" fill="#288b84"/>
+    <path class="cloth" d="M26 620v-105q8-58 69-64h46q61 7 69 64v105Z" fill="#288b84"/>
     <path d="m82 476 36 25 36-25 17 22-29 33H94l-29-33Z" fill="#e8f2f0"/>
     <path d="m118 500 14 12-14 15-14-15Z" fill="#efbd49"/>
     <path d="M62 410q0-65 57-78 58 10 59 82l-10 46H69Z" fill="#282623"/>
-    <ellipse cx="119" cy="415" rx="53" ry="62" fill="#87583f"/>
-    <path d="M68 397q5-59 52-67 50 5 55 64-26-23-53-22-31 0-54 25Z" fill="#282623"/>
+    <ellipse class="face" cx="119" cy="415" rx="53" ry="62" fill="#87583f"/>
+    <path class="hair" d="M68 397q5-59 52-67 50 5 55 64-26-23-53-22-31 0-54 25Z" fill="#282623"/>
     <path d="M56 364q2-39 63-42 61 3 64 42l-11 18H67Z" fill="#ffbf38"/>
     <path d="M47 376q72-18 146 0l-10 15H58Z" fill="#ffd25f"/>
     <path d="M93 416h1m49 0h1" stroke="#241e1a" stroke-width="7" stroke-linecap="round"/>
@@ -110,12 +90,12 @@
 
   <!-- Civil servant -->
   <g class="character civil-servant" transform="translate(686 0)">
-    <path d="M27 620v-105q7-57 69-64h45q61 7 69 64v105Z" fill="#5964a0"/>
+    <path class="cloth" d="M27 620v-105q7-57 69-64h45q61 7 69 64v105Z" fill="#5964a0"/>
     <path d="m82 476 36 25 36-25 17 22-29 33H94l-29-33Z" fill="#f4f5fa"/>
     <path d="m118 501 14 12-14 17-14-17Z" fill="#ef8c57"/>
     <path d="M63 410q0-66 56-78 58 9 59 81l-10 46H70Z" fill="#392d29"/>
-    <ellipse cx="119" cy="415" rx="52" ry="62" fill="#c78662"/>
-    <path d="M68 397q5-62 52-66 49 5 55 60-21-21-53-21-30 0-54 27Z" fill="#392d29"/>
+    <ellipse class="face" cx="119" cy="415" rx="52" ry="62" fill="#c78662"/>
+    <path class="hair" d="M68 397q5-62 52-66 49 5 55 60-21-21-53-21-30 0-54 27Z" fill="#392d29"/>
     <circle cx="100" cy="418" r="3.5" fill="#261d1a"/><circle cx="138" cy="418" r="3.5" fill="#261d1a"/>
     <path d="M107 446q12 9 24 0" fill="none" stroke="#874e43" stroke-width="4" stroke-linecap="round"/>
     <rect x="163" y="528" width="48" height="64" rx="5" fill="#e8bb62" transform="rotate(5 163 528)"/>
@@ -124,12 +104,12 @@
 
   <!-- Nurse -->
   <g class="character nurse" transform="translate(851 0)">
-    <path d="M28 620v-106q8-58 69-64h45q61 7 69 64v106Z" fill="#51a6bb"/>
+    <path class="cloth" d="M28 620v-106q8-58 69-64h45q61 7 69 64v106Z" fill="#51a6bb"/>
     <path d="m82 476 36 25 36-25 17 22-29 33H94l-29-33Z" fill="#f7fbff"/>
     <path d="m118 501 14 12-14 16-14-16Z" fill="#53a6bd"/>
     <path d="M64 407q0-67 55-77 57 9 60 80l-11 48H70Z" fill="#382b2c"/>
-    <ellipse cx="119" cy="414" rx="52" ry="62" fill="#e6ae8c"/>
-    <path d="M68 399q7-65 52-68 49 4 55 63-25-25-54-24-30 0-53 29Z" fill="#382b2c"/>
+    <ellipse class="face" cx="119" cy="414" rx="52" ry="62" fill="#e6ae8c"/>
+    <path class="hair" d="M68 399q7-65 52-68 49 4 55 63-25-25-54-24-30 0-53 29Z" fill="#382b2c"/>
     <path d="M82 360q37-18 74 0l-5 24H87Z" fill="#fff"/>
     <path d="M118 364v16m-8-8h16" stroke="#5c9fb4" stroke-width="4" stroke-linecap="round"/>
     <circle cx="100" cy="419" r="3.5" fill="#30221f"/><circle cx="138" cy="419" r="3.5" fill="#30221f"/>
@@ -139,19 +119,16 @@
 
   <!-- Student -->
   <g class="character student" transform="translate(1016 0)">
-    <path d="M28 620v-108q9-56 68-63h46q60 7 68 63v108Z" fill="#bd6a57"/>
+    <path class="cloth" d="M28 620v-108q9-56 68-63h46q60 7 68 63v108Z" fill="#bd6a57"/>
     <path d="m81 476 36 25 36-25 17 22-29 33H93l-29-33Z" fill="#f5f1e9"/>
     <path d="m117 501 14 12-14 16-14-16Z" fill="#4d76c4"/>
     <path d="M63 408q0-67 55-78 58 9 59 81l-10 45H70Z" fill="#382c27"/>
-    <ellipse cx="118" cy="415" rx="52" ry="62" fill="#9c684c"/>
-    <path d="M68 399q4-62 51-69 48 7 55 65-21-24-53-24-29 0-53 28Z" fill="#382c27"/>
+    <ellipse class="face" cx="118" cy="415" rx="52" ry="62" fill="#9c684c"/>
+    <path class="hair" d="M68 399q4-62 51-69 48 7 55 65-21-24-53-24-29 0-53 28Z" fill="#382c27"/>
     <circle cx="100" cy="418" r="3.5" fill="#241d19"/><circle cx="137" cy="418" r="3.5" fill="#241d19"/>
     <path d="M106 445q12 10 24 0" fill="none" stroke="#654039" stroke-width="4" stroke-linecap="round"/>
     <path d="M44 524q-23 19-20 78l27 14 10-85Zm147 0q23 19 20 78l-27 14-10-85Z" fill="#385ca7"/>
     <path d="M27 571h27m143 0h27" stroke="#86a8ef" stroke-width="6" stroke-linecap="round"/>
   </g>
 
-  <g fill="#d8e5ff" opacity=".55">
-    <circle cx="104" cy="95" r="3"/><circle cx="330" cy="111" r="2"/><circle cx="589" cy="76" r="3"/><circle cx="817" cy="106" r="2"/><circle cx="1074" cy="85" r="3"/>
-  </g>
 </svg>
