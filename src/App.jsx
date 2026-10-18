@@ -2464,15 +2464,12 @@ function App() {
             <p className="text-gray-500 text-xs mt-5">Practical learning. Clear progress. Stronger judgment.</p>
             <figure className="landing-training-figure mt-10 w-full max-w-4xl">
               <img
-                src="https://images.unsplash.com/photo-1573167507387-6b4b98cb7c13?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800"
-                alt="Colleagues gathered around a table as one person leads a workplace discussion"
+                src="/dragnet-everyday-people.svg"
+                alt="Cartoon showing a police officer, teacher, banker, engineer, civil servant, nurse, and student"
                 className="landing-training-photo"
                 loading="eager"
                 fetchPriority="high"
               />
-              <figcaption className="mt-2 text-right text-[11px] text-gray-500">
-                Photo by <a className="underline underline-offset-2 hover:text-gray-300" href="https://unsplash.com/photos/people-on-conference-table-looking-at-talking-woman-Q80LYxv_Tbs" target="_blank" rel="noreferrer">Christina @ wocintechchat.com M</a> on Unsplash
-              </figcaption>
             </figure>
           </section>
 

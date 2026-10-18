@@ -479,7 +479,7 @@ html {
 
 @media (max-width: 520px) {
   .landing-hero { padding-top: 4.5rem; padding-bottom: 4rem; }
-  .landing-training-photo { aspect-ratio: 4 / 3; border-radius: 14px; }
+  .landing-training-photo { aspect-ratio: auto; border-radius: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
