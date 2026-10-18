@@ -403,15 +403,6 @@ html {
   background-image: radial-gradient(ellipse at 50% 0%, rgba(46, 80, 190, .22), transparent 42%),
     radial-gradient(ellipse at 82% 24%, rgba(111, 54, 190, .14), transparent 32%);
 }
-.brand-logo {
-  display: block;
-  width: 176px;
-  height: auto;
-  padding: 5px 9px;
-  border-radius: 9px;
-  background: #f8fafc;
-}
-.brand-logo-auth { width: 192px; margin: 0 auto; }
 .landing-hero {
   position: relative;
   isolation: isolate;
@@ -438,6 +429,20 @@ html {
 .landing-pillar:hover { transform: translateY(-3px); }
 .landing-cta {
   background-image: radial-gradient(ellipse at 100% 0%, rgba(109, 69, 200, .15), transparent 55%);
+}
+.landing-training-figure {
+  margin-left: auto;
+  margin-right: auto;
+}
+.landing-training-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 8;
+  object-fit: cover;
+  object-position: center 42%;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .3);
 }
 @media (prefers-reduced-motion: reduce) {
   .landing-pillar { transition: none; }
@@ -473,9 +478,8 @@ html {
 .product-page > div > nav { border-color: rgba(148, 163, 184, .16); }
 
 @media (max-width: 520px) {
-  .brand-logo { width: 150px; }
-  .brand-logo-auth { width: 176px; }
   .landing-hero { padding-top: 4.5rem; padding-bottom: 4rem; }
+  .landing-training-photo { aspect-ratio: 4 / 3; border-radius: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

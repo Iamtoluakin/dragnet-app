@@ -2401,7 +2401,7 @@ function App() {
 
           {/* ── NAV ── */}
           <nav className="flex items-center justify-between px-6 sm:px-10 py-5 border-b border-white/5">
-            <img src="/logo-dragnet.svg" alt="Dragnet — compliance training" className="brand-logo" />
+            <span className="text-white font-bold text-lg tracking-tight">Dragnet</span>
             <div className="flex items-center gap-3">
               {isAuthenticated ? (
                 <button
@@ -2433,16 +2433,16 @@ function App() {
           <section className="landing-hero flex flex-col items-center justify-center text-center px-6 pt-20 pb-20 sm:pt-28 sm:pb-28">
             <div className="inline-flex items-center gap-2 bg-blue-400/5 border border-blue-300/15 rounded-full px-4 py-1.5 mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-violet-300 animate-pulse"></span>
-              <span className="text-blue-100/70 text-xs font-medium tracking-wide uppercase">Compliance & Character Development</span>
+              <span className="text-blue-100/70 text-xs font-medium tracking-wide uppercase">Practical ethics and compliance learning</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight max-w-3xl">
               Compliance training <br className="hidden sm:block" />
-              <span className="landing-gradient-text">built for real decisions.</span>
+              <span className="landing-gradient-text">for real, everyday people.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-gray-400 max-w-xl mb-10 leading-relaxed">
-              Practice the choices your role demands. Dragnet gives public service, law enforcement, immigration, student, and private-sector learners focused training in ethics and compliance.
+              Challenge corruption and disorderliness with practical learning for everyday people: recognize misconduct, make fair decisions, and act responsibly.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -2463,22 +2463,28 @@ function App() {
             </div>
 
             <p className="text-gray-500 text-xs mt-5">Practical learning. Clear progress. Stronger judgment.</p>
-            <div className="mt-8 max-w-2xl rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
-              <p className="text-blue-300 text-xs font-bold uppercase tracking-[0.2em] mb-2">Building a Culture of Integrity</p>
-              <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
-                <span className="text-white font-semibold">D</span>iscipline · <span className="text-white font-semibold">R</span>esponsibility · <span className="text-white font-semibold">A</span>ccountability · <span className="text-white font-semibold">G</span>overnance · <span className="text-white font-semibold">N</span>ational <span className="text-white font-semibold">E</span>thics · <span className="text-white font-semibold">T</span>raining
-              </p>
-            </div>
+            <figure className="landing-training-figure mt-10 w-full max-w-4xl">
+              <img
+                src="https://images.unsplash.com/photo-1573167507387-6b4b98cb7c13?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1800"
+                alt="Colleagues gathered around a table as one person leads a workplace discussion"
+                className="landing-training-photo"
+                loading="eager"
+                fetchPriority="high"
+              />
+              <figcaption className="mt-2 text-right text-[11px] text-gray-500">
+                Photo by <a className="underline underline-offset-2 hover:text-gray-300" href="https://unsplash.com/photos/people-on-conference-table-looking-at-talking-woman-Q80LYxv_Tbs" target="_blank" rel="noreferrer">Christina @ wocintechchat.com M</a> on Unsplash
+              </figcaption>
+            </figure>
           </section>
 
           {/* ── WHAT WE DO ── */}
           <section className="px-6 pb-20 sm:pb-24 max-w-3xl mx-auto w-full text-center">
             <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest mb-4">What Dragnet does</p>
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 leading-snug">
-              Training that changes how you think, decide, and act.
+              Everyday choices shape the way we work together.
             </h2>
             <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
-              Choose your sector and role, then work through focused lessons, scenarios, and assessments. Your dashboard keeps your assigned modules and course progress in one place.
+              Dragnet helps learners practice fair, responsible decisions through role-based lessons, scenarios, and assessments. Keep assigned modules and progress together in one place.
             </p>
           </section>
 
@@ -2499,8 +2505,8 @@ function App() {
                 },
                 {
                   icon: '03',
-                  title: 'Character & Leadership',
-                  desc: 'Go beyond rules. Become the kind of person who makes things better.',
+                  title: 'Everyday Responsibility',
+                  desc: 'Practice respectful, orderly ways to handle everyday responsibilities.',
                 },
               ].map((p) => (
                 <div key={p.title} className="landing-pillar border border-white/8 rounded-2xl p-6 hover:border-blue-400/30 transition-all" style={{background: '#101426'}}>
@@ -2538,7 +2544,7 @@ function App() {
           <section className="px-6 pb-24 sm:pb-32 max-w-xl mx-auto w-full text-center">
             <div className="landing-cta border border-white/8 rounded-2xl p-8 sm:p-12" style={{background: '#101426'}}>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 leading-snug">
-                The change starts with you.
+                Change starts with everyday choices.
               </h2>
               <p className="text-gray-400 text-sm mb-8 leading-relaxed">
                 Set up your profile to see training selected for your sector, role, department, and rank.
@@ -2555,8 +2561,8 @@ function App() {
 
           {/* ── FOOTER ── */}
           <footer className="border-t border-white/5 px-6 py-6 text-center">
-            <p className="text-gray-500 text-xs font-medium">Building a Culture of Integrity</p>
-            <p className="text-gray-600 text-xs mt-1">© 2026 DragNet. Building better institutions, one person at a time.</p>
+            <p className="text-gray-500 text-xs font-medium">Ethics and compliance learning for everyday life</p>
+            <p className="text-gray-600 text-xs mt-1">© 2026 DragNet.</p>
           </footer>
 
         </div>
@@ -2571,7 +2577,7 @@ function App() {
             </button>
 
             <div className="text-center mb-8">
-              <img src="/logo-dragnet.svg" alt="Dragnet — compliance training" className="brand-logo brand-logo-auth" />
+              <span className="text-white font-bold text-2xl tracking-tight">Dragnet</span>
               <p className="text-gray-600 text-xs mt-1 uppercase tracking-widest">Training · Discipline · Character</p>
             </div>
             
