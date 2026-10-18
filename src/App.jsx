@@ -2430,47 +2430,54 @@ function App() {
           </nav>
 
           {/* ── HERO ── */}
-          <section className="landing-hero flex flex-col items-center justify-center text-center px-6 pt-20 pb-20 sm:pt-28 sm:pb-28">
-            <div className="inline-flex items-center gap-2 bg-blue-400/5 border border-blue-300/15 rounded-full px-4 py-1.5 mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-violet-300 animate-pulse"></span>
-              <span className="text-blue-100/70 text-xs font-medium tracking-wide uppercase">Practical ethics and compliance learning</span>
+          <section className="landing-hero px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+            <div className="max-w-6xl mx-auto">
+              <div className="inline-flex items-center gap-2 bg-blue-400/5 border border-blue-300/15 rounded-full px-4 py-1.5 mb-8">
+                <span className="w-1.5 h-1.5 rounded-full bg-violet-300 animate-pulse"></span>
+                <span className="text-blue-100/70 text-xs font-medium tracking-wide uppercase">Practical ethics and compliance learning</span>
+              </div>
+
+              <div className="landing-hero-grid grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+                <div className="text-center lg:text-left">
+                  <h1 className="text-4xl sm:text-5xl xl:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+                    What Dragnet does <span className="landing-gradient-text">for everyday people</span>
+                  </h1>
+
+                  <p className="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mb-8">
+                    For police officers, teachers, bankers, engineers, civil servants, nurses, students, and more. Dragnet helps people practice fair, responsible decisions through role-based lessons, scenarios, and assessments.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3">
+                    <button
+                      onClick={() => { setAuthMode('signup'); setView('auth'); }}
+                      className="px-8 py-4 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 active:from-blue-700 active:to-violet-700 text-white rounded-xl font-bold text-base shadow-lg shadow-blue-950/50 touch-manipulation transition-all"
+                    >
+                      Create your account
+                    </button>
+                    {isAuthenticated && (
+                      <button
+                        onClick={() => setView('dashboard')}
+                        className="px-8 py-4 bg-white/10 hover:bg-white/15 border border-white/10 text-white rounded-xl font-semibold text-base touch-manipulation transition-all"
+                      >
+                        Go to Dashboard →
+                      </button>
+                    )}
+                  </div>
+
+                  <p className="text-gray-500 text-xs mt-5">Practical learning. Clear progress. Stronger judgment.</p>
+                </div>
+
+                <figure className="landing-illustration w-full">
+                  <img
+                    src="/dragnet-everyday-people.png"
+                    alt="Cartoon of a police officer, teacher, banker, engineer, civil servant, nurse, chef, and students, including a person who uses a wheelchair, against a blue-purple city background"
+                    className="landing-illustration-image"
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                </figure>
+              </div>
             </div>
-
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight max-w-3xl">
-              What Dragnet does <span className="landing-gradient-text">for everyday people</span>
-            </h1>
-
-            <p className="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mb-10">
-              For police officers, teachers, bankers, engineers, civil servants, nurses, students, and more. Dragnet helps people practice fair, responsible decisions through role-based lessons, scenarios, and assessments.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              <button
-                onClick={() => { setAuthMode('signup'); setView('auth'); }}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 active:from-blue-700 active:to-violet-700 text-white rounded-xl font-bold text-base shadow-lg shadow-blue-950/50 touch-manipulation transition-all"
-              >
-                Create your account
-              </button>
-              {isAuthenticated && (
-                <button
-                  onClick={() => setView('dashboard')}
-                  className="px-8 py-4 bg-white/10 hover:bg-white/15 border border-white/10 text-white rounded-xl font-semibold text-base touch-manipulation transition-all"
-                >
-                  Go to Dashboard →
-                </button>
-              )}
-            </div>
-
-            <p className="text-gray-500 text-xs mt-5">Practical learning. Clear progress. Stronger judgment.</p>
-            <figure className="landing-illustration mt-12 w-full max-w-6xl">
-              <img
-                src="/dragnet-everyday-people.png"
-                alt="Cartoon of a police officer, teacher, banker, engineer, civil servant, nurse, chef, and students, including a person who uses a wheelchair, against a blue-purple city background"
-                className="landing-illustration-image"
-                loading="eager"
-                fetchPriority="high"
-              />
-            </figure>
           </section>
 
           {/* ── PILLARS ── */}
