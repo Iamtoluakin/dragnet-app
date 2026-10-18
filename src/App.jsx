@@ -2437,12 +2437,11 @@ function App() {
             </div>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight max-w-3xl">
-              Compliance training <br className="hidden sm:block" />
-              <span className="landing-gradient-text">for real, everyday people.</span>
+              What Dragnet does <span className="landing-gradient-text">for everyday people</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-gray-400 max-w-xl mb-10 leading-relaxed">
-              Challenge corruption and disorderliness with practical learning for everyday people: recognize misconduct, make fair decisions, and act responsibly.
+            <p className="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mb-10">
+              Dragnet helps learners practice fair, responsible decisions through role-based lessons, scenarios, and assessments. Keep assigned modules and progress together in one place.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -2475,17 +2474,6 @@ function App() {
                 Photo by <a className="underline underline-offset-2 hover:text-gray-300" href="https://unsplash.com/photos/people-on-conference-table-looking-at-talking-woman-Q80LYxv_Tbs" target="_blank" rel="noreferrer">Christina @ wocintechchat.com M</a> on Unsplash
               </figcaption>
             </figure>
-          </section>
-
-          {/* ── WHAT WE DO ── */}
-          <section className="px-6 pb-20 sm:pb-24 max-w-3xl mx-auto w-full text-center">
-            <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest mb-4">What Dragnet does</p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 leading-snug">
-              Everyday choices shape the way we work together.
-            </h2>
-            <p className="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-              Dragnet helps learners practice fair, responsible decisions through role-based lessons, scenarios, and assessments. Keep assigned modules and progress together in one place.
-            </p>
           </section>
 
           {/* ── PILLARS ── */}
