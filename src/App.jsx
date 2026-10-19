@@ -6,6 +6,7 @@ import { auth, db } from './firebase';
 import { narrate, stopAudio } from './utils/pollyNarration';
 import { saveUserEmail, recordSignIn, saveAndEmailScore } from './utils/scoreEmail';
 import { generateCareerRecommendations } from './utils/aiRecommendations';
+import { departmentsByRole, departmentsBySection, privateRanksByRole, ranksBySection, rolesBySection, sectors, studentRankForRole } from './data/sectors';
 
 function App() {
   const [view, setView] = useState('landing');
@@ -161,48 +162,6 @@ function App() {
       .replace(/^(?:✅|❌|⚠️|⚠)\s*/u, '')
       .replace(/^(?:CORRECT|INCORRECT|PARTIALLY\s+CORRECT|PARTIALLY\s+INCORRECT):\s*/i, '')
       .trim();
-  };
-
-  const sectors = [
-    { value: 'police', label: 'Police', icon: '🚔', color: 'from-blue-600 to-blue-800' },
-    { value: 'civil', label: 'Civil Service', icon: '🏛️', color: 'from-purple-600 to-purple-800' },
-    { value: 'immigration', label: 'Customs & Immigration', icon: '🛂', color: 'from-green-600 to-green-800' },
-    { value: 'private', label: 'Private Sector', icon: '💼', color: 'from-orange-600 to-orange-800' },
-    { value: 'students', label: 'Students', icon: '🎒', color: 'from-yellow-600 to-yellow-800' }
-  ];
-
-  const rolesBySection = {
-    police: ['Traffic Officer', 'Sergeant', 'Inspector', 'Detective', 'Corporal', 'Constable'],
-    civil: ['Procurement Officer', 'Finance Officer', 'Admin Officer', 'IT Officer', 'HR Officer', 'Legal Officer'],
-    immigration: ['Immigration Officer', 'Customs Officer', 'Border Control Agent', 'Passport Control Officer', 'Senior Immigration Officer', 'Chief Customs Officer'],
-    private: ['Bank Teller', 'Customer Service Rep', 'Manager', 'Accountant', 'Sales Rep', 'IT Staff'],
-    students: [
-      'Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6',
-      'JSS 1', 'JSS 2', 'JSS 3',
-      'SS 1', 'SS 2', 'SS 3',
-      '100 Level', '200 Level', '300 Level', '400 Level', '500 Level'
-    ]
-  };
-
-  const departmentsBySection = {
-    police: ['Operations', 'Traffic', 'Criminal Investigation', 'Intelligence', 'Administration'],
-    civil: ['Finance', 'Procurement', 'IT', 'HR', 'Legal', 'Administration'],
-    immigration: ['Passport Control', 'Border Operations', 'Visa Processing', 'Customs Enforcement', 'Investigation & Compliance', 'Airport Operations'],
-    private: ['Finance', 'IT', 'Healthcare', 'Customer Service', 'Operations', 'Sales'],
-    students: ['Primary School', 'Junior Secondary School', 'Senior Secondary School', 'University']
-  };
-
-  const ranksBySection = {
-    police: ['Constable', 'Corporal', 'Sergeant', 'Inspector', 'Chief Inspector', 'Superintendent'],
-    civil: ['GL06', 'GL07', 'GL08', 'GL09', 'GL10', 'GL12', 'GL14', 'GL15'],
-    immigration: ['Assistant Immigration Officer I', 'Assistant Immigration Officer II', 'Immigration Officer I', 'Immigration Officer II', 'Chief Immigration Officer', 'Deputy Comptroller'],
-    private: ['Intern', 'Junior Officer', 'Officer', 'Senior Officer', 'Manager', 'Senior Manager'],
-    students: [
-      'Primary (P1–P6)',
-      'Junior Secondary (JS1–JS3)',
-      'Senior Secondary (SS1–SS3)',
-      'University (100L–500L)'
-    ]
   };
 
   const analysisSteps = [
@@ -2261,6 +2220,13 @@ function App() {
     setSelectedRank('');
   };
 
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role);
+    const departments = departmentsByRole[selectedSector]?.[role] || [];
+    setSelectedDepartment(departments.length === 1 ? departments[0] : '');
+    setSelectedRank(selectedSector === 'students' ? studentRankForRole(role) : '');
+  };
+
   const getFriendlyAuthError = (error, providerName = 'password') => {
     if (providerName !== 'password' && ['auth/invalid-credential', 'auth/wrong-password'].includes(error.code)) {
       return providerName === 'linkedin'
@@ -2706,39 +2672,20 @@ function App() {
 
               <div className="mb-7">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">1. Your Sector</p>
-                <div className="grid grid-cols-2 gap-3">
-                  {sectors.filter(s => s.value !== 'students').map((sector) => (
+                <div className="profile-sector-grid grid grid-cols-2 gap-3">
+                  {sectors.map((sector) => (
                     <button
                       key={sector.value}
+                      type="button"
+                      aria-pressed={selectedSector === sector.value}
                       onClick={() => handleSectorSelect(sector.value)}
-                      className={`p-4 sm:p-5 rounded-xl border transition-all duration-200 touch-manipulation text-left ${
-                        selectedSector === sector.value
-                          ? 'border-blue-400 bg-blue-500/10'
-                          : 'border-white/8 hover:border-blue-300/25'
-                      }`}
-                      style={selectedSector !== sector.value ? {background:'#1a1a1a'} : {}}
+                      className={`profile-sector-option p-4 sm:p-5 rounded-xl border text-left touch-manipulation ${selectedSector === sector.value ? 'is-selected' : ''}`}
                     >
-                      <div className="text-2xl sm:text-3xl mb-2">{sector.icon}</div>
-                      <div className="text-sm font-semibold text-white">{sector.label}</div>
+                      <span className="profile-sector-icon" aria-hidden="true">{sector.icon}</span>
+                      <span className="profile-sector-label">{sector.label}</span>
+                      {sector.value === 'students' && <span className="profile-sector-detail">Primary · Secondary · University</span>}
                     </button>
                   ))}
-                  {/* Students — full width rectangle */}
-                  <button
-                    onClick={() => handleSectorSelect('students')}
-                    className={`col-span-2 p-5 rounded-xl border-2 text-left transition-all flex items-center gap-4 touch-manipulation ${
-                      selectedSector === 'students'
-                        ? 'border-yellow-500 bg-yellow-500/10'
-                        : 'border-white/8 hover:border-yellow-500/40 hover:bg-yellow-500/5'
-                    }`}
-                    style={selectedSector !== 'students' ? {background:'#1a1a1a'} : {}}
-                  >
-                    <div className="text-3xl">🎒</div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-white text-sm">Students</div>
-                      <div className="text-white/40 text-xs mt-1">Primary · Junior Secondary · Senior Secondary · University</div>
-                    </div>
-                    <div className="text-white/30 text-xs">All levels →</div>
-                  </button>
                 </div>
               </div>
 
@@ -2747,12 +2694,12 @@ function App() {
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">2. Your Role</p>
                   <select
                     value={selectedRole}
-                    onChange={(e) => setSelectedRole(e.target.value)}
+                    onChange={(e) => handleRoleSelect(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-blue-400 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
                   >
                     <option value="">Select your job title...</option>
-                    {rolesBySection[selectedSector].map((role) => (
+                    {(rolesBySection[selectedSector] || []).map((role) => (
                       <option key={role} value={role}>{role}</option>
                     ))}
                   </select>
@@ -2764,29 +2711,37 @@ function App() {
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">3. Department</p>
                   <select
                     value={selectedDepartment}
-                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                    onChange={(e) => { setSelectedDepartment(e.target.value); setSelectedRank(''); }}
                     className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-blue-400 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
+                    disabled={(departmentsByRole[selectedSector]?.[selectedRole] || []).length === 1}
                   >
-                    <option value="">Select your department...</option>
-                    {departmentsBySection[selectedSector]?.map((dept) => (
+                    <option value="">Select the department that best matches your role...</option>
+                    {(departmentsByRole[selectedSector]?.[selectedRole] || departmentsBySection[selectedSector] || []).map((dept) => (
                       <option key={dept} value={dept}>{dept}</option>
                     ))}
                   </select>
+                  {(departmentsByRole[selectedSector]?.[selectedRole] || []).length === 1 && <p className="profile-field-hint">Matched to your selected role.</p>}
                 </div>
               )}
 
               {selectedDepartment && (
                 <div className="mb-7 animate-fadeIn">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">4. Rank / Grade Level</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">4. {selectedSector === 'students' ? 'School Level' : selectedSector === 'private' ? 'Job Level' : 'Rank / Grade Level'}</p>
                   <select
                     value={selectedRank}
                     onChange={(e) => setSelectedRank(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-blue-400 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
+                    disabled={selectedSector === 'students'}
                   >
                     <option value="">Select your rank/grade...</option>
-                    {ranksBySection[selectedSector]?.map((rank) => (
+                    {(selectedSector === 'private'
+                      ? privateRanksByRole[selectedRole] || []
+                      : selectedSector === 'students'
+                        ? [studentRankForRole(selectedRole)].filter(Boolean)
+                        : ranksBySection[selectedSector] || []
+                    ).map((rank) => (
                       <option key={rank} value={rank}>{rank}</option>
                     ))}
                   </select>
