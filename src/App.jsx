@@ -2275,9 +2275,15 @@ function App() {
       'auth/unauthorized-domain': 'This domain is not enabled for sign-in in Firebase yet.',
       'auth/operation-not-allowed': 'This sign-in provider is not enabled for this app yet.',
       'auth/unsupported-provider': 'This sign-in provider is not configured for this app yet.',
+      'auth/popup-blocked': 'Your browser blocked the Google sign-in window. Allow pop-ups for this site and try again.',
+      'auth/cancelled-popup-request': 'Another sign-in window is already open. Close it and try again.',
+      'auth/account-exists-with-different-credential': 'An account already uses this email with another sign-in method. Sign in with that method first.',
+      'auth/invalid-api-key': 'Firebase rejected this app’s API key. Check the Firebase web app configuration.',
+      'auth/invalid-oauth-client-id': 'The Google OAuth client is not configured correctly in Firebase.',
+      'auth/tenant-id-mismatch': 'The sign-in tenant does not match this Firebase project.',
     };
 
-    return messages[error.code] || 'Authentication failed. Please try again.';
+    return messages[error.code] || `Authentication failed (${error.code || 'unknown error'}). Check Firebase Authentication settings and try again.`;
   };
 
   const handleAuth = async (e) => {
@@ -2366,6 +2372,7 @@ function App() {
         void recordSignIn(name, user.email || '');
       }
     } catch (error) {
+      console.error(`${providerName} sign-in failed:`, error.code, error.message);
       setAuthError(getFriendlyAuthError(error));
     } finally {
       setAuthLoading(false);
