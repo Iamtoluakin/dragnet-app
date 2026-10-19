@@ -403,6 +403,19 @@ html {
   background-image: radial-gradient(ellipse at 50% 0%, rgba(46, 80, 190, .22), transparent 42%),
     radial-gradient(ellipse at 82% 24%, rgba(111, 54, 190, .14), transparent 32%);
 }
+.landing-shell nav .landing-nav-signin {
+  color: #cbd5e1 !important;
+  background: transparent !important;
+  border: 1px solid transparent;
+}
+.landing-shell nav .landing-nav-signin:hover { color: #fff !important; background: rgba(255,255,255,.06) !important; }
+.landing-shell nav .landing-nav-signup {
+  color: #fff !important;
+  background: linear-gradient(100deg, #2563eb, #7546dc) !important;
+  border: 1px solid rgba(191,219,254,.2);
+  box-shadow: 0 8px 22px rgba(37,99,235,.24);
+}
+.landing-shell nav .landing-nav-signup:hover { color: #fff !important; background: linear-gradient(100deg, #3b82f6, #8b5cf6) !important; }
 .landing-hero {
   position: relative;
   isolation: isolate;
@@ -610,7 +623,9 @@ html {
 .auth-form-heading > p:last-child { margin: .55rem 0 0; color: #63748e; font-size: .88rem; line-height: 1.55; }
 .auth-social-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
 .auth-social-button { display: inline-flex; min-height: 46px; align-items: center; justify-content: center; gap: .55rem; padding: .55rem .65rem; border: 1px solid #d7e0ed; border-radius: 11px; color: #1a2c46; background: rgba(255,255,255,.86); font-size: .75rem; font-weight: 700; transition: border-color .2s ease, background .2s ease, transform .2s ease; }
+.auth-experience button.auth-social-button { color: #1a2c46 !important; background: #fff !important; border: 1px solid #d7e0ed !important; }
 .auth-social-button:hover { transform: translateY(-1px); border-color: #8fb4e8; background: white; }
+.auth-experience button.auth-social-button:hover { color: #122746 !important; background: #f4f8ff !important; border-color: #8fb4e8 !important; }
 .auth-google-mark, .auth-linkedin-mark { display: grid; width: 21px; height: 21px; place-items: center; font-size: 1rem; font-weight: 800; }
 .auth-google-mark { color: #4285f4; text-shadow: 1px 1px #34a853, -1px -1px #ea4335; }
 .auth-linkedin-mark { border-radius: 4px; color: white; background: #0a66c2; font-size: .76rem; }
@@ -626,11 +641,14 @@ html {
 .auth-strength-track span { display: block; width: var(--strength); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f59e0b, #3b82f6, #22c55e); transition: width .2s ease; }
 .auth-password-strength small { display: block; margin-top: .4rem; color: #72829a; font-size: .68rem; }
 .auth-submit { display: flex; min-height: 50px; align-items: center; justify-content: center; gap: .6rem; margin-top: .2rem; border: 0; border-radius: 11px; color: white; background: linear-gradient(100deg, #1767d5, #336fed 60%, #6557de); box-shadow: 0 10px 24px rgba(38,100,206,.22); font-size: .88rem; font-weight: 800; transition: filter .2s ease, transform .2s ease; }
+.auth-experience button.auth-submit { color: #fff !important; background: linear-gradient(100deg, #1767d5, #336fed 60%, #6557de) !important; border: 0 !important; }
 .auth-submit:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.auth-experience button.auth-submit:hover { color: #fff !important; background: linear-gradient(100deg, #2478e8, #477ef3 60%, #7769eb) !important; }
 .auth-submit:disabled, .auth-social-button:disabled { opacity: .55; cursor: wait; transform: none; }
 .auth-error { padding: .75rem .85rem; border: 1px solid #fecaca; border-radius: 10px; color: #b42318; background: #fff1f0; font-size: .78rem; line-height: 1.45; }
 .auth-switch { margin: 1.25rem 0 0; color: #63748e; text-align: center; font-size: .78rem; }
 .auth-switch button { padding: .25rem; color: #175fc3; font-weight: 800; }
+.auth-experience .auth-switch button { color: #175fc3 !important; background: transparent !important; border: 0 !important; }
 .auth-switch button:hover { text-decoration: underline; }
 .auth-privacy { margin: 1rem 0 0; color: #98a5b7; text-align: center; font-size: .65rem; line-height: 1.5; }
 .auth-experience-signup .auth-story { background: linear-gradient(150deg, #071a35, #0d2d5e 68%, #173d73); }

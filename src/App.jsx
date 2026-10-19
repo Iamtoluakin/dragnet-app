@@ -2445,13 +2445,13 @@ function App() {
                 <>
                   <button
                     onClick={() => { setAuthMode('signin'); setView('auth'); }}
-                    className="px-4 py-2 text-gray-400 hover:text-white text-sm font-medium transition-colors touch-manipulation"
+                    className="landing-nav-signin px-4 py-2 text-gray-400 hover:text-white text-sm font-medium transition-colors touch-manipulation"
                   >
                     Sign in
                   </button>
                   <button
                     onClick={() => { setAuthMode('signup'); setView('auth'); }}
-                  className="px-5 py-2 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white rounded-lg font-semibold text-sm touch-manipulation transition-all"
+                  className="landing-nav-signup px-5 py-2 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white rounded-lg font-semibold text-sm touch-manipulation transition-all"
                   >
                     Get started
                   </button>
