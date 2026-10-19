@@ -2261,7 +2261,12 @@ function App() {
     setSelectedRank('');
   };
 
-  const getFriendlyAuthError = (error) => {
+  const getFriendlyAuthError = (error, providerName = 'password') => {
+    if (providerName !== 'password' && ['auth/invalid-credential', 'auth/wrong-password'].includes(error.code)) {
+      return providerName === 'linkedin'
+        ? 'LinkedIn could not verify this sign-in. Check that Firebase uses your LinkedIn app Client ID and secret, the issuer is https://www.linkedin.com/oauth, and the OIDC provider ID is oidc.linkedin.'
+        : 'Google could not verify this sign-in. Confirm Google is enabled in Firebase and the deployed OAuth client credentials are correct.';
+    }
     const messages = {
       'auth/email-already-in-use': 'An account already exists for this email.',
       'auth/invalid-email': 'Enter a valid email address.',
@@ -2366,8 +2371,17 @@ function App() {
       setUserName(name);
       setUserEmail(user.email || '');
       setIsAuthenticated(true);
-      const hasProfile = await loadUserTraining(user.uid);
-      setView(hasProfile ? 'dashboard' : 'onboarding');
+      // Authentication can succeed while Firestore is temporarily offline.
+      // Continue to onboarding instead of reporting the profile read as a sign-in failure.
+      setView('onboarding');
+      try {
+        const hasProfile = await loadUserTraining(user.uid);
+        if (hasProfile) setView('dashboard');
+      } catch (profileError) {
+        console.error('Signed in, but could not load the saved training profile:', profileError);
+        setUserProfile(null);
+        setCompletedCourses([]);
+      }
       if (user.metadata.creationTime === user.metadata.lastSignInTime) {
         void saveUserEmail(name, user.email || '', selectedSector || 'unknown');
       } else {
@@ -2381,7 +2395,7 @@ function App() {
         customData: error.customData,
         error,
       });
-      setAuthError(getFriendlyAuthError(error));
+      setAuthError(getFriendlyAuthError(error, providerName));
     } finally {
       setAuthLoading(false);
     }
