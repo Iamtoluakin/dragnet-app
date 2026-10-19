@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, OAuthProvider, onAuthStateChanged, signInWithPopup, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { narrate, stopAudio } from './utils/pollyNarration';
@@ -2271,6 +2271,10 @@ function App() {
       'auth/wrong-password': 'Email or password is incorrect.',
       'auth/network-request-failed': 'Could not reach the sign-in service. Check your connection and try again.',
       'auth/operation-timeout': 'The sign-in service did not respond. Check your connection and try again.',
+      'auth/popup-closed-by-user': 'The sign-in window was closed before finishing.',
+      'auth/unauthorized-domain': 'This domain is not enabled for sign-in in Firebase yet.',
+      'auth/operation-not-allowed': 'This sign-in provider is not enabled for this app yet.',
+      'auth/unsupported-provider': 'This sign-in provider is not configured for this app yet.',
     };
 
     return messages[error.code] || 'Authentication failed. Please try again.';
@@ -2333,6 +2337,33 @@ function App() {
         loadUserTraining(credential.user.uid)
           .then((hasProfile) => setView(hasProfile ? 'dashboard' : 'onboarding'))
           .catch((error) => console.error('Failed to load saved training profile:', error));
+      }
+    } catch (error) {
+      setAuthError(getFriendlyAuthError(error));
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleSocialAuth = async (providerName) => {
+    setAuthError(null);
+    setAuthLoading(true);
+    try {
+      const provider = providerName === 'google'
+        ? new GoogleAuthProvider()
+        : new OAuthProvider('oidc.linkedin');
+      const { user } = await signInWithPopup(auth, provider);
+      const name = user.displayName || user.email?.split('@')[0] || 'Dragnet learner';
+      setUserId(user.uid);
+      setUserName(name);
+      setUserEmail(user.email || '');
+      setIsAuthenticated(true);
+      const hasProfile = await loadUserTraining(user.uid);
+      setView(hasProfile ? 'dashboard' : 'onboarding');
+      if (user.metadata.creationTime === user.metadata.lastSignInTime) {
+        void saveUserEmail(name, user.email || '', selectedSector || 'unknown');
+      } else {
+        void recordSignIn(name, user.email || '');
       }
     } catch (error) {
       setAuthError(getFriendlyAuthError(error));
@@ -2480,9 +2511,35 @@ function App() {
             </div>
           </section>
 
-          {/* ── PILLARS ── */}
+          {/* ── HOW IT WORKS ── */}
+          <section className="landing-process" aria-labelledby="landing-process-title">
+            <div className="landing-process-heading">
+              <p className="landing-process-eyebrow">How it works</p>
+              <h2 id="landing-process-title">A clearer path to better decisions.</h2>
+              <p>Start where you are. Build the judgment to handle what comes next.</p>
+            </div>
+            <div className="landing-process-grid">
+              {[
+                { n: '1', title: 'Create your profile', desc: 'Tell us your role and sector. Takes under 2 minutes.' },
+                { n: '2', title: 'Face real scenarios', desc: 'Work through situations pulled from actual professional environments. Make decisions under pressure.' },
+                { n: '3', title: 'Track your growth', desc: 'See how your thinking, discipline, and integrity develop over time.' },
+              ].map((s, index) => (
+                <article key={s.n} className="landing-process-step" style={{ '--step-index': index }}>
+                  <div className="landing-process-number" aria-hidden="true">{s.n}</div>
+                  <div className="landing-process-copy">
+                    <p className="landing-process-label">Step {s.n}</p>
+                    <h3>{s.title}</h3>
+                    <p>{s.desc}</p>
+                  </div>
+                  {index < 2 && <span className="landing-process-arrow" aria-hidden="true">→</span>}
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* ── WHAT YOU DEVELOP ── */}
           <section className="px-6 pb-20 sm:pb-24 max-w-4xl mx-auto w-full">
-            <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest text-center mb-10">What you develop</p>
+            <h2 className="text-gray-500 text-xs font-semibold uppercase tracking-widest text-center mb-10">What you develop</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 {
@@ -2493,7 +2550,7 @@ function App() {
                 {
                   icon: '02',
                   title: 'Discipline & Integrity',
-                  desc: 'Develop the professional habits and ethics that define someone people trust.',
+                  desc: 'Cultivate the discipline, integrity, and professional judgment that earn lasting trust and credibility.',
                 },
                 {
                   icon: '03',
@@ -2505,28 +2562,6 @@ function App() {
                   <div className="text-sm mb-4 font-bold tracking-[0.18em] text-violet-300">{p.icon}</div>
                   <h3 className="text-white font-bold text-base mb-2">{p.title}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">{p.desc}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* ── HOW IT WORKS ── */}
-          <section className="px-6 pb-20 sm:pb-24 max-w-2xl mx-auto w-full">
-            <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest text-center mb-10">How it works</p>
-            <div className="space-y-6">
-              {[
-                { n: '1', title: 'Create your profile', desc: 'Tell us your role and sector. Takes under 2 minutes.' },
-                { n: '2', title: 'Face real scenarios', desc: 'Work through situations pulled from actual professional environments. Make decisions under pressure.' },
-                { n: '3', title: 'Track your growth', desc: 'See how your thinking, discipline, and integrity develop over time.' },
-              ].map((s) => (
-                <div key={s.n} className="flex items-start gap-5">
-                  <div className="flex-shrink-0 w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-green-400 font-bold text-sm" style={{background: '#111111'}}>
-                    {s.n}
-                  </div>
-                  <div>
-                    <h3 className="text-white font-semibold text-sm mb-1">{s.title}</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
-                  </div>
                 </div>
               ))}
             </div>
@@ -2559,117 +2594,73 @@ function App() {
 
         </div>
       ) : view === 'auth' ? (
-        <div className="product-page flex flex-col items-center justify-center min-h-screen px-5 py-10">
-          <div className="max-w-md w-full">
-            <button 
-              onClick={() => setView('landing')}
-              className="mb-6 px-4 py-2 min-h-[44px] text-gray-500 hover:text-white text-sm transition-colors touch-manipulation"
-            >
-              ← Back
-            </button>
-
-            <div className="text-center mb-8">
-              <span className="text-white font-bold text-2xl tracking-tight">Dragnet</span>
-              <p className="text-gray-600 text-xs mt-1 uppercase tracking-widest">Training · Discipline · Character</p>
-            </div>
-            
-            <div className="p-6 sm:p-8 rounded-2xl border border-white/8" style={{background:'#111111'}}>
-              <div className="mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">
-                  {authMode === 'signin' ? 'Welcome back' : 'Create your account'}
-                </h2>
-                <p className="text-gray-500 text-sm">
-                  {authMode === 'signin' 
-                    ? 'Sign in to continue your training' 
-                    : 'Start your training journey today'}
-                </p>
+        <main className={`auth-experience ${authMode === 'signup' ? 'auth-experience-signup' : 'auth-experience-signin'}`}>
+          <button onClick={() => setView('landing')} className="auth-back">← Back to Dragnet</button>
+          <div className="auth-layout">
+            <aside className="auth-story" aria-label={authMode === 'signin' ? 'Professional network' : 'Career growth'}>
+              <a className="auth-brand" href="#home" onClick={(event) => { event.preventDefault(); setView('landing'); }}>
+                <img src="/logo-dragnet.svg" alt="Dragnet" />
+              </a>
+              <div className="auth-network-art" aria-hidden="true">
+                <svg viewBox="0 0 700 560" role="presentation">
+                  <defs>
+                    <linearGradient id="authLine" x1="0" x2="1" y1="0" y2="1"><stop stopColor="#38bdf8" stopOpacity=".12"/><stop offset="1" stopColor="#a78bfa" stopOpacity=".9"/></linearGradient>
+                    <radialGradient id="authGlow"><stop stopColor="#3b82f6" stopOpacity=".4"/><stop offset="1" stopColor="#3b82f6" stopOpacity="0"/></radialGradient>
+                  </defs>
+                  <circle cx="370" cy="280" r="230" fill="url(#authGlow)" />
+                  <g className="auth-network-lines" fill="none" stroke="url(#authLine)" strokeWidth="1.5">
+                    <path d="M88 368 198 255 310 314 394 165 522 220 612 112M198 255 250 105 394 165 475 390 612 112M88 368 226 445 355 390 475 390 592 468M310 314 355 390 522 220 592 468M250 105 394 165 522 220" />
+                  </g>
+                  <g className="auth-network-nodes">
+                    {[[88,368,7],[198,255,10],[310,314,6],[394,165,12],[522,220,8],[612,112,6],[250,105,7],[475,390,11],[226,445,6],[355,390,8],[592,468,7]].map(([cx,cy,r],i)=><circle key={i} cx={cx} cy={cy} r={r} className="auth-network-node" style={{'--node-delay':`${i*180}ms`}} />)}
+                  </g>
+                  <g className="auth-network-people" stroke="#dbeafe" strokeWidth="3" fill="#122d54">
+                    <circle cx="315" cy="204" r="24"/><path d="M271 302q3-65 44-65t45 65M415 263q3-49 37-49t38 49M428 200a24 24 0 1 1 48 0"/><circle cx="174" cy="326" r="19"/><path d="M140 386q2-42 34-42t35 42"/>
+                  </g>
+                  <g className="auth-network-panels"><rect x="447" y="303" width="118" height="76" rx="12"/><path d="M466 354h15l10-19 14 11 20-25 20 12" fill="none" stroke="#60a5fa" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/></g>
+                </svg>
               </div>
+              <div className="auth-story-copy">
+                <p className="auth-eyebrow">{authMode === 'signin' ? 'Your next chapter starts here' : 'More than a platform'}</p>
+                <h1>{authMode === 'signin' ? <>Welcome<br/><span>Back</span></> : <>Start Your<br/><span>Professional Journey</span></>}</h1>
+                <p className="auth-story-subtitle">{authMode === 'signin' ? 'Continue building the skills and connections that accelerate your career.' : 'Join a community committed to excellence, growth, and meaningful impact.'}</p>
+                <div className="auth-story-points">
+                  {(authMode === 'signin' ? [['01','Learn','Build practical judgment'],['02','Connect','Grow through shared experience'],['03','Advance','Make a lasting impact']] : [['01','Develop','Practice real-world skills'],['02','Connect','Learn with your community'],['03','Advance','Grow with confidence']]).map(([number,title,detail])=><div className="auth-story-point" key={title}><span>{number}</span><div><strong>{title}</strong><small>{detail}</small></div></div>)}
+                </div>
+              </div>
+              <p className="auth-story-foot">People. Progress. Possibilities.</p>
+            </aside>
 
-              <form onSubmit={handleAuth} className="space-y-4">
-                {authMode === 'signup' && (
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Full Name</label>
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      placeholder="Enter your full name"
-                      className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400/40 outline-none transition-all text-sm"
-                      style={{background:'#1a1a1a'}}
-                      required
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Email</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    placeholder="your@email.com"
-                    className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400/40 outline-none transition-all text-sm"
-                    style={{background:'#1a1a1a'}}
-                    required
-                  />
+            <section className="auth-form-side" aria-labelledby="auth-form-title">
+              <div className="auth-form-card">
+                <div className="auth-form-heading">
+                  <p className="auth-eyebrow">{authMode === 'signin' ? 'Good to see you again' : 'Your future, in progress'}</p>
+                  <h2 id="auth-form-title">{authMode === 'signin' ? 'Sign in to Dragnet' : 'Create your account'}</h2>
+                  <p>{authMode === 'signin' ? 'Continue your learning and pick up where you left off.' : 'Take the next step toward a brighter future.'}</p>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Password</label>
-                  <input
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
-                    placeholder="••••••••"
-                    className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400/40 outline-none transition-all text-sm"
-                    style={{background:'#1a1a1a'}}
-                    required
-                  />
+                <div className="auth-social-actions">
+                  <button type="button" onClick={() => handleSocialAuth('google')} disabled={authLoading} className="auth-social-button"><span className="auth-google-mark" aria-hidden="true">G</span><span>Continue with Google</span></button>
+                  <button type="button" onClick={() => handleSocialAuth('linkedin')} disabled={authLoading} className="auth-social-button"><span className="auth-linkedin-mark" aria-hidden="true">in</span><span>Continue with LinkedIn</span></button>
                 </div>
+                <div className="auth-divider"><span>or use your email</span></div>
 
-                {authMode === 'signup' && (
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Confirm Password</label>
-                    <input
-                      type="password"
-                      value={formData.confirmPassword}
-                      onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                      placeholder="••••••••"
-                      className="w-full px-4 py-3 rounded-xl text-white border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400/40 outline-none transition-all text-sm"
-                      style={{background:'#1a1a1a'}}
-                      required
-                    />
+                <form onSubmit={handleAuth} className="auth-form">
+                  {authMode === 'signup' && <div className="auth-field"><label htmlFor="auth-name">Full name</label><input id="auth-name" type="text" autoComplete="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Your full name" required /></div>}
+                  <div className="auth-field"><label htmlFor="auth-email">Email address</label><input id="auth-email" type="email" autoComplete="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="you@example.com" required /></div>
+                  <div className="auth-field"><label htmlFor="auth-password">Password</label><input id="auth-password" type="password" autoComplete={authMode === 'signin' ? 'current-password' : 'new-password'} value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} placeholder="At least 6 characters" required minLength={6} />
+                    {authMode === 'signup' && <div className="auth-password-strength" aria-live="polite"><div className="auth-strength-track"><span style={{'--strength':`${formData.password ? Math.max(12, Math.min(100, [formData.password.length >= 8, /[A-Z]/.test(formData.password), /[0-9]/.test(formData.password), /[^A-Za-z0-9]/.test(formData.password)].filter(Boolean).length * 25)) : 0}%`}} /></div><small>{formData.password.length === 0 ? 'Use 8+ characters for a stronger password' : formData.password.length < 6 ? 'Password is too short' : formData.password.length < 8 ? 'Fair · add more characters' : 'Good · your password meets the length guideline'}</small></div>}
                   </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={authLoading}
-                  className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
-                >
-                  {authLoading ? 'Please wait...' : (authMode === 'signin' ? 'Sign In' : 'Create Account')}
-                </button>
-
-                {authError && (
-                  <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                    <p className="text-red-400 text-xs">{authError}</p>
-                  </div>
-                )}
-              </form>
-
-              <div className="mt-5 text-center">
-                <button
-                  onClick={() => setAuthMode(authMode === 'signin' ? 'signup' : 'signin')}
-                  className="text-gray-600 hover:text-gray-300 text-sm transition-colors"
-                >
-                  {authMode === 'signin' 
-                    ? "Don't have an account? Sign up" 
-                    : 'Already have an account? Sign in'}
-                </button>
+                  {authMode === 'signup' && <div className="auth-field"><label htmlFor="auth-confirm-password">Confirm password</label><input id="auth-confirm-password" type="password" autoComplete="new-password" value={formData.confirmPassword} onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} placeholder="Enter your password again" required /></div>}
+                  {authError && <div className="auth-error" role="alert">{authError}</div>}
+                  <button type="submit" disabled={authLoading} className="auth-submit">{authLoading ? 'Please wait…' : authMode === 'signin' ? 'Sign in' : 'Create account'}<span aria-hidden="true">→</span></button>
+                </form>
+                <p className="auth-switch">{authMode === 'signin' ? "New to Dragnet?" : 'Already have an account?'} <button onClick={() => {setAuthError(null); setAuthMode(authMode === 'signin' ? 'signup' : 'signin');}}>{authMode === 'signin' ? 'Create an account' : 'Sign in'}</button></p>
+                <p className="auth-privacy">By continuing, you agree to use Dragnet responsibly and honestly.</p>
               </div>
-            </div>
+            </section>
           </div>
-        </div>
+        </main>
       ) : view === 'onboarding' ? (
         <div className="product-page flex flex-col items-center justify-center min-h-screen px-5 py-10">
           <div className="max-w-2xl w-full">
