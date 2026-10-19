@@ -2283,7 +2283,9 @@ function App() {
       'auth/tenant-id-mismatch': 'The sign-in tenant does not match this Firebase project.',
     };
 
-    return messages[error.code] || `Authentication failed (${error.code || 'unknown error'}). Check Firebase Authentication settings and try again.`;
+    const errorCode = error.code || error.customData?.code || 'unknown error';
+    const detail = error.message || error.customData?.message;
+    return messages[errorCode] || `Authentication failed (${errorCode})${detail ? `: ${detail}` : ''}. Check Firebase Authentication settings and try again.`;
   };
 
   const handleAuth = async (e) => {
@@ -2372,7 +2374,13 @@ function App() {
         void recordSignIn(name, user.email || '');
       }
     } catch (error) {
-      console.error(`${providerName} sign-in failed:`, error.code, error.message);
+      console.error(`${providerName} sign-in failed`, {
+        code: error.code,
+        message: error.message,
+        name: error.name,
+        customData: error.customData,
+        error,
+      });
       setAuthError(getFriendlyAuthError(error));
     } finally {
       setAuthLoading(false);
