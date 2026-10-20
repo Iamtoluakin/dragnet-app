@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, OAuthProvider, onAuthStateChanged, signInWithPopup, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithEmailAndPassword, signOut, updateProfile, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { narrate, stopAudio } from './utils/pollyNarration';
@@ -46,6 +46,11 @@ function App() {
   });
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
+  const [authMethod, setAuthMethod] = useState('email');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneCode, setPhoneCode] = useState('');
+  const [phoneConfirmation, setPhoneConfirmation] = useState(null);
+  const recaptchaVerifierRef = useRef(null);
 
   const loadUserTraining = async (uid) => {
     const profileRef = doc(db, 'userProfiles', uid);
@@ -93,7 +98,7 @@ function App() {
 
       setUserId(user.uid);
       setIsAuthenticated(true);
-      setUserName(user.displayName || user.email?.split('@')[0] || '');
+      setUserName(user.displayName || user.email?.split('@')[0] || user.phoneNumber || '');
       setUserEmail(user.email || '');
 
       try {
@@ -108,6 +113,11 @@ function App() {
     });
 
     return unsubscribe;
+  }, []);
+
+  useEffect(() => () => {
+    recaptchaVerifierRef.current?.clear();
+    recaptchaVerifierRef.current = null;
   }, []);
 
   // Stop narration when scenario changes or component unmounts
@@ -2229,9 +2239,7 @@ function App() {
 
   const getFriendlyAuthError = (error, providerName = 'password') => {
     if (providerName !== 'password' && ['auth/invalid-credential', 'auth/wrong-password'].includes(error.code)) {
-      return providerName === 'linkedin'
-        ? 'LinkedIn could not verify this sign-in. Check that Firebase uses your LinkedIn app Client ID and secret, the issuer is https://www.linkedin.com/oauth, and the OIDC provider ID is oidc.linkedin.'
-        : 'Google could not verify this sign-in. Confirm Google is enabled in Firebase and the deployed OAuth client credentials are correct.';
+      return 'Google could not verify this sign-in. Confirm Google is enabled in Firebase and the deployed OAuth client credentials are correct.';
     }
     const messages = {
       'auth/email-already-in-use': 'An account already exists for this email.',
@@ -2250,6 +2258,12 @@ function App() {
       'auth/cancelled-popup-request': 'Another sign-in window is already open. Close it and try again.',
       'auth/account-exists-with-different-credential': 'An account already uses this email with another sign-in method. Sign in with that method first.',
       'auth/invalid-api-key': 'Firebase rejected this app’s API key. Check the Firebase web app configuration.',
+      'auth/invalid-phone-number': 'Enter a valid phone number in international format, such as +14155552671.',
+      'auth/missing-phone-number': 'Enter your phone number first.',
+      'auth/invalid-verification-code': 'That verification code is incorrect. Check the SMS and try again.',
+      'auth/code-expired': 'That verification code has expired. Request a new one.',
+      'auth/quota-exceeded': 'Firebase has reached its SMS quota. Try again later or contact the site administrator.',
+      'auth/captcha-check-failed': 'Phone verification could not complete. Refresh the page and try again.',
       'auth/invalid-oauth-client-id': 'The Google OAuth client is not configured correctly in Firebase.',
       'auth/tenant-id-mismatch': 'The sign-in tenant does not match this Firebase project.',
     };
@@ -2324,13 +2338,11 @@ function App() {
     }
   };
 
-  const handleSocialAuth = async (providerName) => {
+  const handleGoogleAuth = async () => {
     setAuthError(null);
     setAuthLoading(true);
     try {
-      const provider = providerName === 'google'
-        ? new GoogleAuthProvider()
-        : new OAuthProvider('oidc.linkedin');
+      const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(auth, provider);
       const name = user.displayName || user.email?.split('@')[0] || 'Dragnet learner';
       setUserId(user.uid);
@@ -2354,17 +2366,86 @@ function App() {
         void recordSignIn(name, user.email || '');
       }
     } catch (error) {
-      console.error(`${providerName} sign-in failed`, {
+      console.error('Google sign-in failed', {
         code: error.code,
         message: error.message,
         name: error.name,
         customData: error.customData,
         error,
       });
-      setAuthError(getFriendlyAuthError(error, providerName));
+      setAuthError(getFriendlyAuthError(error, 'google'));
     } finally {
       setAuthLoading(false);
     }
+  };
+
+  const finishPhoneSignIn = async (user) => {
+    const name = user.displayName || user.phoneNumber || 'Dragnet learner';
+    setUserId(user.uid);
+    setUserName(name);
+    setUserEmail(user.email || '');
+    setIsAuthenticated(true);
+    setView('onboarding');
+    setPhoneConfirmation(null);
+    setPhoneCode('');
+    try {
+      const hasProfile = await loadUserTraining(user.uid);
+      if (hasProfile) setView('dashboard');
+    } catch (profileError) {
+      console.error('Signed in, but could not load the saved training profile:', profileError);
+      setUserProfile(null);
+      setCompletedCourses([]);
+    }
+    if (user.metadata.creationTime === user.metadata.lastSignInTime) {
+      void saveUserEmail(name, user.email || '', selectedSector || 'unknown');
+    } else {
+      void recordSignIn(name, user.email || '');
+    }
+  };
+
+  const handlePhoneAuth = async (event) => {
+    event.preventDefault();
+    setAuthError(null);
+    setAuthLoading(true);
+    try {
+      if (phoneConfirmation) {
+        if (!phoneCode.trim()) {
+          setAuthError('Enter the verification code from the SMS.');
+          return;
+        }
+        const credential = await phoneConfirmation.confirm(phoneCode.trim());
+        await finishPhoneSignIn(credential.user);
+      } else {
+        if (!phoneNumber.trim()) {
+          setAuthError('Enter your phone number in international format, such as +14155552671.');
+          return;
+        }
+        const container = document.getElementById('phone-recaptcha-container');
+        if (!container) throw new Error('Phone verification could not initialize. Switch to phone sign-in and try again.');
+        if (!recaptchaVerifierRef.current) {
+          recaptchaVerifierRef.current = new RecaptchaVerifier(auth, container, { size: 'invisible' });
+        }
+        const confirmation = await signInWithPhoneNumber(auth, phoneNumber.trim(), recaptchaVerifierRef.current);
+        setPhoneConfirmation(confirmation);
+      }
+    } catch (error) {
+      console.error('Phone sign-in failed', { code: error.code, message: error.message, error });
+      setAuthError(getFriendlyAuthError(error));
+      if (error.code === 'auth/captcha-check-failed' || error.code === 'auth/invalid-app-credential') {
+        recaptchaVerifierRef.current?.clear();
+        recaptchaVerifierRef.current = null;
+      }
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const resetPhoneAuth = () => {
+    setPhoneConfirmation(null);
+    setPhoneCode('');
+    setAuthError(null);
+    recaptchaVerifierRef.current?.clear();
+    recaptchaVerifierRef.current = null;
   };
 
   const handleLogout = async () => {
@@ -2635,12 +2716,15 @@ function App() {
                 </div>
 
                 <div className="auth-social-actions">
-                  <button type="button" onClick={() => handleSocialAuth('google')} disabled={authLoading} className="auth-social-button"><span className="auth-google-mark" aria-hidden="true">G</span><span>Continue with Google</span></button>
-                  <button type="button" onClick={() => handleSocialAuth('linkedin')} disabled={authLoading} className="auth-social-button"><span className="auth-linkedin-mark" aria-hidden="true">in</span><span>Continue with LinkedIn</span></button>
+                  <button type="button" onClick={handleGoogleAuth} disabled={authLoading} className="auth-social-button"><span className="auth-google-mark" aria-hidden="true">G</span><span>Continue with Google</span></button>
                 </div>
-                <div className="auth-divider"><span>or use your email</span></div>
+                <div className="auth-method-switch" role="tablist" aria-label="Sign-in method">
+                  <button type="button" role="tab" aria-selected={authMethod === 'email'} className={authMethod === 'email' ? 'active' : ''} onClick={() => { setAuthMethod('email'); resetPhoneAuth(); }}>Email</button>
+                  <button type="button" role="tab" aria-selected={authMethod === 'phone'} className={authMethod === 'phone' ? 'active' : ''} onClick={() => { setAuthMethod('phone'); setAuthError(null); }}>Phone</button>
+                </div>
+                <div className="auth-divider"><span>{authMethod === 'email' ? 'or use your email' : 'sign in with your phone'}</span></div>
 
-                <form onSubmit={handleAuth} className="auth-form">
+                {authMethod === 'email' ? <form onSubmit={handleAuth} className="auth-form">
                   {authMode === 'signup' && <div className="auth-field"><label htmlFor="auth-name">Full name</label><input id="auth-name" type="text" autoComplete="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Your full name" required /></div>}
                   <div className="auth-field"><label htmlFor="auth-email">Email address</label><input id="auth-email" type="email" autoComplete="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="you@example.com" required /></div>
                   <div className="auth-field"><label htmlFor="auth-password">Password</label><input id="auth-password" type="password" autoComplete={authMode === 'signin' ? 'current-password' : 'new-password'} value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} placeholder="At least 6 characters" required minLength={6} />
@@ -2649,7 +2733,13 @@ function App() {
                   {authMode === 'signup' && <div className="auth-field"><label htmlFor="auth-confirm-password">Confirm password</label><input id="auth-confirm-password" type="password" autoComplete="new-password" value={formData.confirmPassword} onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} placeholder="Enter your password again" required /></div>}
                   {authError && <div className="auth-error" role="alert">{authError}</div>}
                   <button type="submit" disabled={authLoading} className="auth-submit">{authLoading ? 'Please wait…' : authMode === 'signin' ? 'Sign in' : 'Create account'}<span aria-hidden="true">→</span></button>
-                </form>
+                </form> : <form onSubmit={handlePhoneAuth} className="auth-form">
+                  {!phoneConfirmation ? <div className="auth-field"><label htmlFor="auth-phone">Phone number</label><input id="auth-phone" type="tel" autoComplete="tel" inputMode="tel" value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} placeholder="+14155552671" required /></div> : <><p className="auth-phone-prompt">Enter the verification code sent to <strong>{phoneNumber}</strong>.</p><div className="auth-field"><label htmlFor="auth-phone-code">SMS verification code</label><input id="auth-phone-code" type="text" autoComplete="one-time-code" inputMode="numeric" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value)} placeholder="123456" required /></div></>}
+                  {authError && <div className="auth-error" role="alert">{authError}</div>}
+                  <button type="submit" disabled={authLoading} className="auth-submit">{authLoading ? 'Please wait…' : phoneConfirmation ? 'Verify code' : 'Send code'}<span aria-hidden="true">→</span></button>
+                  {phoneConfirmation && <button type="button" className="auth-text-button" onClick={resetPhoneAuth}>Use a different number</button>}
+                  <div id="phone-recaptcha-container" />
+                </form>}
                 <p className="auth-switch">{authMode === 'signin' ? "New to Dragnet?" : 'Already have an account?'} <button onClick={() => {setAuthError(null); setAuthMode(authMode === 'signin' ? 'signup' : 'signin');}}>{authMode === 'signin' ? 'Create an account' : 'Sign in'}</button></p>
                 <p className="auth-privacy">By continuing, you agree to use Dragnet responsibly and honestly.</p>
               </div>

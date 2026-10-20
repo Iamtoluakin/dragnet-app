@@ -626,9 +626,13 @@ html {
 .auth-experience button.auth-social-button { color: #1a2c46 !important; background: #fff !important; border: 1px solid #d7e0ed !important; }
 .auth-social-button:hover { transform: translateY(-1px); border-color: #8fb4e8; background: white; }
 .auth-experience button.auth-social-button:hover { color: #122746 !important; background: #f4f8ff !important; border-color: #8fb4e8 !important; }
-.auth-google-mark, .auth-linkedin-mark { display: grid; width: 21px; height: 21px; place-items: center; font-size: 1rem; font-weight: 800; }
+.auth-google-mark { display: grid; width: 21px; height: 21px; place-items: center; font-size: 1rem; font-weight: 800; }
 .auth-google-mark { color: #4285f4; text-shadow: 1px 1px #34a853, -1px -1px #ea4335; }
-.auth-linkedin-mark { border-radius: 4px; color: white; background: #0a66c2; font-size: .76rem; }
+.auth-method-switch { display: grid; grid-template-columns: 1fr 1fr; gap: .25rem; padding: .25rem; border: 1px solid #dce4ef; border-radius: 11px; background: #eef3fa; }
+.auth-method-switch button { min-height: 38px; border: 0; border-radius: 8px; color: #63748e; background: transparent; font-size: .78rem; font-weight: 700; }
+.auth-method-switch button.active { color: #174a91; background: #fff; box-shadow: 0 1px 4px rgba(20,50,94,.12); }
+.auth-phone-prompt { margin: 0; color: #63748e; font-size: .82rem; line-height: 1.5; }
+.auth-text-button { justify-self: center; border: 0; color: #2869bd; background: transparent; font-size: .78rem; font-weight: 700; }
 .auth-divider { display: flex; align-items: center; gap: .8rem; margin: 1.15rem 0; color: #7d8ba1; font-size: .7rem; }
 .auth-divider::before, .auth-divider::after { content: ''; height: 1px; flex: 1; background: #dce4ef; }
 .auth-form { display: grid; gap: 1rem; }
