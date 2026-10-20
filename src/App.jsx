@@ -16,6 +16,8 @@ function App() {
   const [authMode, setAuthMode] = useState('signin'); // 'signin' or 'signup'
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [onboardingCourseId, setOnboardingCourseId] = useState('');
+  const [pendingProfileLoad, setPendingProfileLoad] = useState(false);
   const [selectedSector, setSelectedSector] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
@@ -48,6 +50,7 @@ function App() {
   const [authError, setAuthError] = useState(null);
   const [authMethod, setAuthMethod] = useState('email');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneCountryCode, setPhoneCountryCode] = useState('+1');
   const [phoneCode, setPhoneCode] = useState('');
   const [phoneConfirmation, setPhoneConfirmation] = useState(null);
   const recaptchaVerifierRef = useRef(null);
@@ -76,7 +79,7 @@ function App() {
       setUserEmail(profile.email || '');
     }
 
-    return Boolean(profile);
+    return Boolean(profile?.sector && profile?.role && profile?.department && profile?.rank && profile?.courses?.length);
   };
 
   const saveUserTraining = async (uid, data) => {
@@ -93,6 +96,22 @@ function App() {
       if (!user) {
         setUserId('');
         setIsAuthenticated(false);
+        setUserName('');
+        setUserEmail('');
+        setUserProfile(null);
+        setCompletedCourses([]);
+        setCurrentCourse(null);
+        setCurrentScenario(null);
+        setScenarioResult(null);
+        setShowQuiz(false);
+        setQuizAnswers({});
+        setQuizResult(null);
+        setSelectedSector('');
+        setSelectedRole('');
+        setSelectedDepartment('');
+        setSelectedRank('');
+        setOnboardingCourseId('');
+        setView((currentView) => currentView === 'auth' ? currentView : 'landing');
         return;
       }
 
@@ -102,13 +121,23 @@ function App() {
       setUserEmail(user.email || '');
 
       try {
+        setPendingProfileLoad(true);
         const hasProfile = await loadUserTraining(user.uid);
-        setView((currentView) => {
-          if (currentView !== 'landing' && currentView !== 'auth') return currentView;
-          return hasProfile ? 'dashboard' : 'onboarding';
-        });
+        setView((currentView) => currentView === 'landing' || currentView === 'auth'
+          ? hasProfile ? 'dashboard' : 'onboarding'
+          : hasProfile ? currentView : 'onboarding');
+        if (!hasProfile) {
+          setSelectedSector('');
+          setSelectedRole('');
+          setSelectedDepartment('');
+          setSelectedRank('');
+          setOnboardingCourseId('');
+          setView((currentView) => currentView === 'auth' || currentView === 'landing' ? 'onboarding' : currentView);
+        }
       } catch (error) {
         console.error('Failed to load saved training profile:', error);
+      } finally {
+        setPendingProfileLoad(false);
       }
     });
 
@@ -2228,6 +2257,7 @@ function App() {
     setSelectedRole('');
     setSelectedDepartment('');
     setSelectedRank('');
+    setOnboardingCourseId('');
   };
 
   const handleRoleSelect = (role) => {
@@ -2235,6 +2265,7 @@ function App() {
     const departments = departmentsByRole[selectedSector]?.[role] || [];
     setSelectedDepartment(departments.length === 1 ? departments[0] : '');
     setSelectedRank(selectedSector === 'students' ? studentRankForRole(role) : '');
+    setOnboardingCourseId('');
   };
 
   const getFriendlyAuthError = (error, providerName = 'password') => {
@@ -2425,7 +2456,9 @@ function App() {
         if (!recaptchaVerifierRef.current) {
           recaptchaVerifierRef.current = new RecaptchaVerifier(auth, container, { size: 'invisible' });
         }
-        const confirmation = await signInWithPhoneNumber(auth, phoneNumber.trim(), recaptchaVerifierRef.current);
+        const nationalNumber = phoneNumber.replace(/[\s()-]/g, '').replace(/^0+/, '');
+        const fullPhoneNumber = `${phoneCountryCode}${nationalNumber}`;
+        const confirmation = await signInWithPhoneNumber(auth, fullPhoneNumber, recaptchaVerifierRef.current);
         setPhoneConfirmation(confirmation);
       }
     } catch (error) {
@@ -2449,18 +2482,45 @@ function App() {
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
-    setIsAuthenticated(false);
-    setUserId('');
-    setUserName('');
-    setUserEmail('');
-    setUserProfile(null);
-    setCompletedCourses([]);
-    setView('landing');
-    setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+    try {
+      await signOut(auth);
+      setUserId('');
+      setUserName('');
+      setUserEmail('');
+      setUserProfile(null);
+      setCompletedCourses([]);
+      setCurrentCourse(null);
+      setCurrentScenario(null);
+      setScenarioResult(null);
+      setShowQuiz(false);
+      setQuizAnswers({});
+      setQuizResult(null);
+      setSelectedSector('');
+      setSelectedRole('');
+      setSelectedDepartment('');
+      setSelectedRank('');
+      setOnboardingCourseId('');
+      setView('landing');
+      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+    } catch (error) {
+      console.error('Sign-out failed:', error);
+      setAuthError('Could not sign out. Check your connection and try again.');
+    }
   };
 
   const handleCompleteOnboarding = () => {
+    if (!selectedSector || !selectedRole || !selectedDepartment || !selectedRank || !onboardingCourseId) {
+      setAuthError('Choose your sector, role, department, rank or level, and a course before continuing.');
+      return;
+    }
+    setAuthError(null);
+    const selectedCourse = (selectedSector === 'students'
+      ? studentCoursesByLevel[selectedRank] || []
+      : coursesBySector[selectedSector] || []).find((course) => course.id === onboardingCourseId);
+    if (!selectedCourse) {
+      setAuthError('That course is no longer available for this role. Please choose another course.');
+      return;
+    }
     setView('analysis');
     setAnalysisStep(0);
     
@@ -2482,9 +2542,7 @@ function App() {
           department: selectedDepartment,
           rank: selectedRank,
           riskLevel: selectedSector === 'police' || selectedSector === 'civil' ? 'high' : 'medium',
-          courses: selectedSector === 'students'
-            ? (studentCoursesByLevel[selectedRank] || [])
-            : (coursesBySector[selectedSector] || [])
+          courses: [selectedCourse]
         };
         console.log('Setting user profile:', profile);
         setUserProfile(profile);
@@ -2734,7 +2792,7 @@ function App() {
                   {authError && <div className="auth-error" role="alert">{authError}</div>}
                   <button type="submit" disabled={authLoading} className="auth-submit">{authLoading ? 'Please wait…' : authMode === 'signin' ? 'Sign in' : 'Create account'}<span aria-hidden="true">→</span></button>
                 </form> : <form onSubmit={handlePhoneAuth} className="auth-form">
-                  {!phoneConfirmation ? <div className="auth-field"><label htmlFor="auth-phone">Phone number</label><input id="auth-phone" type="tel" autoComplete="tel" inputMode="tel" value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} placeholder="+14155552671" required /></div> : <><p className="auth-phone-prompt">Enter the verification code sent to <strong>{phoneNumber}</strong>.</p><div className="auth-field"><label htmlFor="auth-phone-code">SMS verification code</label><input id="auth-phone-code" type="text" autoComplete="one-time-code" inputMode="numeric" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value)} placeholder="123456" required /></div></>}
+                  {!phoneConfirmation ? <div className="auth-field"><label htmlFor="auth-phone">Phone number</label><div className="auth-phone-input-row"><select aria-label="Country calling code" value={phoneCountryCode} onChange={(event) => setPhoneCountryCode(event.target.value)}><option value="+1">USA (+1)</option><option value="+234">Nigeria (+234)</option><option value="+44">UK (+44)</option></select><input id="auth-phone" type="tel" autoComplete="tel-national" inputMode="tel" value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} placeholder="Phone number" required /></div></div> : <><p className="auth-phone-prompt">Enter the verification code sent to <strong>{phoneCountryCode} {phoneNumber}</strong>.</p><div className="auth-field"><label htmlFor="auth-phone-code">SMS verification code</label><input id="auth-phone-code" type="text" autoComplete="one-time-code" inputMode="numeric" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value)} placeholder="123456" required /></div></>}
                   {authError && <div className="auth-error" role="alert">{authError}</div>}
                   <button type="submit" disabled={authLoading} className="auth-submit">{authLoading ? 'Please wait…' : phoneConfirmation ? 'Verify code' : 'Send code'}<span aria-hidden="true">→</span></button>
                   {phoneConfirmation && <button type="button" className="auth-text-button" onClick={resetPhoneAuth}>Use a different number</button>}
@@ -2801,7 +2859,7 @@ function App() {
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">3. Department</p>
                   <select
                     value={selectedDepartment}
-                    onChange={(e) => { setSelectedDepartment(e.target.value); setSelectedRank(''); }}
+                    onChange={(e) => { setSelectedDepartment(e.target.value); setSelectedRank(''); setOnboardingCourseId(''); }}
                     className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-blue-400 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
                     disabled={(departmentsByRole[selectedSector]?.[selectedRole] || []).length === 1}
@@ -2820,7 +2878,7 @@ function App() {
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">4. {selectedSector === 'students' ? 'School Level' : selectedSector === 'private' ? 'Job Level' : 'Rank / Grade Level'}</p>
                   <select
                     value={selectedRank}
-                    onChange={(e) => setSelectedRank(e.target.value)}
+                    onChange={(e) => { setSelectedRank(e.target.value); setOnboardingCourseId(''); }}
                     className="w-full px-4 py-3 rounded-xl text-white border border-white/8 focus:border-blue-400 outline-none transition-all text-sm"
                     style={{background:'#1a1a1a'}}
                     disabled={selectedSector === 'students'}
@@ -2839,12 +2897,33 @@ function App() {
               )}
 
               {selectedRank && (
+                <div className="mb-7 animate-fadeIn">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">5. Choose your first course</p>
+                  <div className="grid gap-3">
+                    {(selectedSector === 'students' ? studentCoursesByLevel[selectedRank] || [] : coursesBySector[selectedSector] || []).map((course) => (
+                      <button
+                        key={course.id}
+                        type="button"
+                        aria-pressed={onboardingCourseId === course.id}
+                        onClick={() => setOnboardingCourseId(course.id)}
+                        className={`p-4 rounded-xl border text-left transition-all touch-manipulation ${onboardingCourseId === course.id ? 'border-blue-400 bg-blue-500/10' : 'border-white/10 hover:border-white/25'}`}
+                      >
+                        <span className="block text-white text-sm font-semibold">{course.title}</span>
+                        <span className="block text-gray-500 text-xs mt-1">{course.description}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedRank && (
                 <div className="animate-fadeIn">
                   <button
                     onClick={handleCompleteOnboarding}
+                    disabled={!onboardingCourseId}
                     className="w-full py-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-sm shadow-blue-950/30 touch-manipulation transition-all"
                   >
-                    Get My Training Plan →
+                    {onboardingCourseId ? 'Start My Course →' : 'Choose a course to continue'}
                   </button>
                 </div>
               )}

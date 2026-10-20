@@ -632,6 +632,9 @@ html {
 .auth-method-switch button { min-height: 38px; border: 0; border-radius: 8px; color: #63748e; background: transparent; font-size: .78rem; font-weight: 700; }
 .auth-method-switch button.active { color: #174a91; background: #fff; box-shadow: 0 1px 4px rgba(20,50,94,.12); }
 .auth-phone-prompt { margin: 0; color: #63748e; font-size: .82rem; line-height: 1.5; }
+.auth-phone-input-row { display: grid; grid-template-columns: minmax(118px, .8fr) 1.6fr; gap: .5rem; }
+.auth-phone-input-row select { min-height: 48px; padding: .65rem .55rem; border: 1px solid #d4deeb; border-radius: 10px; outline: none; color: #152640; background: rgba(255,255,255,.95); font-size: .82rem; }
+.auth-phone-input-row select:focus { border-color: #3980e8; box-shadow: 0 0 0 3px rgba(59,130,246,.16); }
 .auth-text-button { justify-self: center; border: 0; color: #2869bd; background: transparent; font-size: .78rem; font-weight: 700; }
 .auth-divider { display: flex; align-items: center; gap: .8rem; margin: 1.15rem 0; color: #7d8ba1; font-size: .7rem; }
 .auth-divider::before, .auth-divider::after { content: ''; height: 1px; flex: 1; background: #dce4ef; }
