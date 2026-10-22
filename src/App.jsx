@@ -10,6 +10,10 @@ import { departmentsByRole, departmentsBySection, privateRanksByRole, ranksBySec
 
 function App() {
   const [view, setView] = useState('landing');
+  const [scenarioChoice, setScenarioChoice] = useState(null);
+  const [scenarioFeedback, setScenarioFeedback] = useState(false);
+  const [requestEmail, setRequestEmail] = useState('');
+  const [requestSubmitted, setRequestSubmitted] = useState(false);
   const keyLearningRef = useRef(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState('');
@@ -2561,12 +2565,15 @@ function App() {
 
   return (
     <div className="min-h-screen" style={{background:'#0a0a0a'}}>
-      {view === 'landing' ? (
+      {['landing', 'academy', 'organizations', 'whatsapp'].includes(view) ? (
         <div className="min-h-screen flex flex-col overflow-x-hidden landing-shell" style={{background: '#080b18'}}>
 
           {/* ── NAV ── */}
-          <nav className="flex items-center justify-between px-6 sm:px-10 py-5 border-b border-white/5">
-            <span className="text-white font-bold text-lg tracking-tight">Dragnet</span>
+          <nav className="public-nav flex items-center justify-between px-6 sm:px-10 py-5 border-b border-white/5">
+            <button className="public-brand" onClick={() => setView('landing')} aria-label="Dragnet home"><span className="public-brand-mark">D</span> DRAGNET</button>
+            <div className="public-links">
+              <button onClick={() => setView('landing')}>Home</button><button onClick={() => setView('academy')}>Explore courses</button><a href="#how-it-works" onClick={() => setView('landing')}>How it works</a><button onClick={() => setView('organizations')}>Organizations</button><button onClick={() => setView('whatsapp')}>WhatsApp</button>
+            </div>
             <div className="flex items-center gap-3">
               {isAuthenticated ? (
                 <button
@@ -2585,7 +2592,7 @@ function App() {
                   </button>
                   <button
                     onClick={() => { setAuthMode('signup'); setView('auth'); }}
-                  className="landing-nav-signup px-5 py-2 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white rounded-lg font-semibold text-sm touch-manipulation transition-all"
+                  className="landing-nav-signup public-primary-cta px-5 py-2 rounded-lg font-semibold text-sm touch-manipulation transition-all"
                   >
                     Get started
                   </button>
@@ -2604,21 +2611,23 @@ function App() {
 
               <div className="landing-hero-grid grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
                 <div className="text-center lg:text-left">
+                  <p className="public-kicker">LEARN INTEGRITY. LEAD WITH ACCOUNTABILITY.</p>
                   <h1 className="text-4xl sm:text-5xl xl:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
-                    What Dragnet does <span className="landing-gradient-text">for everyday people</span>
+                    Better decisions start with <span className="landing-gradient-text">better understanding.</span>
                   </h1>
 
                   <p className="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mb-8">
-                    For police officers, teachers, bankers, engineers, civil servants, nurses, students, and more. Dragnet helps people practice fair, responsible decisions through role-based lessons, scenarios, and assessments.
+                    Learn the rules that matter to your role. Explore real-life situations, practice ethical decision-making, and build confidence through personalized learning.
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3">
                     <button
                       onClick={() => { setAuthMode('signup'); setView('auth'); }}
-                      className="px-8 py-4 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 active:from-blue-700 active:to-violet-700 text-white rounded-xl font-bold text-base shadow-lg shadow-blue-950/50 touch-manipulation transition-all"
+                      className="public-primary-cta px-8 py-4 rounded-xl font-bold text-base shadow-lg touch-manipulation transition-all"
                     >
-                      Create your account
+                      Start learning
                     </button>
+                    <a href="#how-it-works" className="public-secondary-cta">See how it works <span>↘</span></a>
                     {isAuthenticated && (
                       <button
                         onClick={() => setView('dashboard')}
@@ -2629,7 +2638,7 @@ function App() {
                     )}
                   </div>
 
-                  <p className="text-gray-500 text-xs mt-5">Practical learning. Clear progress. Stronger judgment.</p>
+                  <p className="text-gray-500 text-xs mt-5">For people shaping a fairer, more accountable future across Africa.</p>
                 </div>
 
                 <figure className="landing-illustration w-full">
@@ -2639,14 +2648,20 @@ function App() {
                     className="landing-illustration-image"
                     loading="eager"
                     fetchPriority="high"
+                    onError={(event) => {
+                      event.currentTarget.hidden = true;
+                      const fallback = event.currentTarget.nextElementSibling;
+                      if (fallback) fallback.hidden = false;
+                    }}
                   />
+                  <div className="landing-art-fallback" hidden role="img" aria-label="Illustrated group of African professionals and learners"><span>👮🏾‍♀️</span><span>🧑🏾‍🏫</span><span>🧑🏾‍⚕️</span><span>👩🏾‍💻</span><span>🧑🏾‍🎓</span><span>🧑🏾‍💼</span></div>
                 </figure>
               </div>
             </div>
           </section>
 
           {/* ── HOW IT WORKS ── */}
-          <section className="landing-process" aria-labelledby="landing-process-title">
+          <section className="landing-process" id="how-it-works" aria-labelledby="landing-process-title">
             <div className="landing-process-heading">
               <p className="landing-process-eyebrow">How it works</p>
               <h2 id="landing-process-title">A clearer path to better decisions.</h2>
@@ -2654,9 +2669,11 @@ function App() {
             </div>
             <div className="landing-process-grid">
               {[
-                { n: '1', title: 'Create your profile', desc: 'Tell us your role and sector. Takes under 2 minutes.' },
-                { n: '2', title: 'Face real scenarios', desc: 'Work through situations pulled from actual professional environments. Make decisions under pressure.' },
-                { n: '3', title: 'Track your growth', desc: 'See how your thinking, discipline, and integrity develop over time.' },
+                { n: '1', title: 'Choose your role', desc: 'Tell Dragnet about your work and responsibilities.' },
+                { n: '2', title: 'Explore your lessons', desc: 'Build understanding with relevant, practical learning.' },
+                { n: '3', title: 'Practice real decisions', desc: 'Try realistic scenarios and see the impact of your choices.' },
+                { n: '4', title: 'Check your understanding', desc: 'Complete short assessments and revisit what you need.' },
+                { n: '5', title: 'Track your progress', desc: 'Continue learning and earn Dragnet training completion certificates.' },
               ].map((s, index) => (
                 <article key={s.n} className="landing-process-step" style={{ '--step-index': index }}>
                   <div className="landing-process-number" aria-hidden="true">{s.n}</div>
@@ -2665,14 +2682,30 @@ function App() {
                     <h3>{s.title}</h3>
                     <p>{s.desc}</p>
                   </div>
-                  {index < 2 && <span className="landing-process-arrow" aria-hidden="true">→</span>}
+                  {index < 4 && <span className="landing-process-arrow" aria-hidden="true">→</span>}
                 </article>
               ))}
             </div>
           </section>
 
+          {view === 'landing' ? <>
+            <section className="public-audience section-wrap"><div className="section-heading"><p className="landing-process-eyebrow">Made for your everyday</p><h2>Learning that meets you where you work.</h2><p>Choose a path shaped around your role. Start with the responsibilities you carry.</p></div><div className="audience-grid">{[
+              ['🚔','Police & law enforcement','Professional conduct, public trust, and anti-bribery.'],['🏫','Teachers & educators','Fairness, safeguarding, and responsible leadership.'],['🎓','Students & young professionals','Integrity in learning, work, and everyday choices.'],['🏛️','Civil servants','Accountability, conflicts of interest, and public service.'],['🩺','Healthcare workers','Trust, patient care, and ethical responsibilities.'],['⚙️','Engineers & technical teams','Safety, transparency, and responsible practice.'],['🏦','Bankers & finance','Fraud awareness, confidentiality, and sound judgment.'],['🏢','Businesses & NGOs','Build consistent ethical habits across your teams.']
+            ].map(([icon,title,desc])=><article className="audience-card" key={title}><span>{icon}</span><h3>{title}</h3><p>{desc}</p><button onClick={() => { setAuthMode('signup'); setView('auth'); }}>Create my learning profile <b>↗</b></button></article>)}</div></section>
+            <section className="scenario-section"><div className="scenario-intro"><p className="landing-process-eyebrow">Try a decision</p><h2>Experience real decisions.</h2><p>Integrity is practiced in the moments when choices are not always easy.</p><div className="scenario-badge">A procurement scenario <span>• 2 min</span></div></div><div className="scenario-card"><div className="scenario-card-top"><span>YOUR SCENARIO</span><span>01 / 01</span></div><h3>A contractor offers you an expensive gift before a procurement decision. What would you do?</h3><div className="scenario-options">{['Accept it, since the decision has not been made yet.','Decline politely and disclose the offer through the proper channel.','Keep it quiet and make sure the process stays fair.'].map((answer,index)=><button key={answer} className={scenarioChoice===index?'chosen':''} onClick={()=>{setScenarioChoice(index);setScenarioFeedback(true);}}><span>{String.fromCharCode(65+index)}</span>{answer}</button>)}</div>{scenarioFeedback&&<div className={`scenario-feedback ${scenarioChoice===1?'is-good':'is-review'}`} role="status"><b>{scenarioChoice===1?'Good judgment':'Consider the conflict of interest'}</b><p>{scenarioChoice===1?'Declining and disclosing the gift protects a fair process and makes your decision transparent. Follow your organization’s gift and reporting policy.':'Even if you intend to be fair, accepting or hiding a valuable gift can create an actual or perceived conflict. Decline it and follow your organization’s disclosure process.'}</p><small>Principles: impartiality · transparency · accountability</small></div>}<button className="scenario-reset" onClick={()=>{setScenarioChoice(null);setScenarioFeedback(false);}}>Reset scenario</button></div></section>
+            <section className="coach-section section-wrap"><div className="coach-orb">✳</div><div><p className="landing-process-eyebrow">A learning companion</p><h2>Meet your AI Integrity Coach.</h2><p>Explore practical questions about workplace conduct, conflicts of interest, corruption prevention, and professional responsibilities. Dragnet’s current learning experience includes role-based course content and interactive scenarios.</p><p className="coach-note">AI guidance should be grounded in reviewed learning materials and verified references. It is educational, not legal advice; this coach experience is a planned enhancement.</p></div></section>
+            <section className="product-strip section-wrap"><article><div className="product-icon">◉</div><p className="landing-process-eyebrow">5 minutes a day</p><h2>Dragnet on WhatsApp</h2><p>Short integrity lessons, daily challenges, and quick quizzes are planned for a future WhatsApp experience.</p><button onClick={()=>setView('whatsapp')}>Get updates <span>→</span></button><small>WhatsApp Business connection is not yet active.</small></article><article><div className="product-icon">↗</div><p className="landing-process-eyebrow">Structured learning</p><h2>Dragnet Academy</h2><p>Discover professional learning paths with scenarios, assessments, progress tracking, and completion certificates.</p><button onClick={()=>setView('academy')}>Explore the Academy <span>→</span></button></article></section>
+            <section className="org-banner"><div><p className="landing-process-eyebrow">For teams and institutions</p><h2>Build a culture of integrity across your organization.</h2><p>Explore training for schools, public institutions, NGOs, banks, businesses, and professional associations.</p></div><button onClick={()=>setView('organizations')}>Explore organization training <span>→</span></button></section>
+            <section className="language-note"><span>🌍</span><p><b>Learn in your language.</b> Dragnet is preparing for English, Yoruba, Hausa, Igbo, and Nigerian Pidgin. These language options are not yet available.</p></section>
+          </> : <section className="product-page-public section-wrap">
+            <p className="landing-process-eyebrow">{view==='academy'?'DRAGNET ACADEMY':view==='organizations'?'DRAGNET FOR ORGANIZATIONS':'DRAGNET ON WHATSAPP'}</p>
+            <h1>{view==='academy'?'Learn the principles. Practice the decisions. Build professional confidence.':view==='organizations'?'Build a culture of integrity across your organization.':'Build better habits of integrity in just five minutes a day.'}</h1>
+            <p>{view==='academy'?'Explore structured, role-based learning in ethics, anti-corruption, accountability, workplace conduct, and governance.':view==='organizations'?'Support staff onboarding and professional learning with practical ethics and compliance training.': 'Microlearning, integrity challenges, and short scenario quizzes tailored to your profession are planned for WhatsApp.'}</p>
+            {view==='academy'?<><div className="course-discovery"><div className="course-discovery-head"><h2>Learning paths</h2><span>Available in current platform</span></div><div className="course-path-grid">{['Ethics & Integrity Fundamentals','Anti-Corruption Awareness','Public Service Accountability','Workplace Ethics','Police Ethics & Professional Conduct','Financial Integrity & Fraud Awareness','Healthcare Professional Ethics','Responsible Leadership & Governance'].map((course,i)=><article key={course}><span>0{i+1}</span><h3>{course}</h3><p>Role-based course · Scenarios · Assessment</p><button onClick={()=>{setAuthMode('signup');setView('auth');}}>Start learning →</button></article>)}</div><p className="certificate-note">Certificates are Dragnet training completion certificates. They do not represent government accreditation or professional licenses.</p></div></>:<div className="request-panel"><h2>{view==='organizations'?'Request an organization demo':'Get Dragnet on WhatsApp updates'}</h2><p>{view==='organizations'?'Leave your email and the Dragnet team can follow up about institutional training.':'Leave your email to hear when WhatsApp learning becomes available.'}</p>{requestSubmitted?<div className="request-confirmation" role="status">Thanks — your interest has been noted in this browser. A connected request service is not configured yet.</div>:<form onSubmit={(event)=>{event.preventDefault();setRequestSubmitted(true);}}><label htmlFor="product-request-email">Work email</label><input id="product-request-email" type="email" autoComplete="email" required value={requestEmail} onChange={(event)=>setRequestEmail(event.target.value)} placeholder="you@organization.org"/><label className="opt-in-label"><input type="checkbox" required/> I agree to be contacted about this {view==='organizations'?'demo':'feature'}.</label><button type="submit">{view==='organizations'?'Request a demo':'Join the updates list'} →</button></form>}</div>}
+          </section>}
+
           {/* ── WHAT YOU DEVELOP ── */}
-          <section className="px-6 pb-20 sm:pb-24 max-w-4xl mx-auto w-full">
+          {view === 'landing' && <section className="px-6 pb-20 sm:pb-24 max-w-4xl mx-auto w-full">
             <h2 className="text-gray-500 text-xs font-semibold uppercase tracking-widest text-center mb-10">What you develop</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
@@ -2699,30 +2732,30 @@ function App() {
                 </div>
               ))}
             </div>
-          </section>
+          </section>}
 
           {/* ── FINAL CTA ── */}
-          <section className="px-6 pb-24 sm:pb-32 max-w-xl mx-auto w-full text-center">
+          {view==='landing'&&<section className="px-6 pb-24 sm:pb-32 max-w-xl mx-auto w-full text-center">
             <div className="landing-cta border border-white/8 rounded-2xl p-8 sm:p-12" style={{background: '#101426'}}>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 leading-snug">
-                Change starts with everyday choices.
+                Build integrity. One decision at a time.
               </h2>
               <p className="text-gray-400 text-sm mb-8 leading-relaxed">
                 Set up your profile to see training selected for your sector, role, department, and rank.
               </p>
               <button
                 onClick={() => { setAuthMode('signup'); setView('auth'); }}
-                className="w-full py-4 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 active:from-blue-700 active:to-violet-700 text-white rounded-xl font-bold text-base shadow-lg shadow-blue-950/30 touch-manipulation transition-all"
+                className="public-primary-cta w-full py-4 rounded-xl font-bold text-base shadow-lg touch-manipulation transition-all"
               >
-                Create your account →
+                Start learning free →
               </button>
               <p className="text-gray-600 text-xs mt-4">Role-based compliance training</p>
             </div>
-          </section>
+          </section>}
 
           {/* ── FOOTER ── */}
           <footer className="border-t border-white/5 px-6 py-6 text-center">
-            <p className="text-gray-500 text-xs font-medium">Ethics and compliance learning for everyday life</p>
+            <p className="text-gray-500 text-xs font-medium">Learn Integrity. Lead with Accountability.</p>
             <p className="text-gray-600 text-xs mt-1">© 2026 DragNet.</p>
           </footer>
 
