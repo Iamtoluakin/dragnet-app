@@ -8,10 +8,48 @@ import { saveUserEmail, recordSignIn, saveAndEmailScore } from './utils/scoreEma
 import { generateCareerRecommendations } from './utils/aiRecommendations';
 import { departmentsByRole, departmentsBySection, privateRanksByRole, ranksBySection, rolesBySection, sectors, studentRankForRole } from './data/sectors';
 
+const homepageScenarios = [
+  {
+    category: 'Public service integrity',
+    question: 'A contractor offers you an expensive gift before a procurement decision. What should you do?',
+    answers: [
+      'Accept it because no decision has been made yet.',
+      "Decline it and follow the organization's disclosure policy.",
+      'Accept it but promise to remain impartial.',
+    ],
+    explanation: 'Accepting gifts connected to official decisions can create conflicts of interest. Declining the gift and following applicable disclosure rules helps protect impartiality.',
+    principle: 'Impartiality · Disclosure · Public trust',
+  },
+  {
+    category: 'Workplace ethics',
+    question: 'Your supervisor asks you to change information in an official report to make your department look better. What should you do?',
+    answers: [
+      'Change the information because your supervisor instructed you.',
+      'Refuse to falsify the report and raise the concern through the appropriate reporting channel.',
+      'Make the changes but keep a personal copy of the original.',
+    ],
+    explanation: 'Professional integrity requires accurate reporting. Following an instruction does not justify deliberately falsifying official information.',
+    principle: 'Honesty · Accountability · Accurate records',
+  },
+  {
+    category: 'Everyday integrity',
+    question: 'You discover that a cashier accidentally gave you more change than you should have received. What should you do?',
+    answers: [
+      'Keep the money because the mistake was not yours.',
+      'Return the extra money and explain the mistake.',
+      'Keep it unless the cashier notices.',
+    ],
+    explanation: 'Integrity extends beyond the workplace. Returning money received by mistake demonstrates honesty and personal responsibility.',
+    principle: 'Honesty · Responsibility · Trust',
+  },
+];
+
 function App() {
   const [view, setView] = useState('landing');
+  const [scenarioIndex, setScenarioIndex] = useState(0);
   const [scenarioChoice, setScenarioChoice] = useState(null);
-  const [scenarioFeedback, setScenarioFeedback] = useState(false);
+  const [scenarioScore, setScenarioScore] = useState(0);
+  const [scenarioComplete, setScenarioComplete] = useState(false);
   const [requestEmail, setRequestEmail] = useState('');
   const [requestSubmitted, setRequestSubmitted] = useState(false);
   const keyLearningRef = useRef(null);
@@ -2689,15 +2727,85 @@ function App() {
           </section>
 
           {view === 'landing' ? <>
-            <section className="public-audience section-wrap"><div className="section-heading"><p className="landing-process-eyebrow">Made for your everyday</p><h2>Learning that meets you where you work.</h2><p>Choose a path shaped around your role. Start with the responsibilities you carry.</p></div><div className="audience-grid">{[
-              ['🚔','Police & law enforcement','Professional conduct, public trust, and anti-bribery.'],['🏫','Teachers & educators','Fairness, safeguarding, and responsible leadership.'],['🎓','Students & young professionals','Integrity in learning, work, and everyday choices.'],['🏛️','Civil servants','Accountability, conflicts of interest, and public service.'],['🩺','Healthcare workers','Trust, patient care, and ethical responsibilities.'],['⚙️','Engineers & technical teams','Safety, transparency, and responsible practice.'],['🏦','Bankers & finance','Fraud awareness, confidentiality, and sound judgment.'],['🏢','Businesses & NGOs','Build consistent ethical habits across your teams.']
-            ].map(([icon,title,desc])=><article className="audience-card" key={title}><span>{icon}</span><h3>{title}</h3><p>{desc}</p><button onClick={() => { setAuthMode('signup'); setView('auth'); }}>Create my learning profile <b>↗</b></button></article>)}</div></section>
-            <section className="scenario-section"><div className="scenario-intro"><p className="landing-process-eyebrow">Try a decision</p><h2>Experience real decisions.</h2><p>Integrity is practiced in the moments when choices are not always easy.</p><div className="scenario-badge">A procurement scenario <span>• 2 min</span></div></div><div className="scenario-card"><div className="scenario-card-top"><span>YOUR SCENARIO</span><span>01 / 01</span></div><h3>A contractor offers you an expensive gift before a procurement decision. What would you do?</h3><div className="scenario-options">{['Accept it, since the decision has not been made yet.','Decline politely and disclose the offer through the proper channel.','Keep it quiet and make sure the process stays fair.'].map((answer,index)=><button key={answer} className={scenarioChoice===index?'chosen':''} onClick={()=>{setScenarioChoice(index);setScenarioFeedback(true);}}><span>{String.fromCharCode(65+index)}</span>{answer}</button>)}</div>{scenarioFeedback&&<div className={`scenario-feedback ${scenarioChoice===1?'is-good':'is-review'}`} role="status"><b>{scenarioChoice===1?'Good judgment':'Consider the conflict of interest'}</b><p>{scenarioChoice===1?'Declining and disclosing the gift protects a fair process and makes your decision transparent. Follow your organization’s gift and reporting policy.':'Even if you intend to be fair, accepting or hiding a valuable gift can create an actual or perceived conflict. Decline it and follow your organization’s disclosure process.'}</p><small>Principles: impartiality · transparency · accountability</small></div>}<button className="scenario-reset" onClick={()=>{setScenarioChoice(null);setScenarioFeedback(false);}}>Reset scenario</button></div></section>
+            <section className="scenario-section" aria-labelledby="scenario-preview-title">
+              <div className="scenario-intro">
+                <p className="landing-process-eyebrow">Try a decision</p>
+                <h2 id="scenario-preview-title">Practice the choices that build trust.</h2>
+                <p>Read a realistic situation, choose what you would do, and get immediate feedback grounded in practical ethics.</p>
+                <div className="scenario-badge">Dragnet learning preview <span>· 3 short decisions</span></div>
+              </div>
+              <div className="scenario-card" aria-live="polite">
+                <div className="scenario-card-top">
+                  <span>{scenarioComplete ? 'SCENARIOS COMPLETE' : homepageScenarios[scenarioIndex].category.toUpperCase()}</span>
+                  {!scenarioComplete && <span>QUESTION {scenarioIndex + 1} OF {homepageScenarios.length}</span>}
+                </div>
+                <div className="scenario-progress" role="progressbar" aria-label="Scenario progress" aria-valuemin="0" aria-valuemax={homepageScenarios.length} aria-valuenow={scenarioComplete ? homepageScenarios.length : scenarioIndex + 1}>
+                  <span className="scenario-progress-fill" style={{ width: `${scenarioComplete ? 100 : ((scenarioIndex + 1) / homepageScenarios.length) * 100}%` }} />
+                </div>
+
+                {scenarioComplete ? (
+                  <div className="scenario-completion" role="status">
+                    <span className="scenario-completion-icon" aria-hidden="true">✓</span>
+                    <p className="scenario-completion-kicker">Three decisions practiced</p>
+                    <h3>You completed the scenario preview.</h3>
+                    <p>You made {scenarioScore} of {homepageScenarios.length} thoughtful choices. Keep practicing the principles of honesty, impartiality, and accountability in everyday decisions.</p>
+                    <div className="scenario-actions">
+                      <button className="scenario-next" onClick={() => { setScenarioIndex(0); setScenarioChoice(null); setScenarioScore(0); setScenarioComplete(false); }}>Try again</button>
+                      <button className="scenario-lessons" onClick={() => { setAuthMode('signup'); setView('auth'); }}>Explore more lessons <span aria-hidden="true">→</span></button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <h3>{homepageScenarios[scenarioIndex].question}</h3>
+                    <div className="scenario-options" role="group" aria-label="Choose your response">
+                      {homepageScenarios[scenarioIndex].answers.map((answer, index) => (
+                        <button
+                          key={answer}
+                          type="button"
+                          className={scenarioChoice === index ? (index === 1 ? 'chosen is-correct' : 'chosen is-incorrect') : ''}
+                          aria-pressed={scenarioChoice === index}
+                          disabled={scenarioChoice !== null}
+                          onClick={() => {
+                            setScenarioChoice(index);
+                            if (index === 1) setScenarioScore((score) => score + 1);
+                          }}
+                        >
+                          <span>{String.fromCharCode(65 + index)}</span>{answer}
+                        </button>
+                      ))}
+                    </div>
+                    {scenarioChoice !== null && (
+                      <div className={`scenario-feedback ${scenarioChoice === 1 ? 'is-good' : 'is-review'}`} role="status">
+                        <b><span aria-hidden="true">{scenarioChoice === 1 ? '✓' : '!'}</span> {scenarioChoice === 1 ? 'That is the strongest response.' : 'That response can create risk.'}</b>
+                        <p>{homepageScenarios[scenarioIndex].explanation}</p>
+                        <small>Principles: {homepageScenarios[scenarioIndex].principle}</small>
+                        {scenarioChoice !== 1 && <button className="scenario-retry" onClick={() => setScenarioChoice(null)}>Try this question again</button>}
+                      </div>
+                    )}
+                    {scenarioChoice === 1 && (
+                      <button
+                        className="scenario-next"
+                        onClick={() => {
+                          if (scenarioIndex === homepageScenarios.length - 1) {
+                            setScenarioComplete(true);
+                          } else {
+                            setScenarioIndex((index) => index + 1);
+                            setScenarioChoice(null);
+                          }
+                        }}
+                      >
+                        {scenarioIndex === homepageScenarios.length - 1 ? 'Complete scenarios' : 'Next scenario'} <span aria-hidden="true">→</span>
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            </section>
             <section className="coach-section section-wrap"><div className="coach-orb">✳</div><div><p className="landing-process-eyebrow">A learning companion</p><h2>Meet your AI Integrity Coach.</h2><p>Explore practical questions about workplace conduct, conflicts of interest, corruption prevention, and professional responsibilities. Dragnet’s current learning experience includes role-based course content and interactive scenarios.</p><p className="coach-note">AI guidance should be grounded in reviewed learning materials and verified references. It is educational, not legal advice; this coach experience is a planned enhancement.</p></div></section>
             <section className="product-strip section-wrap"><article><div className="product-icon">◉</div><p className="landing-process-eyebrow">5 minutes a day</p><h2>Dragnet on WhatsApp</h2><p>Short integrity lessons, daily challenges, and quick quizzes are planned for a future WhatsApp experience.</p><button onClick={()=>setView('whatsapp')}>Get updates <span>→</span></button><small>WhatsApp Business connection is not yet active.</small></article><article><div className="product-icon">↗</div><p className="landing-process-eyebrow">Structured learning</p><h2>Dragnet Academy</h2><p>Discover professional learning paths with scenarios, assessments, progress tracking, and completion certificates.</p><button onClick={()=>setView('academy')}>Explore the Academy <span>→</span></button></article></section>
             <section className="org-banner"><div><p className="landing-process-eyebrow">For teams and institutions</p><h2>Build a culture of integrity across your organization.</h2><p>Explore training for schools, public institutions, NGOs, banks, businesses, and professional associations.</p></div><button onClick={()=>setView('organizations')}>Explore organization training <span>→</span></button></section>
             <section className="language-note"><span>🌍</span><p><b>Learn in your language.</b> Dragnet is preparing for English, Yoruba, Hausa, Igbo, and Nigerian Pidgin. These language options are not yet available.</p></section>
-          </> : <section className="product-page-public section-wrap">
+          </> : <section className={`product-page-public section-wrap ${view === 'whatsapp' ? 'whatsapp-page' : ''}`}>
             <p className="landing-process-eyebrow">{view==='academy'?'DRAGNET ACADEMY':view==='organizations'?'DRAGNET FOR ORGANIZATIONS':'DRAGNET ON WHATSAPP'}</p>
             <h1>{view==='academy'?'Learn the principles. Practice the decisions. Build professional confidence.':view==='organizations'?'Build a culture of integrity across your organization.':'Build better habits of integrity in just five minutes a day.'}</h1>
             <p>{view==='academy'?'Explore structured, role-based learning in ethics, anti-corruption, accountability, workplace conduct, and governance.':view==='organizations'?'Support staff onboarding and professional learning with practical ethics and compliance training.': 'Microlearning, integrity challenges, and short scenario quizzes tailored to your profession are planned for WhatsApp.'}</p>
